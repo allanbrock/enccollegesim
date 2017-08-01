@@ -1,6 +1,6 @@
 package com.endicott.edu.service;
 /**
- * Created by abrocken on 7/8/2017.
+ * Provides restful services for working with college dorms.
  */
 
 import com.endicott.edu.datalayer.DormitoryDao;

@@ -1,4 +1,5 @@
-package com.endicott.edu.service; /**
+package com.endicott.edu.service;
+/**
  * Created by abrocken on 7/8/2017.
  */
 
@@ -15,8 +16,14 @@ import java.util.List;
 // The Java class will be hosted at the URI path "/finances"
 @Path("/dorms")
 public class DormServices {
-    DormitoryDao dao = new DormitoryDao();
+    private DormitoryDao dao = new DormitoryDao();
 
+    /**
+     * Get a list of the dorms that are in the college.
+     *
+     * @param runId simulation ID
+     * @return JSON formatted list.
+     */
     @GET
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)

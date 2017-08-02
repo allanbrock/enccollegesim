@@ -28,17 +28,56 @@ public class CollegeTests {
 
     public static void runTests(){
         CollegeTests tester = new CollegeTests();
-        //initialize the tester
+
         tester.init();
-        //tests get all users Web Service Method
-        tester.testEstablishCollege();
+
+        tester.testFetchMissingCollege("test123");
+        tester.testCreateCollege("test009");
+        tester.testGetCollege("test009");
+        tester.testDeleteCollege("test009");
     }
 
-    private void testEstablishCollege(){
-        String runId = "test007";
+    private void testFetchMissingCollege(String runId) {
         String result = PASS;
 
-        System.out.println("Test case name: testEstablishCollege\n");
+        System.out.print("Test case name: testFetchMissingCollege...");
+
+        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.get();
+        if(response.getStatus() != 404) {
+            System.out.println("    Got unexpected response college.");
+            result = FAIL;
+        }
+
+        System.out.println(" Result: " + result );
+    }
+
+    private void testGetCollege(String runId){
+        String result = PASS;
+
+        System.out.print("Test case name: testGetCollege...");
+
+        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.get();
+        CollegeModel college = response.readEntity(CollegeModel.class);
+
+        if(response.getStatus() != 200 || college.getHoursAlive() != 1 || college.getAvailableCash() != CollegeManager.STARTUP_FUNDING) {
+            System.out.println("    Got bad college response or contents.");
+            result = FAIL;
+        }
+
+        System.out.println(" Result: " + result );
+    }
+
+
+    private void testCreateCollege(String runId){
+        String result = PASS;
+
+        System.out.print("Test case name: testCreateCollege...");
 
         WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
@@ -61,11 +100,36 @@ public class CollegeTests {
         CollegeModel college = response.readEntity(CollegeModel.class);
 
         if(response.getStatus() != 200 || college.getHoursAlive() != 1 || college.getAvailableCash() != CollegeManager.STARTUP_FUNDING) {
-            System.out.println("    Got bad college response or contents.");
+            System.out.println("    Got bad college response or contents:" + response.getStatus());
             result = FAIL;
         }
 
-        System.out.println("Test case name: testEstablishCollege, Result: " + result );
+        System.out.println(" Result: " + result );
     }
+
+
+    private void testDeleteCollege(String runId) {
+        String result = PASS;
+
+        System.out.print("Test case name: testDeleteCollege...");
+
+        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        Invocation.Builder invocationBuilder =  webTarget.request();
+
+        Response response = invocationBuilder.delete();
+        if(response.getStatus() != 200) {
+            System.out.println("    Got unexpected delete response college." + response.getStatus());
+            result = FAIL;
+        }
+
+        response = invocationBuilder.get();
+        if(response.getStatus() != 404) {
+            System.out.println("    Got unexpected get response college: " + response.getStatus());
+            result = FAIL;
+        }
+
+        System.out.println(" Result: " + result );
+    }
+
 
 }

@@ -39,7 +39,9 @@ public class CollegeDao {
 
     public void deleteCollege(String runId) {
         File file = new File(getFilePath(runId));
-        file.delete();
+        System.out.println("About to delete file: " + getFilePath(runId));
+        boolean result = file.delete();
+        System.out.println("Result = " + result);
     }
 
     public void saveCollege(CollegeModel college){
@@ -63,13 +65,16 @@ public class CollegeDao {
     }
 
     private static void testCollegeDao() {
+        String runId = "000";
         CollegeDao dao = new CollegeDao();
-        CollegeModel college = dao.getCollege("000");
-        college.setHoursAlive(2);
+        CollegeModel college = new CollegeModel();
+        college.setAvailableCash(100);
+        college.setRunId(runId);
         dao.saveCollege(college);
-        college = dao.getCollege("000");
-        assert(college.getHoursAlive() == 2);
-        System.out.println("Test case name: testCollegeDao, Result: pass");
+
+        college = dao.getCollege(runId);
+        assert(college.getAvailableCash() == 100);
+        dao.deleteCollege(runId);
     }
 
 }

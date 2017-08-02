@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="College_sim3:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/College_sim3_war</output-path>
+    <root id="archive" name="College_sim3_war.war">
+      <element id="artifact" artifact-name="College_sim3:war exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="org.glassfish.jersey.core:jersey-client:2.2" />
+          <element id="library" level="project" name="org.glassfish.jersey.media:jersey-media-moxy:2.2" />
+        </element>
+        <element id="directory" name="classes">
+          <element id="module-output" name="enccollegesim" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="enccollegesim/web/Web" />
+    </root>
+  </artifact>
+</component>

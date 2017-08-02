@@ -77,4 +77,16 @@ public class CollegeService {
             throw new DataNotFoundException("Unknown command.");
         }
     }
+
+    /**
+     * A simple test service.
+     *
+     * @return A success message.
+     */
+    @GET
+    @Path("/test")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getTest() {
+        return "Success.\n";
+    }
 }

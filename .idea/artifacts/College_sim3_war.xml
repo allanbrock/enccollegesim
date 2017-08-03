@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="College_sim3:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/College_sim3_war</output-path>
+    <root id="archive" name="College_sim3_war.war">
+      <element id="artifact" artifact-name="College_sim3:war exploded" />
+    </root>
+  </artifact>
+</component>

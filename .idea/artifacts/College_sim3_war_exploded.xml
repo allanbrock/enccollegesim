@@ -7,6 +7,7 @@
         <element id="directory" name="classes">
           <element id="module-output" name="enccollegesim" />
         </element>
+        <element id="directory" name="lib" />
       </element>
     </root>
   </artifact>

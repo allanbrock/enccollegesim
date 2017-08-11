@@ -14,6 +14,7 @@ import com.endicott.edu.models.NewsType;
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 100000;
 
+
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
@@ -32,7 +33,7 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
 
-        // Create a newfeed item about establishing the college.
+        // Create a News Feed item about establishing the college.
         NewsFeedItemModel note = new NewsFeedItemModel();
         note.setHour(college.getCurrentDay());
         note.setMessage("The college was established today!");
@@ -48,7 +49,7 @@ public class CollegeManager {
         return college;
     }
 
-    public static void sellCollege(String runId) {
+    static public void sellCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
@@ -74,5 +75,18 @@ public class CollegeManager {
         dormManager.handleTimeChange(runId, hoursAlive);
 
         return college;
+    }
+
+    static public boolean doesCollegeExist(String runId) {
+        CollegeDao collegeDao = new CollegeDao();
+
+        // See if there already is a college for this run.
+        // We don't expect this, but if so, just return it.
+        try {
+            CollegeModel college = collegeDao.getCollege(runId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

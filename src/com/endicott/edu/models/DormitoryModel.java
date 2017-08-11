@@ -11,6 +11,7 @@ public class DormitoryModel implements Serializable {
     private int hourLastTimeBillPaid = 0;
     private String name = "unknown";
     private String runId = "unknown";
+    private String note = "no note";
 
     public DormitoryModel() {
     }
@@ -61,5 +62,13 @@ public class DormitoryModel implements Serializable {
 
     public void setRunId(String runId) {
         this.runId = runId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

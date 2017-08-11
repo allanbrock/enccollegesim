@@ -7,7 +7,10 @@
         <element id="directory" name="classes">
           <element id="module-output" name="enccollegesim" />
         </element>
-        <element id="directory" name="lib" />
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="org.glassfish.jersey.core:jersey-client:2.25.1" />
+          <element id="library" level="project" name="org.glassfish.jersey.media:jersey-media-moxy:2.25.1" />
+        </element>
       </element>
     </root>
   </artifact>

@@ -1,7 +1,5 @@
 package com.endicott.edu.models;
 
-//import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.Serializable;
 
 /**
@@ -12,6 +10,7 @@ public class CollegeModel implements Serializable {
     private int hoursAlive = 0;
     private int availableCash = 0;
     private String runId = "unknown";
+    private String note = "empty";
 
     public int getAvailableCash() {
         return availableCash;
@@ -36,6 +35,14 @@ public class CollegeModel implements Serializable {
 
     public void setHoursAlive(int hoursAlive) {
         this.hoursAlive = hoursAlive;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public void advanceClock(int hours) {

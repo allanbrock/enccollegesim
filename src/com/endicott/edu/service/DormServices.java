@@ -5,11 +5,9 @@ package com.endicott.edu.service;
 
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.simulators.CollegeManager;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -17,6 +15,37 @@ import java.util.List;
 @Path("/dorms")
 public class DormServices {
     private DormitoryDao dao = new DormitoryDao();
+
+    /**
+     * Create a new dorm.
+     *
+     * @return college in JSON format
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public DormitoryModel postDorm(DormitoryModel dorm) {
+        if (dorm == null) {
+            DormitoryModel badDorm = new DormitoryModel();
+            badDorm.setNote("Didn't get a dorm");
+            return badDorm;
+        }
+        // Make sure the college exists, return error if not.
+        String runId = dorm.getRunId();
+        if (!CollegeManager.doesCollegeExist(runId)) {
+            //throw new DataNotFoundException("No such college.");
+            //dorm.setNote("College not found: " + runId + " Dorm: " + dorm.getName());
+            return dorm;
+        }
+
+        // Override some fields
+        dorm.setHourLastTimeBillPaid(0);
+
+        // Create a dorm
+        DormitoryDao dormDao = new DormitoryDao();
+        dormDao.saveNewDorm(runId, dorm);
+        return dorm;
+    }
 
     /**
      * Get a list of the dorms that are in the college.

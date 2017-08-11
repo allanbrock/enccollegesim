@@ -5,10 +5,7 @@ package com.endicott.edu.service; /**
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.models.NewsFeedItemModel;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -21,5 +18,32 @@ public class NewsFeedService {
     public List<NewsFeedItemModel> getNewsFeed(@PathParam("runId") String runId) {
         NewsFeedDao dao = new NewsFeedDao();
         return dao.getAllNotes(runId);
+    }
+
+//    @POST
+//    @Path("/{runId}")
+//    @Produces(MediaType.TEXT_HTML)
+//    public String post(@PathParam("runId") String runId) {
+//        return "Hello added.";
+//    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_HTML)
+    public String post(NewsFeedItemModel news) {
+        // This has an issue.  Not receiving the news that was sent.
+        // Getting an empty NewsFeedItemModel 
+        return news.getMessage();
+    }
+    /**
+     * A simple test service.
+     *
+     * @return A success message.
+     */
+    @GET
+    @Path("/test")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getTest() {
+        return "Success.\n";
     }
 }

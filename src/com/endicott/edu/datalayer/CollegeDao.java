@@ -46,6 +46,7 @@ public class CollegeDao {
 
     public void saveCollege(CollegeModel college){
         try {
+            college.setNote(getFilePath(college.getRunId()));
             File file = new File(getFilePath(college.getRunId()));
             file.createNewFile();
             FileOutputStream fos;

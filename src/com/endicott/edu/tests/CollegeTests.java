@@ -1,7 +1,6 @@
 package com.endicott.edu.tests;
 
 import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.service.ServiceUtils;
 import com.endicott.edu.simulators.CollegeManager;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -20,17 +19,23 @@ public class CollegeTests {
     private Client client;
     private static final String PASS = "pass";
     private static final String FAIL = "fail";
+    private String serviceUrl;
 
     private void init(){
         this.client = ClientBuilder.newClient(new ClientConfig());
         //this.client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
     }
 
-    public static void runTests(){
+    public void setServiceUrl(String serviceUrl) {
+        this.serviceUrl = serviceUrl;
+    }
+
+    public static void runTests(String serviceUrl){
         CollegeTests tester = new CollegeTests();
+        System.out.println("Testing service: " + serviceUrl);
 
         tester.init();
-
+        tester.setServiceUrl(serviceUrl);
         tester.testFetchMissingCollege("test123");
         tester.testCreateCollege("test009");
         tester.testGetCollege("test009");
@@ -42,7 +47,7 @@ public class CollegeTests {
 
         System.out.print("Test case name: testFetchMissingCollege...");
 
-        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 
         Response response = invocationBuilder.get();
@@ -59,7 +64,7 @@ public class CollegeTests {
 
         System.out.print("Test case name: testGetCollege...");
 
-        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 
         Response response = invocationBuilder.get();
@@ -79,7 +84,7 @@ public class CollegeTests {
 
         System.out.print("Test case name: testCreateCollege...");
 
-        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 
         // Delete the college (if it already exists)
@@ -113,7 +118,7 @@ public class CollegeTests {
 
         System.out.print("Test case name: testDeleteCollege...");
 
-        WebTarget webTarget = client.target(ServiceUtils.SERVICE_URL + "college/" + runId);
+        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request();
 
         Response response = invocationBuilder.delete();

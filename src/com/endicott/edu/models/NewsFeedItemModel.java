@@ -1,14 +1,15 @@
 package com.endicott.edu.models;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Created by abrocken on 7/23/2017.
  */
-//@XmlRootElement
+@XmlRootElement
 public class NewsFeedItemModel implements Serializable {
     int hour = 0;
-    String message = "";
+    String message = "Nothing is new.";
     NewsType noteType = NewsType.UNKNOWN_NOTE;
     String runId = "unknown";
 

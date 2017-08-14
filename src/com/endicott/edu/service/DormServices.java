@@ -1,11 +1,9 @@
 package com.endicott.edu.service;
-/**
- * Provides restful services for working with college dorms.
- */
 
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.simulators.CollegeManager;
+import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,23 +16,33 @@ public class DormServices {
 
     /**
      * Create a new dorm.
+     * Notice that it consumes "text plain".  It really should be  APPLICATION_JSON
+     * but having trouble getting this to work.
      *
      * @return college in JSON format
      */
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public DormitoryModel postDorm(DormitoryModel dorm) {
+    public DormitoryModel postDorm(String dormJsonString) {
+        Gson g = new Gson();
+        DormitoryModel dorm = g.fromJson(dormJsonString, DormitoryModel.class);
+
+        // This is not very good error handling.  We should return HTTP error.
         if (dorm == null) {
             DormitoryModel badDorm = new DormitoryModel();
             badDorm.setNote("Didn't get a dorm");
             return badDorm;
         }
+
+        // What if we already have a dorm with the same name?
+        // We should return an error.
+
         // Make sure the college exists, return error if not.
         String runId = dorm.getRunId();
         if (!CollegeManager.doesCollegeExist(runId)) {
             //throw new DataNotFoundException("No such college.");
-            //dorm.setNote("College not found: " + runId + " Dorm: " + dorm.getName());
+            dorm.setNote("College not found: " + runId + " Dorm: " + dorm.getName());
             return dorm;
         }
 
@@ -44,6 +52,7 @@ public class DormServices {
         // Create a dorm
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
+        dorm.setNote("created dorm.");
         return dorm;
     }
 

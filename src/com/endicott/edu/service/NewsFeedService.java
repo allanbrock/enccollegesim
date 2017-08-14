@@ -1,6 +1,6 @@
-package com.endicott.edu.service; /**
- * Created by abrocken on 7/8/2017.
- */
+package com.endicott.edu.service;
+
+//Created by abrocken on 7/8/2017.
 
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.models.NewsFeedItemModel;
@@ -20,21 +20,6 @@ public class NewsFeedService {
         return dao.getAllNotes(runId);
     }
 
-//    @POST
-//    @Path("/{runId}")
-//    @Produces(MediaType.TEXT_HTML)
-//    public String post(@PathParam("runId") String runId) {
-//        return "Hello added.";
-//    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_HTML)
-    public String post(NewsFeedItemModel news) {
-        // This has an issue.  Not receiving the news that was sent.
-        // Getting an empty NewsFeedItemModel 
-        return news.getMessage();
-    }
     /**
      * A simple test service.
      *

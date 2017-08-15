@@ -8,9 +8,8 @@ import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsFeedItemModel;
 import com.endicott.edu.models.NewsType;
 
-/**
- * Created by abrocken on 7/24/2017.
- */
+// Created by abrocken on 7/24/2017.
+
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 100000;
 
@@ -21,9 +20,8 @@ public class CollegeManager {
         // See if there already is a college for this run.
         // We don't expect this, but if so, just return it.
         try {
-            CollegeModel college = collegeDao.getCollege(runId);
-            return college;
-        } catch (Exception e) {
+            return collegeDao.getCollege(runId);
+        } catch (Exception ignored) {
         }
 
         // Create the college.

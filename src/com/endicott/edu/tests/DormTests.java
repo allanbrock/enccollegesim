@@ -1,7 +1,6 @@
 package com.endicott.edu.tests;
 
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.models.DormitoriesModel;
 import org.glassfish.jersey.client.ClientConfig;
 
 import javax.ws.rs.client.Client;
@@ -13,12 +12,11 @@ import javax.ws.rs.core.Response;
 
 // Created by abrocken on 7/17/2017.
 
-class CollegeTests {
+class DormTests {
     private Client client;
     private static final String PASS = "pass";
     private static final String FAIL = "fail";
-    private static final String TEST_COLLEGE_ID = "test_automated_001";
-    private static final String TEST_COLLEGE_ID_MISSING = "test_automated_xyz";
+    private static final String COLLEGE_TEST_ID = "testdorm";
     private String serviceUrl;
 
     private void init(){
@@ -31,63 +29,21 @@ class CollegeTests {
     }
 
     static void runTests(String serviceUrl){
-        CollegeTests tester = new CollegeTests();
+        DormTests tester = new DormTests();
 
         tester.init();
         tester.setServiceUrl(serviceUrl);
-        tester.testFetchMissingCollege(TEST_COLLEGE_ID_MISSING);
-        tester.testCreateCollege(TEST_COLLEGE_ID);
-        tester.testGetCollege(TEST_COLLEGE_ID);
-        tester.testDeleteCollege(TEST_COLLEGE_ID);
+        tester.testCreateCollegeWithDorm(COLLEGE_TEST_ID);
+        tester.testDeleteCollege(COLLEGE_TEST_ID);
     }
 
-    private void testFetchMissingCollege(String runId) {
+    private void testCreateCollegeWithDorm(String runId){
         String result = PASS;
 
-        System.out.print("Test case name: testFetchMissingCollege...");
+        System.out.print("Test case name: testCreateCollegeWithDorm...");
 
         WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
-
-        Response response = invocationBuilder.get();
-        if(response.getStatus() != 404) {
-            System.out.println("    Got unexpected response college.");
-            result = FAIL;
-        }
-
-        System.out.println(" Result: " + result );
-    }
-
-    private void testGetCollege(String runId){
-        String result = PASS;
-
-        System.out.print("Test case name: testGetCollege...");
-
-        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
-        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
-
-        Response response = invocationBuilder.get();
-        CollegeModel college = response.readEntity(CollegeModel.class);
-
-        if(response.getStatus() != 200 || college.getHoursAlive() != 1 || college.getAvailableCash() != CollegeManager.STARTUP_FUNDING) {
-            System.out.println("    Got bad college response or contents.");
-            result = FAIL;
-        }
-
-        System.out.println(" Result: " + result );
-    }
-
-
-    private void testCreateCollege(String runId){
-        String result = PASS;
-
-        System.out.print("Test case name: testCreateCollege...");
-
-        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
-        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
-
-        // Delete the college (if it already exists)
-        //Response response = invocationBuilder.delete();
 
         // Create college
         Response response = invocationBuilder.post(null);
@@ -98,11 +54,14 @@ class CollegeTests {
             return;
         }
 
-        // Get newly created college.
+        // Get dorm from newly created college.
+        client.target(serviceUrl + "dorms/" + runId);
         response = invocationBuilder.get();
-        CollegeModel college = response.readEntity(CollegeModel.class);
 
-        if(response.getStatus() != 200 || college.getHoursAlive() != 1 || college.getAvailableCash() != CollegeManager.STARTUP_FUNDING) {
+        //List<DormitoryModel> dorms = response.readEntity(List.class);
+        DormitoriesModel dorms = response.readEntity(DormitoriesModel.class);
+
+        if(response.getStatus() != 200 && dorms.getDormList().size() != 1) {
             System.out.println("    Got bad college response or contents:" + response.getStatus());
             result = FAIL;
         }

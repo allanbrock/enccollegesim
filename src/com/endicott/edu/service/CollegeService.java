@@ -1,6 +1,6 @@
-package com.endicott.edu.service; /**
- * Created by abrocken on 7/8/2017.
- */
+package com.endicott.edu.service;
+
+// Created by abrocken on 7/8/2017.
 
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.exceptions.DataNotFoundException;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 // The Java class will be hosted at the URI path "/helloworld"
 @Path("/college")
 public class CollegeService {
-    CollegeDao collegeDao = new CollegeDao();
+    private CollegeDao collegeDao = new CollegeDao();
 
     /**
      * Retrieve a college simulation that already exists.
@@ -25,8 +25,7 @@ public class CollegeService {
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
     public CollegeModel getCollege(@PathParam("runId") String runId) {
-        CollegeModel college = collegeDao.getCollege(runId);
-        return college;
+        return collegeDao.getCollege(runId);
     }
 
     /**
@@ -55,7 +54,7 @@ public class CollegeService {
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteCollege(@PathParam("runId") String runId) {
         CollegeManager president = new CollegeManager();
-        president.sellCollege(runId);
+        CollegeManager.sellCollege(runId);
         return "College might have been deleted.\n";
     }
 

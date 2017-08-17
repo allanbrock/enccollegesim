@@ -3,12 +3,12 @@ package com.endicott.edu.service;
 // Created by abrocken on 7/8/2017.
 
 import com.endicott.edu.datalayer.CollegeDao;
-import com.endicott.edu.exceptions.DataNotFoundException;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.simulators.CollegeManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 // The Java class will be hosted at the URI path "/helloworld"
 @Path("/college")
@@ -73,7 +73,7 @@ public class CollegeService {
         if (command.equalsIgnoreCase("nextDay")) {
             return CollegeManager.nextDay(runId);
         } else {
-            throw new DataNotFoundException("Unknown command.");
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
     }
 

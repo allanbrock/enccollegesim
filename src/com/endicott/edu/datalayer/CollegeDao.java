@@ -1,13 +1,13 @@
 package com.endicott.edu.datalayer;
 
-import com.endicott.edu.exceptions.DataNotFoundException;
 import com.endicott.edu.models.CollegeModel;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.*;
 
-/**
- * Created by abrocken on 7/17/2017.
- */
+// Created by abrocken on 7/17/2017.
+
 public class CollegeDao {
     private String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "college.dat";
@@ -22,7 +22,7 @@ public class CollegeDao {
             File file = new File(getFilePath(runId));
 
             if (!file.exists()) {
-                throw new DataNotFoundException("Couldn't find college for runId " + runId);
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
             }
             else{
                 FileInputStream fis = new FileInputStream(file);
@@ -54,8 +54,6 @@ public class CollegeDao {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(college);
             oos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

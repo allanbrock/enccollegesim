@@ -8,6 +8,8 @@ import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsFeedItemModel;
 import com.endicott.edu.models.NewsType;
 
+import java.util.logging.Logger;
+
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
@@ -17,14 +19,20 @@ public class CollegeManager {
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
+        Logger logger = Logger.getLogger("CollegeManager");
+        logger.info("Establishing a college");
+
         // See if there already is a college for this run.
         // We don't expect this, but if so, just return it.
+        logger.info("Checking if college exists.");
         try {
+            logger.info("College exists.");
             return collegeDao.getCollege(runId);
         } catch (Exception ignored) {
         }
 
         // Create the college.
+        logger.info("Creating college");
         CollegeModel college = new CollegeModel();
         college.setRunId(runId);
         college.setHoursAlive(1);
@@ -32,6 +40,7 @@ public class CollegeManager {
         collegeDao.saveCollege(college);
 
         // Create a News Feed item about establishing the college.
+        logger.info("Creating newsfeed");
         NewsFeedItemModel note = new NewsFeedItemModel();
         note.setHour(college.getCurrentDay());
         note.setMessage("The college was established today!");
@@ -40,10 +49,13 @@ public class CollegeManager {
         noteDao.saveNote(runId, note);
 
         // Create a dorm
+
+        logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Frates", runId);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
 
+        logger.info("Done creating college");
         return college;
     }
 

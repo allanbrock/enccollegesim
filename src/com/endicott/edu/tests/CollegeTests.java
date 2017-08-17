@@ -17,7 +17,7 @@ class CollegeTests {
     private Client client;
     private static final String PASS = "pass";
     private static final String FAIL = "fail";
-    private static final String TEST_COLLEGE_ID = "test_automated_001";
+    private static final String TEST_COLLEGE_ID = "test_automated_005";
     private static final String TEST_COLLEGE_ID_MISSING = "test_automated_xyz";
     private String serviceUrl;
 
@@ -87,10 +87,10 @@ class CollegeTests {
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 
         // Delete the college (if it already exists)
-        //Response response = invocationBuilder.delete();
+        Response response = invocationBuilder.delete();
 
         // Create college
-        Response response = invocationBuilder.post(null);
+        response = invocationBuilder.post(null);
 
         //Response response = invocationBuilder.post(Entity.entity(college, MediaType.APPLICATION_JSON));
         if(response.getStatus() != 200) {

@@ -1,6 +1,5 @@
 package com.endicott.edu.application;
 
-import com.endicott.edu.exceptions.DataNotFoundExceptionMapper;
 import com.endicott.edu.service.CollegeService;
 import com.endicott.edu.service.DormServices;
 import com.endicott.edu.service.NewsFeedService;
@@ -24,7 +23,6 @@ public class MyApplication extends Application{
         h.add( NewsFeedService.class );
         h.add( org.glassfish.jersey.moxy.json.MoxyJsonFeature.class);  // This enables JSON binding support
         h.add( JsonMoxyConfigurationContextResolver.class);
-        h.add( DataNotFoundExceptionMapper.class);
         return h;
     }
 }

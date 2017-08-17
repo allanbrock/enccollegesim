@@ -2,18 +2,21 @@ package com.endicott.edu.datalayer;
 
 import com.endicott.edu.models.DormitoryModel;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
-/**
- * Created by abrocken on 7/17/2017.
- */
+// Created by abrocken on 7/17/2017.
+
 public class DormitoryDao {
     private String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "dormitory.dat";
     }
+    private Logger logger = Logger.getLogger("DormitoryDao");
 
     public List<DormitoryModel> getDorms(String runId) {
         ArrayList<DormitoryModel> dorms = new ArrayList<>();
@@ -22,7 +25,7 @@ public class DormitoryDao {
             File file = new File(getFilePath(runId));
 
             if (!file.exists()) {
-                return dorms;
+                return dorms;  // There are no dorms yet.
             }
             else{
                 FileInputStream fis = new FileInputStream(file);
@@ -38,6 +41,7 @@ public class DormitoryDao {
     }
 
     public void saveAllDorms(String runId, List<DormitoryModel> notes){
+        logger.info("Saving all dorm...");
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();
@@ -47,13 +51,20 @@ public class DormitoryDao {
             oos.writeObject(notes);
             oos.close();
         } catch (FileNotFoundException e) {
+            logger.info("Got file not found when attempting to create: " + getFilePath(runId));
             e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
+            logger.info("Got io exceptionfound when attempting to create: " + getFilePath(runId));
             e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
+
+        logger.info("Saved dorms...");
     }
 
     public void saveNewDorm(String runId, DormitoryModel dorm) {
+        logger.info("Saving new dorm...");
         List<DormitoryModel> dorms = getDorms(runId);
         dorm.setRunId(runId);
         dorms.add(dorm);
@@ -74,7 +85,7 @@ public class DormitoryDao {
         DormitoryDao dao = new DormitoryDao();
         DormitoryModel m1 = new DormitoryModel(100, 10, 0, "Frates", runId );
         DormitoryModel m2 = new DormitoryModel(200, 10, 0, "Hamilton", runId);
-        ArrayList<DormitoryModel> dorms = new ArrayList<DormitoryModel>();
+        ArrayList<DormitoryModel> dorms = new ArrayList<>();
         dorms.add(m1);
         dorms.add(m2);
         dao.saveAllDorms(runId, dorms);

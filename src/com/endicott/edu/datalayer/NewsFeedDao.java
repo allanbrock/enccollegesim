@@ -3,14 +3,15 @@ package com.endicott.edu.datalayer;
 import com.endicott.edu.models.NewsFeedItemModel;
 import com.endicott.edu.models.NewsType;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by abrocken on 7/17/2017.
- */
+// Created by abrocken on 7/17/2017.
+
 public class NewsFeedDao {
     private String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "newsfeed.dat";
@@ -62,10 +63,9 @@ public class NewsFeedDao {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(notes);
             oos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -89,7 +89,7 @@ public class NewsFeedDao {
         NewsFeedDao dao = new NewsFeedDao();
         NewsFeedItemModel m1 = new NewsFeedItemModel(1, "Day One - msg 1", NewsType.GENERAL_NOTE, "000");
         NewsFeedItemModel m2 = new NewsFeedItemModel(1, "Day One - msg 2", NewsType.GENERAL_NOTE, "000");
-        ArrayList<NewsFeedItemModel> notes = new ArrayList<NewsFeedItemModel>();
+        ArrayList<NewsFeedItemModel> notes = new ArrayList<>();
         notes.add(m1);
         notes.add(m2);
         dao.saveAllNotes("000", notes);

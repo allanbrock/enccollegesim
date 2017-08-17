@@ -16,7 +16,7 @@ import java.util.Set;
 public class MyApplication extends Application{
     //The method returns a non-empty collection with classes, that must be included in the published JAX-RS application
     @SuppressWarnings("unchecked")
-    @Override 
+    @Override
     public Set<Class<?>> getClasses() {
         HashSet h = new HashSet<Class<?>>();
         h.add(DormServices.class);

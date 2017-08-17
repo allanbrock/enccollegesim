@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 // The Java class will be hosted at the URI path "/finances"
@@ -28,22 +29,13 @@ public class DormServices {
         Gson g = new Gson();
         DormitoryModel dorm = g.fromJson(dormJsonString, DormitoryModel.class);
 
-        // This is not very good error handling.  We should return HTTP error.
-        if (dorm == null) {
-            DormitoryModel badDorm = new DormitoryModel();
-            badDorm.setNote("Didn't get a dorm");
-            return badDorm;
-        }
-
         // What if we already have a dorm with the same name?
         // We should return an error.
 
         // Make sure the college exists, return error if not.
         String runId = dorm.getRunId();
         if (!CollegeManager.doesCollegeExist(runId)) {
-            //throw new DataNotFoundException("No such college.");
-            dorm.setNote("College not found: " + runId + " Dorm: " + dorm.getName());
-            return dorm;
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
         // Override some fields

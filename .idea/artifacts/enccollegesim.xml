@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="enccollegesim">
+    <output-path>$PROJECT_DIR$/out/artifacts/enccollegesim</output-path>
+    <root id="archive" name="enccollegesim.war">
+      <element id="artifact" artifact-name="enccollegesim exploded" />
+    </root>
+  </artifact>
+</component>

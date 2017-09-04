@@ -84,8 +84,17 @@ public class CollegeService {
      */
     @GET
     @Path("/test")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_HTML)
     public String getTest() {
-        return "Success.\n";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<body>\n");
+        sb.append("<p>Success!</p>");
+        sb.append("<p></p>");
+        sb.append("<p><h1>Contributors</h1></p>");
+        sb.append("<p><h2>Fall 2017</h2></p>");
+        sb.append("<li>Allan Brockenbrough</l1>");
+        sb.append("</body>\n");
+        return(sb.toString());
     }
 }

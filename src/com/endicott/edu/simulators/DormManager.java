@@ -13,10 +13,11 @@ public class DormManager {
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<DormitoryModel> dorms = dao.getDorms(runId);
+
         for (DormitoryModel dorm : dorms) {
-            int newCharge = (hoursAlive - dorm.getHourLastTimeBillPaid()) * dorm.getCostPerHour();
+            int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getCostPerHour();
             Accountant.payBill(runId, newCharge);
-            dorm.setHourLastTimeBillPaid(hoursAlive);
+            dorm.setHourLastUpdated(hoursAlive);
         }
 
         dao.saveAllDorms(runId, dorms);

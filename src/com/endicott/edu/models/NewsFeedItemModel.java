@@ -1,12 +1,11 @@
 package com.endicott.edu.models;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Created by abrocken on 7/23/2017.
  */
-@XmlRootElement
+
 public class NewsFeedItemModel implements Serializable {
     int hour = 0;
     String message = "Nothing is new.";

@@ -39,7 +39,7 @@ public class DormServices {
         }
 
         // Override some fields
-        dorm.setHourLastTimeBillPaid(0);
+        dorm.setHourLastUpdated(0);
 
         // Create a dorm
         DormitoryDao dormDao = new DormitoryDao();

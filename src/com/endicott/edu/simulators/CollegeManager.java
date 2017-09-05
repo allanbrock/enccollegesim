@@ -51,7 +51,7 @@ public class CollegeManager {
         // Create a dorm
 
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Frates", runId);
+        DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall", runId);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
 

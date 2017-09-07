@@ -12,7 +12,7 @@ import java.util.List;
  * Created by abrocken on 7/29/2017.
  */
 public class DormManager {
-    private static final float PROBABILTY_OF_FLOOD = 0.01f;
+    private static final float PROBABILTY_OF_FLOOD = 0.005f;
     DormitoryDao dao = new DormitoryDao();
 
     public void handleTimeChange(String runId, int hoursAlive) {

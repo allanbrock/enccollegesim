@@ -20,7 +20,7 @@ public class CollegeManager {
         CollegeDao collegeDao = new CollegeDao();
 
         Logger logger = Logger.getLogger("CollegeManager");
-        logger.info("Establishing a college");
+        logger.info("Establishing the college");
 
         // See if there already is a college for this run.
         // We don't expect this, but if so, just return it.

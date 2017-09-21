@@ -11,13 +11,13 @@ public class DaoUtils {
     private static Logger logger = Logger.getLogger("DaoUtils");
 
     static public String getFilePathPrefix(String runId) {
-        return getCollegeStorageDirectory() + "\\" + runId;
+        return getCollegeStorageDirectory() + File.separator + runId;
     }
 
     static private String getCollegeStorageDirectory() {
-        String collegeDir = System.getenv("SystemDrive")+"\\collegesim";
+        String collegeDir = System.getenv("SystemDrive")+ File.separator +"collegesim";
         logger.info("File location of colleges is: " + collegeDir);
         new File(collegeDir).mkdirs();
-        return System.getenv("SystemDrive")+"\\collegesim";
+        return collegeDir;
     }
 }

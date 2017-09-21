@@ -8,11 +8,13 @@ import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 // Created by abrocken on 7/17/2017.
 
 public class NewsFeedDao {
+    private Logger logger = Logger.getLogger("NewFeedDao");
     private String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "newsfeed.dat";
     }
@@ -64,6 +66,7 @@ public class NewsFeedDao {
             oos.writeObject(notes);
             oos.close();
         } catch (IOException e) {
+            logger.info("Cannot create file: " + getFilePath(runId));
             e.printStackTrace();
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /**
- * Created by abrocken on 7/20/2017.
+ * Created by abrocken on 7/20/2017. 
  */
 public class DaoUtils {
     private String REST_SERVICE_URL = "http://localhost:8080/College_sim3_war_exploded/finances";

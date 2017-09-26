@@ -94,7 +94,8 @@ public class CollegeService {
         sb.append("<p><h1>Contributors</h1></p>");
         sb.append("<p><h2>Fall 2017</h2></p>");
         sb.append("<li>Allan Brockenbrough</l1>");
-        sb.append("<li>Nick Scrivani</l1>");
+        sb.append("<li>Connor Frazier</li>");
+        sb.append("<li>Jeff Thor</li>");
         sb.append("</body>\n");
         return(sb.toString());
     }

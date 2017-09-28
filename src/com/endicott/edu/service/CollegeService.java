@@ -96,7 +96,6 @@ public class CollegeService {
         sb.append("<li>Allan Brockenbrough</l1>");
         sb.append("<li>Allison Flood</l1>");
         sb.append("<li>Connor Frazier</l1>");
-        sb.append("<li>Chris Seidl</l1>");
         sb.append("</body>\n");
         return(sb.toString());
     }

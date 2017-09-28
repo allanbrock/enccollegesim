@@ -99,6 +99,7 @@ public class CollegeService {
         sb.append("<li>Connor Frazier</l1>");
         sb.append("<li>Jeremy Doski</li>");
         sb.append("<li>Nick Scrivani");
+        sb.append("<li>Nick Dos Santos");
         sb.append("</body>\n");
         return(sb.toString());
     }

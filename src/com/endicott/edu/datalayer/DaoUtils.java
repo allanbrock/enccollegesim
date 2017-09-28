@@ -1,12 +1,23 @@
 package com.endicott.edu.datalayer;
 
+import java.io.File;
+import java.util.logging.Logger;
+
 /**
- * Created by abrocken on 7/20/2017.
+ * Created by abrocken on 7/20/2017. 
  */
 public class DaoUtils {
     private String REST_SERVICE_URL = "http://localhost:8080/College_sim3_war_exploded/finances";
+    private static Logger logger = Logger.getLogger("DaoUtils");
 
     static public String getFilePathPrefix(String runId) {
-        return System.getenv("SystemDrive")+"\\Users\\"+System.getProperty("user.name")+"\\collegesim_" + runId + "_";
+        return getCollegeStorageDirectory() + File.separator + runId;
+    }
+
+    static private String getCollegeStorageDirectory() {
+        String collegeDir = System.getenv("SystemDrive")+ File.separator +"collegesim";
+        logger.info("File location of colleges is: " + collegeDir);
+        new File(collegeDir).mkdirs();
+        return collegeDir;
     }
 }

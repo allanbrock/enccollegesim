@@ -2,7 +2,17 @@
   <artifact type="war" name="enccollegesim">
     <output-path>$PROJECT_DIR$/out/artifacts/enccollegesim</output-path>
     <root id="archive" name="enccollegesim.war">
-      <element id="artifact" artifact-name="enccollegesim exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="College_sim3" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="org.glassfish.jersey.core:jersey-client:2.25.1" />
+          <element id="library" level="project" name="org.glassfish.jersey.media:jersey-media-moxy:2.25.1" />
+          <element id="library" level="project" name="com.google.code.gson:gson:2.7" />
+          <element id="library" level="project" name="javax.servlet:jstl:1.2" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

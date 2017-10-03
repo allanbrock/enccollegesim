@@ -1,0 +1,105 @@
+package com.endicott.edu.datalayer;
+
+import com.endicott.edu.models.SportsModel;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+
+// Created by Nick DosSantos on 10/2/17.
+
+public class SportsDao {
+    private String getFilePath(String runId) {
+        return DaoUtils.getFilePathPrefix(runId) +  "sports.dat";
+    }
+    private Logger logger = Logger.getLogger("SportsDao");
+
+    public List<SportsModel> getSports(String runId) {
+        ArrayList<SportsModel> sports = new ArrayList<>();
+        SportsModel sportsModel = null;
+        try {
+            File file = new File(getFilePath(runId));
+
+            if (!file.exists()) {
+                return sports;  // There are no sports yet.
+            }
+            else{
+                FileInputStream fis = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                sports = (ArrayList<SportsModel>) ois.readObject();
+                ois.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return sports;
+    }
+
+    public void saveAllSports(String runId, List<SportsModel> notes){
+        logger.info("Saving all sport...");
+        try {
+            File file = new File(getFilePath(runId));
+            file.createNewFile();
+            FileOutputStream fos;
+            fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(notes);
+            oos.close();
+        } catch (FileNotFoundException e) {
+            logger.info("Got file not found when attempting to create: " + getFilePath(runId));
+            e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            logger.info("Got io exceptionfound when attempting to create: " + getFilePath(runId));
+            e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
+        logger.info("Saved sports...");
+    }
+
+    public void saveNewSport(String runId, SportsModel sport) {
+        logger.info("Saving new sport...");
+        List<SportsModel> sports = getSports(runId);
+        sport.setRunId(runId);
+        sports.add(sport);
+        saveAllSports(runId, sports);
+    }
+
+    public void deleteSports(String runId) {
+        File file = new File(getFilePath(runId));
+        file.delete();
+    }
+
+    public static void main(String[] args) {
+        testNotes();
+    }
+
+    private static void testNotes() {
+        final String runId = "testsport001";
+        SportsDao dao = new SportsDao();
+        SportsModel m1 = new SportsModel(18, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Soccer", runId );
+        SportsModel m2 = new SportsModel(20, 30, 500, 0, 0, 10, 30, 1500, 3, 0, "Hockey", runId );
+        ArrayList<SportsModel> sports = new ArrayList<>();
+        sports.add(m1);
+        sports.add(m2);
+        dao.saveAllSports(runId, sports);
+
+        List<SportsModel> outMsgs = dao.getSports(runId);
+
+        assert(outMsgs.size() == 2);
+        assert(outMsgs.get(1).getCapacity() == 100);
+
+        SportsModel m3 = new SportsModel(10, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Test Team", runId );
+        dao.saveNewSport(runId, m3);
+        outMsgs = dao.getSports(runId);
+        assert(outMsgs.size() == 3);
+
+        System.out.println("Test case name: testSports, Result: pass");
+    }
+}

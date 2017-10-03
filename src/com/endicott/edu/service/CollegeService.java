@@ -95,12 +95,8 @@ public class CollegeService {
         sb.append("<p><h2>Fall 2017</h2></p>");
         sb.append("<li>Allan Brockenbrough</l1>");
         sb.append("<li>Mazlin Higbee</l1>");
-        sb.append("<li>Allison Flood</l1>");
-        sb.append("<li>Connor Frazier</l1>");
-        sb.append("<li>Jeremy Doski</li>");
-        sb.append("<li>Nick Scrivani");
-        sb.append("<li>Nick Dos Santos");
-        sb.append("<li>Cam Bleck</li>");
+        sb.append("<li>Nick Dos Santos</l1>");
+        sb.append("<li>Jeremy Doski</l1>");
         sb.append("</body>\n");
         return(sb.toString());
     }

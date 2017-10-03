@@ -9,14 +9,20 @@ public class DormitoryModel implements Serializable {
     private int capacity = 0;
     private int costPerHour = 0;
     private int hourLastUpdated = 0;
+    private int hrsTilComplete = 0;
+    public int numStudents = 0;
+    public String curDisaster = "none";
+    private String dormClass = "unknown";
     private String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
+    public int reputation = 5;
 
     public DormitoryModel() {
     }
 
-    public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, String runId) {
+    public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, int hrsTilComplete, int numStudents,
+                          String curDisaster, String dormClass, int reputation, String runId) {
         this.capacity = capacity;
         this.costPerHour = costPerHour;
         this.hourLastUpdated = hourLastUpdated;

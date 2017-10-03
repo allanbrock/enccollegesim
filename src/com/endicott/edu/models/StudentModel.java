@@ -16,6 +16,7 @@ public class StudentModel implements Serializable {
     private String dorm = "unknown";
     private String gender = "unknown";
     private String runId = "unknown";
+    private String note = "no note";
 
 
     public StudentModel() {
@@ -56,9 +57,9 @@ public class StudentModel implements Serializable {
         return team;
     }
 
-    public String getDorm() {
-        return dorm;
-    }
+    public String getDorm() { return dorm; }
+
+    public String getNote() { return note; }
 
     public String getGender() {
         return gender;
@@ -101,5 +102,7 @@ public class StudentModel implements Serializable {
     }
 
     public void setRunId(String runId) { this.runId = runId; }
+
+    public void setNote(String note) { this.note = note; }
 }
 

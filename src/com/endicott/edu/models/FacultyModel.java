@@ -24,12 +24,12 @@ public class FacultyModel implements Serializable {
         this.title = title;
     }
 
-    public String getConcentration() {
-        return concentration;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setConcentration(String concentration) {
-        this.concentration = concentration;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public long getSalary() {
@@ -56,26 +56,26 @@ public class FacultyModel implements Serializable {
         this.runId = runId;
     }
 
-    private String facultyName;
-    private String title;
-    private String concentration;
-    private long salary = 115000;
-    private String officeLocation;
+    private String facultyName; //simply the name
+    private String title; //EX: Assoicate prof, Dean, VP...
+    private String department; //department of the faculty member EX: Math, Computer Science, Biology
+    private long salary = 115000; //yearly salary
+    private String officeLocation; //office building and number
     private String runId;
 
-    public FacultyModel(String facultyName, String title, String concentration, long salary, String officeLocation, String runId) {
+    public FacultyModel(String facultyName, String title, String department, long salary, String officeLocation, String runId) {
         this.facultyName = facultyName;
         this.title = title;
-        this.concentration = concentration;
+        this.department = department;
         this.salary = salary;
         this.officeLocation = officeLocation;
         this.runId = runId;
     }
 
-    public FacultyModel(String facultyName, String title, String concentration, String officeLocation, String runId) {
+    public FacultyModel(String facultyName, String title, String department, String officeLocation, String runId) {
         this.facultyName = facultyName;
         this.title = title;
-        this.concentration = concentration;
+        this.department = department;
         this.officeLocation = officeLocation;
         this.runId = runId;
     }

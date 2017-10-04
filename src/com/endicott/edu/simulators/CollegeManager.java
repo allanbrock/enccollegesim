@@ -3,10 +3,8 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.NewsFeedDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.NewsFeedItemModel;
-import com.endicott.edu.models.NewsType;
+import com.endicott.edu.datalayer.SportsDao;
+import com.endicott.edu.models.*;
 
 import java.util.logging.Logger;
 
@@ -51,9 +49,16 @@ public class CollegeManager {
         // Create a dorm
 
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall", runId);
+        DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall",0, 0, "none", "none",5, runId);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
+
+        // Create a sports team
+
+        logger.info("Creating Sports Team");
+        SportsModel sport = new SportsModel(17, 30, 100, 0, 0, 0, 20, 0, 0, 0, "Men's Soccer", runId);
+        SportsDao sportDao = new SportsDao();
+        sportDao.saveNewSport(runId, sport);
 
         logger.info("Done creating college");
         return college;

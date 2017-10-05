@@ -1,6 +1,6 @@
 package com.endicott.edu.datalayer;
 
-import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.SportsModel;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -10,38 +10,38 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
-// Created by abrocken on 7/17/2017.
+// Created by Nick DosSantos on 10/2/17.
 
-public class DormitoryDao {
+public class SportsDao {
     private String getFilePath(String runId) {
-        return DaoUtils.getFilePathPrefix(runId) +  "dormitory.dat";
+        return DaoUtils.getFilePathPrefix(runId) +  "sports.dat";
     }
-    private Logger logger = Logger.getLogger("DormitoryDao");
+    private Logger logger = Logger.getLogger("SportsDao");
 
-    public List<DormitoryModel> getDorms(String runId) {
-        ArrayList<DormitoryModel> dorms = new ArrayList<>();
-        DormitoryModel dormModel = null;
+    public List<SportsModel> getSports(String runId) {
+        ArrayList<SportsModel> sports = new ArrayList<>();
+        SportsModel sportsModel = null;
         try {
             File file = new File(getFilePath(runId));
 
             if (!file.exists()) {
-                return dorms;  // There are no dorms yet.
+                return sports;  // There are no sports yet.
             }
             else{
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                dorms = (ArrayList<DormitoryModel>) ois.readObject();
+                sports = (ArrayList<SportsModel>) ois.readObject();
                 ois.close();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        return dorms;
+        return sports;
     }
 
-    public void saveAllDorms(String runId, List<DormitoryModel> notes){
-        logger.info("Saving all dorm...");
+    public void saveAllSports(String runId, List<SportsModel> notes){
+        logger.info("Saving all sport...");
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();
@@ -60,18 +60,18 @@ public class DormitoryDao {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        logger.info("Saved dorms...");
+        logger.info("Saved sports...");
     }
 
-    public void saveNewDorm(String runId, DormitoryModel dorm) {
-        logger.info("Saving new dorm...");
-        List<DormitoryModel> dorms = getDorms(runId);
-        dorm.setRunId(runId);
-        dorms.add(dorm);
-        saveAllDorms(runId, dorms);
+    public void saveNewSport(String runId, SportsModel sport) {
+        logger.info("Saving new sport...");
+        List<SportsModel> sports = getSports(runId);
+        sport.setRunId(runId);
+        sports.add(sport);
+        saveAllSports(runId, sports);
     }
 
-    public void deleteDorms(String runId) {
+    public void deleteSports(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }
@@ -80,31 +80,26 @@ public class DormitoryDao {
         testNotes();
     }
 
-
     private static void testNotes() {
-        final String runId = "testdorm001";
-        DormitoryDao dao = new DormitoryDao();
+        final String runId = "testsport001";
+        SportsDao dao = new SportsDao();
+        SportsModel m1 = new SportsModel(18, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Soccer", runId );
+        SportsModel m2 = new SportsModel(20, 30, 500, 0, 0, 10, 30, 1500, 3, 0, "Hockey", runId );
+        ArrayList<SportsModel> sports = new ArrayList<>();
+        sports.add(m1);
+        sports.add(m2);
+        dao.saveAllSports(runId, sports);
 
-        DormitoryModel m1 = new DormitoryModel(100, 10, 0, "Hampshire Hall",
-                0, 0, "none", "none", 5,runId );
-        DormitoryModel m2 = new DormitoryModel(200, 10, 0, "Vermont House",
-                0, 0, "none", "none",5, runId);
-        ArrayList<DormitoryModel> dorms = new ArrayList<>();
-        dorms.add(m1);
-        dorms.add(m2);
-        dao.saveAllDorms(runId, dorms);
-
-        List<DormitoryModel> outMsgs = dao.getDorms(runId);
+        List<SportsModel> outMsgs = dao.getSports(runId);
 
         assert(outMsgs.size() == 2);
         assert(outMsgs.get(1).getCapacity() == 100);
 
-        DormitoryModel m3 = new DormitoryModel(300, 10, 0, "Maine Manor",
-                0, 0, "none","none",5, runId);
-        dao.saveNewDorm(runId, m3);
-        outMsgs = dao.getDorms(runId);
+        SportsModel m3 = new SportsModel(10, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Test Team", runId );
+        dao.saveNewSport(runId, m3);
+        outMsgs = dao.getSports(runId);
         assert(outMsgs.size() == 3);
 
-        System.out.println("Test case name: testDorms, Result: pass");
+        System.out.println("Test case name: testSports, Result: pass");
     }
 }

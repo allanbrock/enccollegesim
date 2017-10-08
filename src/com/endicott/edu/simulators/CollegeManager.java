@@ -55,7 +55,7 @@ public class CollegeManager {
 
         // Create a sports team
         logger.info("Creating Sports Team");
-        SportsModel sport = new SportsModel(17, 30, 100, 0, 0, 0, 20, 0, 0, 0, "Men's Soccer", runId);
+        SportModel sport = new SportModel(17, 30, 100, 0, 0, 0, 20, 0, 0, 0, "Men's Soccer", runId);
         SportsDao sportDao = new SportsDao();
         sportDao.saveNewSport(runId, sport);
 

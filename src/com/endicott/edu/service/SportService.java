@@ -1,9 +1,7 @@
 package com.endicott.edu.service;
 
-import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.SportsDao;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.SportsModel;
+import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.google.gson.Gson;
 
@@ -27,9 +25,9 @@ public class SportService {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public SportsModel addSport(String sportJsonString) {
+    public SportModel addSport(String sportJsonString) {
         Gson g = new Gson();
-        SportsModel sport = g.fromJson(sportJsonString, SportsModel.class);
+        SportModel sport = g.fromJson(sportJsonString, SportModel.class);
 
         // What if we already have a dorm with the same name?
         // We should return an error.
@@ -59,7 +57,7 @@ public class SportService {
     @GET
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SportsModel> getSports(@PathParam("runId") String runId) {
+    public List<SportModel> getSports(@PathParam("runId") String runId) {
         return dao.getSports(runId);
     }
 

@@ -61,7 +61,7 @@ public class CollegeManager {
         StudentDao studentDao = new StudentDao();
         Random rand = new Random();
 
-        for(int i = 0; i < 100; i++){
+//        for(int i = 0; i < 100; i++){
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
@@ -75,7 +75,7 @@ public class CollegeManager {
             }
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
-        }
+        //}
 
         logger.info("Done creating college");
         return college;

@@ -7,11 +7,10 @@ import java.io.Serializable;
  */
 public class StudentModel implements Serializable {
 
-    private String name = "unknown";
     private int idNumber = 0;
-    private int happinessLevel = 0;
+    private int happinessLevel = 0; //0-100
     private boolean athlete = false;
-    private int athleticAbility = 0;
+    private int athleticAbility = 0; //0-10
     private String team = "unknown";
     private String dorm = "unknown";
     private String gender = "unknown";
@@ -22,8 +21,7 @@ public class StudentModel implements Serializable {
     public StudentModel() {
     }
 
-    public StudentModel(String name, int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String Gender, String runId) {
-        this.name = name;
+    public StudentModel(int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String Gender, String runId) {
         this.idNumber = idNumber;
         this.happinessLevel = happinessLevel;
         this.athlete = athlete;
@@ -31,10 +29,6 @@ public class StudentModel implements Serializable {
         this.dorm = dorm;
         this.gender = gender;
         this.runId = runId;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getIdNumber() {
@@ -67,10 +61,6 @@ public class StudentModel implements Serializable {
 
     public String getRunId() {
         return runId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setIdNumber(int idNumber) {

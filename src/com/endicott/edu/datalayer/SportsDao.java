@@ -42,6 +42,7 @@ public class SportsDao {
 
     public void saveAllSports(String runId, List<SportModel> notes){
         logger.info("Saving all sport...");
+
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();

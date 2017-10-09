@@ -88,6 +88,9 @@ public class CollegeManager {
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 
+        SportManager sportManager = new SportManager();
+        sportManager.handleTimeChange(runId, hoursAlive);
+
         return college;
     }
 

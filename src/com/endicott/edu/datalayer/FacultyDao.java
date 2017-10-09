@@ -29,6 +29,7 @@ public class FacultyDao {
      * @return ArrayList<FacultyModel> faculty
      */
     public List<FacultyModel> getFaculty(String runId) {
+        logger.info("Loading all faculty...");
         ArrayList<FacultyModel> faculty = new ArrayList<>();
         FacultyModel facultyModel = null; //not sure why this is defined and not used.....
         try {
@@ -44,6 +45,7 @@ public class FacultyDao {
                 ois.close();
             }
         } catch (IOException | ClassNotFoundException e) {
+            logger.warning("IO exception in retrieving faculty.. ");
             e.printStackTrace();
         }
 
@@ -53,14 +55,22 @@ public class FacultyDao {
 
     /**
      * This creates a new faculty member and then saves them to the master list
+     * After assigning them an ID
+     * THIS NEEDS TO BE USED TO CREATE NEW MEMBERS
      * @param runId
      * @param member
      */
     public void saveNewFaculty(String runId, FacultyModel member) {
-        logger.info("Saving new dorm...");
+        logger.info("Saving new faculty...");
         List<FacultyModel> faculty = getFaculty(runId);
         member.setRunId(runId);
+        //sets the faculty id number to the number of faculty in the list +1
+        if(member.getFacultyID() ==  -1){
+            member.setFacultyID(numberOfFaculty(runId) + 1);
+        }
+        logger.info("Creating faculty with ID: " + member.getFacultyID());
         faculty.add(member);
+
         saveAllFaculty(runId, faculty);
     }
 
@@ -70,7 +80,7 @@ public class FacultyDao {
      * @param faculty
      */
     private void saveAllFaculty(String runId, List<FacultyModel> faculty) {
-        logger.info("Saving all dorm...");
+        logger.info("Saving all faculty...");
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();
@@ -89,7 +99,7 @@ public class FacultyDao {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        logger.info("Saved dorms...");
+        logger.info("Saved faculty...");
 
     }
 
@@ -99,7 +109,37 @@ public class FacultyDao {
      */
     public void removeAllFaculty(String runId){
         File file = new File(getFilePath(runId));
+        logger.info("Removing all faculty from: " + getFilePath(runId));
         file.delete();
+    }
+
+    public void removeSingleFaculty(String runId,FacultyModel member){
+        logger.info("Removing faculty member..");
+        String tmp = member.getFacultyName();
+
+        List<FacultyModel> faculty = getFaculty(runId);
+        for( int i = 0; i < faculty.size(); i++){
+            if(member.getFacultyID() == faculty.get(i).getFacultyID()){
+                logger.info("removing " + faculty.get(i).getFacultyName());
+                faculty.remove(i);
+            }
+
+        }
+        saveAllFaculty(runId,faculty);
+
+        logger.info("Faculty member removed: " + tmp);
+
+
+    }
+
+    /**
+     * returns the number of faculty in the list for the college
+     * @param runId
+     * @return
+     */
+    public int numberOfFaculty(String runId){
+        return getFaculty(runId).size();
+
     }
 
 
@@ -123,6 +163,8 @@ public class FacultyDao {
         faculty.add(f2);
 
         fao.saveAllFaculty(runId,faculty);
+        assert(fao.numberOfFaculty(runId) == 2);
+        System.out.println(fao.numberOfFaculty(runId));
 
         List<FacultyModel> outMsgs = fao.getFaculty(runId);
 
@@ -133,10 +175,12 @@ public class FacultyDao {
 
         fao.saveNewFaculty(runId,f3);
         outMsgs = fao.getFaculty(runId);
-
+        System.out.println("Adding a new Faculty member..." + "ID: " + outMsgs.get(2).getFacultyID());
         assert(outMsgs.size() == 3);
-        System.out.println("Adding a new Faculty member...");
 
+        System.out.println("Removing object:  " + f3.getFacultyName() + "ID: " + f3.getFacultyID());
+        fao.removeSingleFaculty(runId,f3);
+        outMsgs = fao.getFaculty(runId);
         faculty.clear();
         System.out.println("Clearing list... ");
 
@@ -149,10 +193,12 @@ public class FacultyDao {
         System.out.println("Lets remove all the faculty.... ");
         fao.removeAllFaculty(runId);
 
+
+
         File file = new File(fao.getFilePath(runId));
         assert (!file.exists());
 
-        System.out.println("End of testing faculty");
+        System.out.println("End of testing faculty successful.");
     }
 
 

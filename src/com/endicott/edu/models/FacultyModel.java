@@ -8,6 +8,35 @@ import java.io.Serializable;
  * mhigb411@mail.endicott.edu
  */
 public class FacultyModel implements Serializable {
+
+    private long facultyID = -1; // a uniqueid for that member of the faculty.
+    private String facultyName; //simply the name
+    private String title; //EX: Assoicate prof, Dean, VP...
+    private String department; //department of the faculty member EX: Math, Computer Science, Biology
+    private long salary = 115000; //yearly salary
+    private String officeLocation; //office building and number
+    private String runId;
+
+    public FacultyModel(String facultyName, String title, String department, long salary, String officeLocation, String runId) {
+        this.facultyName = facultyName;
+        this.title = title;
+        this.department = department;
+        this.salary = salary;
+        this.officeLocation = officeLocation;
+        this.runId = runId;
+        this.facultyID = facultyID;
+    }
+
+    public FacultyModel(String facultyName, String title, String department, String officeLocation, String runId) {
+        this.facultyName = facultyName;
+        this.title = title;
+        this.department = department;
+        this.officeLocation = officeLocation;
+        this.runId = runId;
+        this.facultyID = facultyID;
+        this.salary = salary;
+    }
+
     public String getFacultyName() {
         return facultyName;
     }
@@ -55,30 +84,7 @@ public class FacultyModel implements Serializable {
     public void setRunId(String runId) {
         this.runId = runId;
     }
-
-    private String facultyName; //simply the name
-    private String title; //EX: Assoicate prof, Dean, VP...
-    private String department; //department of the faculty member EX: Math, Computer Science, Biology
-    private long salary = 115000; //yearly salary
-    private String officeLocation; //office building and number
-    private String runId;
-
-    public FacultyModel(String facultyName, String title, String department, long salary, String officeLocation, String runId) {
-        this.facultyName = facultyName;
-        this.title = title;
-        this.department = department;
-        this.salary = salary;
-        this.officeLocation = officeLocation;
-        this.runId = runId;
-    }
-
-    public FacultyModel(String facultyName, String title, String department, String officeLocation, String runId) {
-        this.facultyName = facultyName;
-        this.title = title;
-        this.department = department;
-        this.officeLocation = officeLocation;
-        this.runId = runId;
-    }
-
+    public long getFacultyID() { return facultyID; }
+    public void setFacultyID(long facultyID) { this.facultyID = facultyID;}
 
 }

@@ -52,7 +52,7 @@ public class StudentServices {
     }
 
     /**
-     * Get a list of the dorms that are in the college.
+     * Get a list of the students that are in the college.
      *
      * @param runId simulation ID
      * @return JSON formatted list.

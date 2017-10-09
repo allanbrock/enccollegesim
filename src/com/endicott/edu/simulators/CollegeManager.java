@@ -3,9 +3,10 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.NewsFeedDao;
-import com.endicott.edu.datalayer.SportsDao;
+import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.*;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 // Created by abrocken on 7/24/2017.
@@ -53,12 +54,28 @@ public class CollegeManager {
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
 
-        // Create a sports team
+        // Creating students
 
-        logger.info("Creating Sports Team");
-        SportsModel sport = new SportsModel(17, 30, 100, 0, 0, 0, 20, 0, 0, 0, "Men's Soccer", runId);
-        SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
+        logger.info("Creating students");
+        StudentModel student = new StudentModel();
+        StudentDao studentDao = new StudentDao();
+        Random rand = new Random();
+
+//        for(int i = 0; i < 100; i++){
+            student.setIdNumber(100000 + rand.nextInt(900000));
+            student.setHappinessLevel(rand.nextInt(100));
+            student.setAthlete(false);
+            student.setAthleticAbility(rand.nextInt(100));
+            student.setTeam("");
+            student.setDorm("");
+            if(rand.nextInt(1) == 1){
+                student.setGender("Male");
+            } else {
+                student.setGender("Female");
+            }
+            student.setRunId(runId);
+            studentDao.saveNewStudent(runId, student);
+        //}
 
         logger.info("Done creating college");
         return college;

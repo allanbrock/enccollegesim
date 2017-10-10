@@ -1,6 +1,6 @@
 package com.endicott.edu.datalayer;
 
-import com.endicott.edu.models.SportsModel;
+import com.endicott.edu.models.SportModel;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -18,9 +18,9 @@ public class SportsDao {
     }
     private Logger logger = Logger.getLogger("SportsDao");
 
-    public List<SportsModel> getSports(String runId) {
-        ArrayList<SportsModel> sports = new ArrayList<>();
-        SportsModel sportsModel = null;
+    public List<SportModel> getSports(String runId) {
+        ArrayList<SportModel> sports = new ArrayList<>();
+        SportModel sportModel = null;
         try {
             File file = new File(getFilePath(runId));
 
@@ -30,7 +30,7 @@ public class SportsDao {
             else{
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                sports = (ArrayList<SportsModel>) ois.readObject();
+                sports = (ArrayList<SportModel>) ois.readObject();
                 ois.close();
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -40,8 +40,9 @@ public class SportsDao {
         return sports;
     }
 
-    public void saveAllSports(String runId, List<SportsModel> notes){
+    public void saveAllSports(String runId, List<SportModel> notes){
         logger.info("Saving all sport...");
+
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();
@@ -63,9 +64,9 @@ public class SportsDao {
         logger.info("Saved sports...");
     }
 
-    public void saveNewSport(String runId, SportsModel sport) {
+    public void saveNewSport(String runId, SportModel sport) {
         logger.info("Saving new sport...");
-        List<SportsModel> sports = getSports(runId);
+        List<SportModel> sports = getSports(runId);
         sport.setRunId(runId);
         sports.add(sport);
         saveAllSports(runId, sports);
@@ -83,19 +84,19 @@ public class SportsDao {
     private static void testNotes() {
         final String runId = "testsport001";
         SportsDao dao = new SportsDao();
-        SportsModel m1 = new SportsModel(18, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Soccer", runId );
-        SportsModel m2 = new SportsModel(20, 30, 500, 0, 0, 10, 30, 1500, 3, 0, "Hockey", runId );
-        ArrayList<SportsModel> sports = new ArrayList<>();
+        SportModel m1 = new SportModel(18, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Soccer", runId );
+        SportModel m2 = new SportModel(20, 30, 500, 0, 0, 10, 30, 1500, 3, 0, "Hockey", runId );
+        ArrayList<SportModel> sports = new ArrayList<>();
         sports.add(m1);
         sports.add(m2);
         dao.saveAllSports(runId, sports);
 
-        List<SportsModel> outMsgs = dao.getSports(runId);
+        List<SportModel> outMsgs = dao.getSports(runId);
 
         assert(outMsgs.size() == 2);
         assert(outMsgs.get(1).getCapacity() == 100);
 
-        SportsModel m3 = new SportsModel(10, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Test Team", runId );
+        SportModel m3 = new SportModel(10, 20, 100, 0, 0, 10, 20, 200, 2, 0, "Test Team", runId );
         dao.saveNewSport(runId, m3);
         outMsgs = dao.getSports(runId);
         assert(outMsgs.size() == 3);

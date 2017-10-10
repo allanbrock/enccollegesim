@@ -1,8 +1,6 @@
 package com.endicott.edu.application;
 
-import com.endicott.edu.service.CollegeService;
-import com.endicott.edu.service.DormServices;
-import com.endicott.edu.service.NewsFeedService;
+import com.endicott.edu.service.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -21,6 +19,8 @@ public class MyApplication extends Application{
         h.add(DormServices.class);
         h.add( CollegeService.class );
         h.add( NewsFeedService.class );
+        h.add(StudentServices.class);
+        h.add(SportService.class);
         h.add( org.glassfish.jersey.moxy.json.MoxyJsonFeature.class);  // This enables JSON binding support
         h.add( JsonMoxyConfigurationContextResolver.class);
         return h;

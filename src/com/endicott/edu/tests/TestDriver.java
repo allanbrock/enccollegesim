@@ -16,6 +16,7 @@ public class TestDriver {
 
         CollegeTests.runTests(serviceUrl);
         DormTests.runTests(serviceUrl);
+        SportsTests.runTests(serviceUrl);
     }
 
 }

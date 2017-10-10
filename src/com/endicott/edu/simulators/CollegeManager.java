@@ -1,13 +1,9 @@
 package com.endicott.edu.simulators;
 
-import com.endicott.edu.datalayer.CollegeDao;
-import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.datalayer.NewsFeedDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.NewsFeedItemModel;
-import com.endicott.edu.models.NewsType;
+import com.endicott.edu.datalayer.*;
+import com.endicott.edu.models.*;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 // Created by abrocken on 7/24/2017.
@@ -55,6 +51,35 @@ public class CollegeManager {
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
 
+        // Creating students
+
+        logger.info("Creating students");
+        StudentModel student = new StudentModel();
+        StudentDao studentDao = new StudentDao();
+        Random rand = new Random();
+
+        //Create a default sport
+        logger.info("Creating sport");
+        SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
+        SportsDao sportDao = new SportsDao();
+        sportDao.saveNewSport(runId, sport);
+
+//        for(int i = 0; i < 100; i++){
+            student.setIdNumber(100000 + rand.nextInt(900000));
+            student.setHappinessLevel(rand.nextInt(100));
+            student.setAthlete(false);
+            student.setAthleticAbility(rand.nextInt(100));
+            student.setTeam("");
+            student.setDorm("");
+            if(rand.nextInt(1) == 1){
+                student.setGender("Male");
+            } else {
+                student.setGender("Female");
+            }
+            student.setRunId(runId);
+            studentDao.saveNewStudent(runId, student);
+        //}
+
         logger.info("Done creating college");
         return college;
     }
@@ -83,6 +108,9 @@ public class CollegeManager {
         // Tell everyone about the time change.
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
+
+        SportManager sportManager = new SportManager();
+        sportManager.handleTimeChange(runId, hoursAlive);
 
         return college;
     }

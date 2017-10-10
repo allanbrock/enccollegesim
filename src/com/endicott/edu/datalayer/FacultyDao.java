@@ -57,8 +57,9 @@ public class FacultyDao {
      * This creates a new faculty member and then saves them to the master list
      * After assigning them an ID
      * THIS NEEDS TO BE USED TO CREATE NEW MEMBERS
-     * @param runId
-     * @param member
+     * todo: change how we assign ID
+     * @param runId sim id
+     * @param member faculty object
      */
     public void saveNewFaculty(String runId, FacultyModel member) {
         logger.info("Saving new faculty...");

@@ -20,6 +20,7 @@ public class MyApplication extends Application{
         h.add( CollegeService.class );
         h.add( NewsFeedService.class );
         h.add(StudentServices.class);
+        h.add(FacultyService.class);
         h.add(SportService.class);
         h.add( org.glassfish.jersey.moxy.json.MoxyJsonFeature.class);  // This enables JSON binding support
         h.add( JsonMoxyConfigurationContextResolver.class);

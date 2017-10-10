@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 100000;
 
-
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
@@ -34,54 +33,65 @@ public class CollegeManager {
         college.setHoursAlive(1);
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
-
-        // Create a News Feed item about establishing the college.
-        logger.info("Creating newsfeed");
-        NewsFeedItemModel note = new NewsFeedItemModel();
-        note.setHour(college.getCurrentDay());
-        note.setMessage("The college was established today!");
-        note.setNoteType(NewsType.GENERAL_NOTE);
-        NewsFeedDao noteDao = new NewsFeedDao();
-        noteDao.saveNote(runId, note);
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.");
+        // Creating students
+        createInitialStudents(runId, college.getCurrentDay());
 
         // Create a dorm
-
+        // We need to add the students to the dorm.
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall",0, 0, "none", "none",5, runId);
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60,5);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-
-        // Creating students
-
-        logger.info("Creating students");
-        StudentModel student = new StudentModel();
-        StudentDao studentDao = new StudentDao();
-        Random rand = new Random();
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
 
         //Create a default sport
         logger.info("Creating sport");
         SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
         SportsDao sportDao = new SportsDao();
         sportDao.saveNewSport(runId, sport);
+        logger.info("Calling CreateInitFaculty...");
+        createInitialFaculty(runId);
 
-//        for(int i = 0; i < 100; i++){
+        logger.info("Done creating college");
+        return college;
+    }
+
+    static private void createInitialFaculty(String runId){
+        Logger logger = Logger.getLogger("CollegeManager");
+
+        logger.info("Creating Initial Faculty..");
+
+        FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
+        FacultyDao fao = new FacultyDao();
+        fao.saveNewFaculty(runId,member);
+        logger.info("Created new faculty member ID: " + member.getFacultyID());
+
+    }
+
+    static private void createInitialStudents(String runId, int currentDay) {
+        StudentModel student = new StudentModel();
+        StudentDao studentDao = new StudentDao();
+        Random rand = new Random();
+        int numStudents = 2 + rand.nextInt(3);
+
+        for(int i = 0; i < numStudents; i++) {
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(100));
             student.setTeam("");
             student.setDorm("");
-            if(rand.nextInt(1) == 1){
+            if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {
                 student.setGender("Female");
             }
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
-        //}
+        }
 
-        logger.info("Done creating college");
-        return college;
+        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.");
     }
 
     static public void sellCollege(String runId) {

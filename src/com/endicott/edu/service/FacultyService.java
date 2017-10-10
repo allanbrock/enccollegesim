@@ -47,7 +47,7 @@ public class FacultyService {
     public String postFaculty(String facultyJson) {
         FacultyModel member = gson.fromJson(facultyJson,FacultyModel.class);
 
-        //make sure the college were trying to use exsists
+        //make sure the college were trying to use exists
         String runId = member.getRunId();
 
         if (!CollegeManager.doesCollegeExist(runId)) {

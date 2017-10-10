@@ -122,6 +122,9 @@ public class CollegeManager {
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
 
+        FloodManager floodManager = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
+
         return college;
     }
 

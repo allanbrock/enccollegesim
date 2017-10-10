@@ -1,9 +1,6 @@
 package com.endicott.edu.simulators;
 
-import com.endicott.edu.datalayer.CollegeDao;
-import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.datalayer.NewsFeedDao;
-import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.datalayer.*;
 import com.endicott.edu.models.*;
 
 import java.util.Random;
@@ -61,6 +58,12 @@ public class CollegeManager {
         StudentDao studentDao = new StudentDao();
         Random rand = new Random();
 
+        //Create a default sport
+        logger.info("Creating sport");
+        SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
+        SportsDao sportDao = new SportsDao();
+        sportDao.saveNewSport(runId, sport);
+
 //        for(int i = 0; i < 100; i++){
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
@@ -105,6 +108,9 @@ public class CollegeManager {
         // Tell everyone about the time change.
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
+
+        SportManager sportManager = new SportManager();
+        sportManager.handleTimeChange(runId, hoursAlive);
 
         return college;
     }

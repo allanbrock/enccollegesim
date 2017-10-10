@@ -69,6 +69,7 @@ public class DormitoryDao {
         dorm.setRunId(runId);
         dorms.add(dorm);
         saveAllDorms(runId, dorms);
+
     }
 
     public void deleteDorms(String runId) {
@@ -85,10 +86,10 @@ public class DormitoryDao {
         final String runId = "testdorm001";
         DormitoryDao dao = new DormitoryDao();
 
-        DormitoryModel m1 = new DormitoryModel(100, 10, 0, "Hampshire Hall",
-                0, 0, "none", "none", 5,runId );
-        DormitoryModel m2 = new DormitoryModel(200, 10, 0, "Vermont House",
-                0, 0, "none", "none",5, runId);
+        DormitoryModel m1 = new DormitoryModel(100, 10, "Hampshire Hall", 50,
+                "none", 3, "none", 50, 0);
+        DormitoryModel m2 = new DormitoryModel(200, 10, "Vermont House", 70,
+                "none", 7, "none", 100,500);
         ArrayList<DormitoryModel> dorms = new ArrayList<>();
         dorms.add(m1);
         dorms.add(m2);
@@ -99,8 +100,8 @@ public class DormitoryDao {
         assert(outMsgs.size() == 2);
         assert(outMsgs.get(1).getCapacity() == 100);
 
-        DormitoryModel m3 = new DormitoryModel(300, 10, 0, "Maine Manor",
-                0, 0, "none","none",5, runId);
+        DormitoryModel m3 = new DormitoryModel(300, 10, "Maine Manor", 250,
+                "flood", 8, "none",100,6810);
         dao.saveNewDorm(runId, m3);
         outMsgs = dao.getDorms(runId);
         assert(outMsgs.size() == 3);

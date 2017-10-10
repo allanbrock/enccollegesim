@@ -1,6 +1,9 @@
 package com.endicott.edu.tests;
 
 import com.endicott.edu.models.DormitoriesModel;
+import com.endicott.edu.models.DormitoryModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.glassfish.jersey.client.ClientConfig;
 
 import javax.ws.rs.client.Client;
@@ -33,36 +36,58 @@ class DormTests {
 
         tester.init();
         tester.setServiceUrl(serviceUrl);
-        tester.testCreateCollegeWithDorm(COLLEGE_TEST_ID);
+        tester.testCreateCollege(COLLEGE_TEST_ID);
+        tester.testDorm(COLLEGE_TEST_ID);
         tester.testDeleteCollege(COLLEGE_TEST_ID);
     }
 
-    private void testCreateCollegeWithDorm(String runId){
+    private boolean testCreateCollege(String runId) {
         String result = PASS;
 
         System.out.print("Test case name: testCreateCollegeWithDorm...");
 
         WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
-        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
         // Create college
         Response response = invocationBuilder.post(null);
 
         //Response response = invocationBuilder.post(Entity.entity(college, MediaType.APPLICATION_JSON));
-        if(response.getStatus() != 200) {
+        if (response.getStatus() != 200) {
             System.out.println("    Got bad response creating college: " + response.getStatus());
+            return false;
+        }
+
+        return true;
+    }
+
+    private void testDorm(String runId){
+        String result = PASS;
+        DormitoryModel[] dorms;
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        WebTarget webTarget = client.target(serviceUrl + "dorms/" + runId);
+        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+
+        Response response = invocationBuilder.get();
+        if(response.getStatus() != 200) {
+            System.out.println("    Got bad college response or contents:" + response.getStatus());
+            System.out.println(" Result: FAIL");
             return;
         }
 
-        // Get dorm from newly created college.
-        client.target(serviceUrl + "dorms/" + runId);
-        response = invocationBuilder.get();
+        String responseAsString = response.readEntity(String.class);
+        Gson gson = new GsonBuilder().create();
 
-        //List<DormitoryModel> dorms = response.readEntity(List.class);
-        DormitoriesModel dorms = response.readEntity(DormitoriesModel.class);
+        try {
+            dorms = gson.fromJson(responseAsString, DormitoryModel[].class);
+        } catch (Exception e) {
+            System.out.println("    Didn't understand response of " + responseAsString);
+            System.out.println(" Result: FAIL");
+            return;
+        }
 
-        if(response.getStatus() != 200 && dorms.getDormList().size() != 1) {
-            System.out.println("    Got bad college response or contents:" + response.getStatus());
+        if(dorms.length != 1) {
+            System.out.println("    Thought there would be 1 dorm.  Saw: " + dorms.length);
             result = FAIL;
         }
 

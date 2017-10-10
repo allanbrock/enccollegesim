@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 100000;
 
-
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
@@ -45,18 +44,13 @@ public class CollegeManager {
         noteDao.saveNote(runId, note);
 
         // Create a dorm
-
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall",0, 0, "none", "none",5, runId);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
 
         // Creating students
-
-        logger.info("Creating students");
-        StudentModel student = new StudentModel();
-        StudentDao studentDao = new StudentDao();
-        Random rand = new Random();
+        createInitialStudents(runId);
 
         //Create a default sport
         logger.info("Creating sport");
@@ -64,24 +58,30 @@ public class CollegeManager {
         SportsDao sportDao = new SportsDao();
         sportDao.saveNewSport(runId, sport);
 
-//        for(int i = 0; i < 100; i++){
+        logger.info("Done creating college");
+        return college;
+    }
+
+    static private void createInitialStudents(String runId) {
+        StudentModel student = new StudentModel();
+        StudentDao studentDao = new StudentDao();
+        Random rand = new Random();
+
+        for(int i = 0; i < 5; i++) {
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(100));
             student.setTeam("");
             student.setDorm("");
-            if(rand.nextInt(1) == 1){
+            if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {
                 student.setGender("Female");
             }
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
-        //}
-
-        logger.info("Done creating college");
-        return college;
+        }
     }
 
     static public void sellCollege(String runId) {

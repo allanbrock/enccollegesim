@@ -32,6 +32,7 @@ public class DormManager {
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getCostPerHour();
         Accountant.payBill(runId, newCharge);
+        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge);
     }
 
     private void checkForEnvironmentalDisaster(String runId, int hoursAlive, DormitoryModel dorm) {

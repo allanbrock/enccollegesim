@@ -33,24 +33,17 @@ public class CollegeManager {
         college.setHoursAlive(1);
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
-
-        // Create a News Feed item about establishing the college.
-        logger.info("Creating newsfeed");
-        NewsFeedItemModel note = new NewsFeedItemModel();
-        note.setHour(college.getCurrentDay());
-        note.setMessage("The college was established today!");
-        note.setNoteType(NewsType.GENERAL_NOTE);
-        NewsFeedDao noteDao = new NewsFeedDao();
-        noteDao.saveNote(runId, note);
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.");
+        // Creating students
+        createInitialStudents(runId, college.getCurrentDay());
 
         // Create a dorm
+        // We need to add the students to the dorm.
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, 0, "Hampshire Hall",0, 0, "none", "none",5, runId);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-
-        // Creating students
-        createInitialStudents(runId);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
 
         //Create a default sport
         logger.info("Creating sport");
@@ -62,12 +55,13 @@ public class CollegeManager {
         return college;
     }
 
-    static private void createInitialStudents(String runId) {
+    static private void createInitialStudents(String runId, int currentDay) {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
         Random rand = new Random();
+        int numStudents = 2 + rand.nextInt(3);
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < numStudents; i++) {
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
@@ -82,6 +76,8 @@ public class CollegeManager {
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
+
+        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.");
     }
 
     static public void sellCollege(String runId) {

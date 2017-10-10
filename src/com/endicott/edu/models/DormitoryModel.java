@@ -8,18 +8,14 @@ import java.io.Serializable;
 public class DormitoryModel implements Serializable {
     private int capacity = 0;
     private int hourLastUpdated = 0;
-    //hours to complete for construction
     private float hoursToComplete = 0;
-    //number of students currently living in the dorm
     public int numStudents = 0;
-    //current disaster affecting the dorm
     public String curDisaster = "none";
-    //name of the dorm
-    public String name = "unknown";
+    private String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
     //dorms start at a middle reputation (5/10) upon creation. (0/10 is the worst reputation, 10/10 is the best).
-    public int reputation = 5;
+    public int reputation = 0;
     private int dormType = 0;
     private float buildCost = 0;
     //per year maintenance cost
@@ -27,6 +23,8 @@ public class DormitoryModel implements Serializable {
     private int numRooms = 0;
     private float squareFeet;
 
+    private DormitoryModel() {
+    }
 
 
 
@@ -48,8 +46,7 @@ public class DormitoryModel implements Serializable {
     public float getHoursToComplete() {
         return hoursToComplete;
     }
-
-    public void setHoursToComplete(int hoursToComplete) {
+    public void setHoursToComplete(float hoursToComplete) {
         this.hoursToComplete = hoursToComplete;
     }
 
@@ -85,17 +82,12 @@ public class DormitoryModel implements Serializable {
         this.reputation = reputation;
     }
 
-
-    public DormitoryModel() {
+    public float getBuildCost() {
+        return buildCost;
     }
 
-    public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, int hoursToComplete, int numStudents,
-                          String curDisaster, String dormClass, int reputation, String runId) {
-        this.capacity = capacity;
-        this.costPerHour = costPerHour;
-        this.hourLastUpdated = hourLastUpdated;
-        this.name = name;
-        this.runId = runId;
+    public void setBuildCost(float buildCost) {
+        this.buildCost = buildCost;
     }
 
     public int getCapacity() {

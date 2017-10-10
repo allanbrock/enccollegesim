@@ -28,4 +28,12 @@ public class SportManager {
         Accountant.payBill(runId, newCharge);
         NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge);
     }
+
+    static public void sellSport(String runId) {
+        SportsDao sportsDao = new SportsDao();
+        NewsFeedDao noteDao = new NewsFeedDao();
+
+        sportsDao.deleteSports(runId);
+        noteDao.deleteNotes(runId);
+    }
 }

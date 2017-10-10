@@ -87,9 +87,9 @@ public class DormitoryDao {
         DormitoryDao dao = new DormitoryDao();
 
         DormitoryModel m1 = new DormitoryModel(100, 10, "Hampshire Hall", 50,
-                "none", 3, "none", 50, 0);
+                "none", 3, "none", 50);
         DormitoryModel m2 = new DormitoryModel(200, 10, "Vermont House", 70,
-                "none", 7, "none", 100,500);
+                "none", 7, "none", 100);
         ArrayList<DormitoryModel> dorms = new ArrayList<>();
         dorms.add(m1);
         dorms.add(m2);
@@ -101,7 +101,7 @@ public class DormitoryDao {
         assert(outMsgs.get(1).getCapacity() == 100);
 
         DormitoryModel m3 = new DormitoryModel(300, 10, "Maine Manor", 250,
-                "flood", 8, "none",100,6810);
+                "flood", 8, "none",100);
         dao.saveNewDorm(runId, m3);
         outMsgs = dao.getDorms(runId);
         assert(outMsgs.size() == 3);

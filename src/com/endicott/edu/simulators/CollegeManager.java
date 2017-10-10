@@ -50,9 +50,23 @@ public class CollegeManager {
         SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
         SportsDao sportDao = new SportsDao();
         sportDao.saveNewSport(runId, sport);
+        logger.info("Calling CreateInitFaculty...");
+        createInitialFaculty(runId);
 
         logger.info("Done creating college");
         return college;
+    }
+
+    static private void createInitialFaculty(String runId){
+        Logger logger = Logger.getLogger("CollegeManager");
+
+        logger.info("Creating Initial Faculty..");
+
+        FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
+        FacultyDao fao = new FacultyDao();
+        fao.saveNewFaculty(runId,member);
+        logger.info("Created new faculty member ID: " + member.getFacultyID());
+
     }
 
     static private void createInitialStudents(String runId, int currentDay) {

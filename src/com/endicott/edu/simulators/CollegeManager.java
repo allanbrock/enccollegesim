@@ -40,7 +40,7 @@ public class CollegeManager {
         // Create a dorm
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60,5);
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
@@ -121,6 +121,9 @@ public class CollegeManager {
 
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
+
+        FloodManager floodManager = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
 
         return college;
     }

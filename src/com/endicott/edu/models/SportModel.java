@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class SportModel implements Serializable {
     private int minPlayers = 0;
+    private int currentPlayers = 0;
     private int maxPlayers = 0;
     private int costPerDay = 0;
     private int hourLastUpdated = 0;
@@ -19,12 +20,15 @@ public class SportModel implements Serializable {
     private String runId = "unknown";
     private String sportName = "unknown";
     private String note = "no note";
+    private boolean isActive = false;
 
     public SportModel() {
+
     }
 
-    public SportModel(int minPlayers, int maxPlayers, int costPerDay, int gamesLost, int gamesTied, int gamesWon, int numGames, int startupCost, int reputation, int hourLastUpdated, String sportName, String runId) {
+    public SportModel(int minPlayers, int currentPlayers, int maxPlayers, int costPerDay, int gamesLost, int gamesTied, int gamesWon, int numGames, int startupCost, int reputation, int hourLastUpdated, String sportName, String runId, Boolean isActive) {
         this.minPlayers = minPlayers;
+        this.currentPlayers = currentPlayers;
         this.maxPlayers = maxPlayers;
         this.costPerDay = costPerDay;
         this.hourLastUpdated = hourLastUpdated;
@@ -34,6 +38,12 @@ public class SportModel implements Serializable {
         this.gamesTied = gamesTied;
         this.numGames = numGames;
         this.startupCost = startupCost;
+        this.sportName = sportName;
+        this.runId = runId;
+        this.isActive = isActive;
+    }
+
+    public SportModel(String sportName, String runId){
         this.sportName = sportName;
         this.runId = runId;
     }

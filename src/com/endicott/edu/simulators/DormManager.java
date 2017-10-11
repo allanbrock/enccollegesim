@@ -48,17 +48,17 @@ public class DormManager {
             //String curDisaster, int reputation, String runId, int numRooms,
             //float maintenanceCost
             DormitoryModel temp = new DormitoryModel(700, 1, "take in from user 1", 0, "none",
-                   5, " ",  350, 0);
+                   5, " ",  350);
         }
         //normal size
         else if(dormType == 2){
             DormitoryModel temp = new DormitoryModel(1000, 1, "take in from user 2", 0, "none",
-                    5, " ",  500, 0);
+                    5, " ",  500);
         }
         //large size
         else if(dormType == 3){
             DormitoryModel temp = new DormitoryModel(1500, 1, "take in from user 3", 0, "none",
-                    5, " ",  750, 0);
+                    5, " ",  750);
         }
         else{
             //not a type only 3 types of dorms
@@ -78,7 +78,7 @@ public class DormManager {
 
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
-        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getCostPerHour();
+        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, (int) (newCharge));
         NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge);
     }

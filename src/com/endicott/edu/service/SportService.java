@@ -1,8 +1,12 @@
 package com.endicott.edu.service;
 
+import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.SportsDao;
+import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.SportModel;
+import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.simulators.SportManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
@@ -61,6 +65,16 @@ public class SportService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<SportModel> getSports(@PathParam("runId") String runId) {
         return dao.getSports(runId);
+    }
+
+
+    @DELETE
+    @Path("/{runId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteSport(@PathParam("runId") String runId) {
+        SportManager president = new SportManager();
+        SportManager.sellSport(runId);
+        return "Sport has been deleted.\n";
     }
 
 }

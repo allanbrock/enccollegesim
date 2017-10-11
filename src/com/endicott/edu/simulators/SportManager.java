@@ -61,4 +61,12 @@ public class SportManager {
             sportDao.saveNewSport(runId, sport);
         }
     }
+
+    static public void sellSport(String runId) {
+        SportsDao sportsDao = new SportsDao();
+        NewsFeedDao noteDao = new NewsFeedDao();
+
+        sportsDao.deleteSports(runId);
+        noteDao.deleteNotes(runId);
+    }
 }

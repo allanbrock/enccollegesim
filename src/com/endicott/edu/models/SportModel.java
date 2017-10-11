@@ -95,4 +95,84 @@ public class SportModel implements Serializable {
     public void setNote(String note) {
         this.note = note;
     }
+
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    public void setMinPlayers(int minPlayers) {
+        this.minPlayers = minPlayers;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public int getCostPerDay() {
+        return costPerDay;
+    }
+
+    public void setCostPerDay(int costPerDay) {
+        this.costPerDay = costPerDay;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
+    public int getGamesWon() {
+        return gamesWon;
+    }
+
+    public void setGamesWon(int gamesWon) {
+        this.gamesWon = gamesWon;
+    }
+
+    public int getGamesLost() {
+        return gamesLost;
+    }
+
+    public void setGamesLost(int gamesLost) {
+        this.gamesLost = gamesLost;
+    }
+
+    public int getGamesTied() {
+        return gamesTied;
+    }
+
+    public void setGamesTied(int gamesTied) {
+        this.gamesTied = gamesTied;
+    }
+
+    public int getNumGames() {
+        return numGames;
+    }
+
+    public void setNumGames(int numGames) {
+        this.numGames = numGames;
+    }
+
+    public int getStartupCost() {
+        return startupCost;
+    }
+
+    public void setStartupCost(int startupCost) {
+        this.startupCost = startupCost;
+    }
+
+    public String getSportName() {
+        return sportName;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
 }

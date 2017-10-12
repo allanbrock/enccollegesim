@@ -48,15 +48,6 @@ public class CollegeManager {
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);
         sportManager.addNewTeam("Men's Basketball", runId);
-        /*
-        Create a default sport
-        logger.info("Creating sport");
-        SportModel sport = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId, false );
-        SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        logger.info("Calling CreateInitFaculty...");
-        createInitialFaculty(runId);
-        */
 
         logger.info("Done creating college");
         return college;
@@ -103,9 +94,11 @@ public class CollegeManager {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
+        SportsDao sportsDao = new SportsDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
+        sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
 

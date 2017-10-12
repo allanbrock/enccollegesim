@@ -58,6 +58,7 @@ class SportsTests {
             return false;
         }
 
+
         return true;
     }
 
@@ -86,8 +87,8 @@ class SportsTests {
             return;
         }
 
-        if(sports.length != 1) {
-            System.out.println("    Thought there would be 1 sport team.  Saw: " + sports.length);
+        if(sports.length != 2) {
+            System.out.println("    Thought there would be 2 sports teams.  Saw: " + sports.length);
             System.out.println(" Result: FAIL");
             result = FAIL;
         }

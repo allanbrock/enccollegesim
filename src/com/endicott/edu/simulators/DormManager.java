@@ -19,8 +19,8 @@ public class DormManager {
     //how much the college loses everytime a dorm floods.
     private static final int COST_OF_FLOOD = 500;
     DormitoryDao dao = new DormitoryDao();
+
     CollegeDao collegeDao = new CollegeDao();
-    String collegeRunId;
 
 
 
@@ -30,15 +30,15 @@ public class DormManager {
         for (DormitoryModel dorm : dorms) {
 
             billRunningCostOfDorm(runId, hoursAlive, dorm);
-            checkForEnvironmentalDisaster(runId, hoursAlive, dorm);
+//            checkForEnvironmentalDisaster(runId, hoursAlive, dorm);
 
             dorm.setHourLastUpdated(hoursAlive);
         }
 
         dao.saveAllDorms(runId, dorms);
-        // Get the college
-        CollegeModel college = collegeDao.getCollege(runId);
-        collegeRunId = college.getRunId();
+//        // Get the college
+//        CollegeModel college = collegeDao.getCollege(runId);
+//        collegeRunId = college.getRunId();
 
     }
     public static void setDormAttributesByDormType(DormitoryModel temp){
@@ -87,80 +87,65 @@ public class DormManager {
         NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge);
     }
 
-    private void checkForEnvironmentalDisaster(String runId, int hoursAlive, DormitoryModel dorm) {
-        float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
-        if (didItHappen(oddsThatBurnedDown)) {
-            //subtract the flooding cost from the overall college funds.
-            NewsFeedItemModel note = new NewsFeedItemModel();
-            note.setHour(hoursAlive);
-            note.setMessage("Dorm " + dorm.getName() + " has flooded. Students successfully evacuated.\n");
-            note.setNoteType(NewsType.GENERAL_NOTE);
-            NewsFeedDao noteDao = new NewsFeedDao();
-            noteDao.saveNote(runId, note);
+
+
+    //takes in the length of the flood, the dorm name affected by the flood, and the runId of the college.
+    public void floodAlert(int lengthOfFlood, String dormName, String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        for(DormitoryModel d : dorms){
+            if(d.name == dormName){
+                d.setCurDisaster("flood");
+                d.setLengthOfDisaster(lengthOfFlood);
+            }
         }
+        dao.saveAllDorms(collegeId, dorms);
+        //when lengthOfFlood number of hours is completed change curDisaster back to "none".
     }
 
-    private boolean didItHappen(float oddsBetween0And1
-    ) {
-        return (Math.random() < oddsBetween0And1);
-    }
-
-    //A way to get the disaster from the disaster team.
-    //takes in 3 arguements: the name of the disaster (flood, plague...), if the disaster is started (started:true, ended: false),
-    //and the name of the dorm affected, only 1 disaster can affect a dorm at one time.
-
-    //need runId - what is runId?
-    //have the disaster team give the name of the dorm and find it in the list.
-    //needs more work, ask in class.
-    public void disasterAlert(String disasterName, boolean isStarted, String dorm){
-
-        List<DormitoryModel> dorms = dao.getDorms(collegeRunId);
-        DormitoryModel D;
-
-        for (DormitoryModel d : dorms){
-            if(d.name == dorm){
-                D = d;
-                //if the disaster has started, add its name to the dorm curDisaster attribute
-                if(isStarted){
-                    D.setCurDisaster(disasterName);
-                }
-                //if the disaster has ended change the dorm curDisaster attribute back to none.
-                else{
-                    D.setCurDisaster("none");
-                }
+    //handles one student being admitted to the college at a time:
+    //takes in the runId of the college (String)
+    //returns the name of the dorm (String) that student was placed in.
+    public String assignDorm(String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        String dormName = "";
+        for(DormitoryModel d : dorms){
+            int s = d.getNumStudents();
+            int c = d.getCapacity();
+            dormName = d.getName();
+            if(s < c){
+                d.setNumStudents(s + 1);
                 break;
             }
         }
-
-
-
+        dao.saveAllDorms(collegeId, dorms);
+        return dormName;
     }
 
-    //find a dorm that can either house the incoming students or have enough students to vacate the leaving students.
-    public void dormOccupancyManager(int numStudents, boolean toIncreaseStudents){
-    List<DormitoryModel> dorms = dao.getDorms(collegeRunId);
-        DormitoryModel D;
-
-        for(DormitoryModel d: dorms){
+    //handles one student leaving the college at a time:
+    //takes in the runId of the college (String), and the name of the dorm the student is in (String)
+    //returns nothing.
+    public void removeStudent(String collegeId, String dormName){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        for(DormitoryModel d : dorms){
             int s = d.getNumStudents();
-            int c = d.getCapacity();
-           if(toIncreaseStudents){
-               if(s < c){
-                   d.setNumStudents(s + numStudents);
-               }
-               break;
-           }
-           else{
-               if(s > 0){
-                   d.setNumStudents(s - numStudents);
-                   break;
-               }
-               else{
-                   //do nothing because loop will move onto the next dorm.
-               }
-
-           }
+            if(d.name == dormName){
+                d.setNumStudents(s - 1);
+                break;
+            }
         }
+        dao.saveAllDorms(collegeId, dorms);
+
+    }
+
+ 
+
+
+
+
+
+
+
+
 
 
 
@@ -172,4 +157,4 @@ public class DormManager {
 
 
 
-}
+

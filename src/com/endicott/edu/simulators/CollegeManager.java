@@ -45,13 +45,9 @@ public class CollegeManager {
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
 
-        //Create a default sport
-        logger.info("Creating sport");
-        SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
-        SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        logger.info("Calling CreateInitFaculty...");
-        createInitialFaculty(runId);
+        SportManager sportManager = new SportManager();
+        sportManager.addNewTeam("Men's Soccer", runId);
+        sportManager.addNewTeam("Men's Basketball", runId);
 
         logger.info("Done creating college");
         return college;
@@ -87,6 +83,7 @@ public class CollegeManager {
             } else {
                 student.setGender("Female");
             }
+            student.setSick(false);
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }

@@ -1,12 +1,8 @@
 package com.endicott.edu.service;
 
-import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.datalayer.SportsDao;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.SportModel;
-import com.endicott.edu.models.SportsModel;
+import com.endicott.edu.datalayer.FloodDao;
+import com.endicott.edu.models.FloodModel;
 import com.endicott.edu.simulators.CollegeManager;
-import com.endicott.edu.simulators.SportManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
@@ -14,13 +10,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-// The Java class will be hosted at the URI path "/finances"
-@Path("/sports")
-public class SportService {
-    private SportsDao dao = new SportsDao();
+// The Java class will be hosted at the URI path "/floods"
+@Path("/floods")
+public class FloodServices {
+    private FloodDao dao = new FloodDao();
 
     /**
-     * Create a new dorm.
+     * Create a new flood.
      * Notice that it consumes "text plain".  It really should be  APPLICATION_JSON
      * but having trouble getting this to work.
      *
@@ -29,33 +25,31 @@ public class SportService {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public SportModel addSport(String sportJsonString) {
+    public FloodModel postDorm(String dormJsonString) {
         Gson g = new Gson();
-        SportModel sport = g.fromJson(sportJsonString, SportModel.class);
+        FloodModel flood = g.fromJson(dormJsonString, FloodModel.class);
 
-        // What if we already have a dorm with the same name?
+        // If we already have a flood in progress
         // We should return an error.
 
         // Make sure the college exists, return error if not.
-        String runId = sport.getRunId();
+        String runId = flood.getRunId();
         if (!CollegeManager.doesCollegeExist(runId)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
         // Override some fields
-        sport.setHourLastUpdated(0);
+        flood.setHourLastUpdated(0);
 
-        // Create a sport
-        SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        sport.setNote("created sport.");
-        return sport;
-
-
+        // Create a flood
+        FloodDao dormDao = new FloodDao();
+        dormDao.saveNewFlood(runId, flood);
+        flood.setNote("Flood created");
+        return flood;
     }
 
     /**
-     * Get a list of the sports that are in the college.
+     * Get a list of the floods
      *
      * @param runId simulation ID
      * @return JSON formatted list.
@@ -63,18 +57,8 @@ public class SportService {
     @GET
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SportModel> getSports(@PathParam("runId") String runId) {
-        return dao.getSports(runId);
-    }
-
-
-    @DELETE
-    @Path("/{runId}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String deleteSport(@PathParam("runId") String runId) {
-        SportManager president = new SportManager();
-        SportManager.sellSport(runId);
-        return "Sport has been deleted.\n";
+    public List<FloodModel> getFloods(@PathParam("runId") String runId) {
+        return dao.getFloods(runId);
     }
 
 }

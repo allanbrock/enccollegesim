@@ -10,18 +10,31 @@ public class DormitoryModel implements Serializable {
     private int hourLastUpdated = 0;
     private float hoursToComplete = 0;
     public int numStudents = 0;
+    //current disaster affecting the dorm
     public String curDisaster = "none";
+    //how long the disaster is supposed to last in hours
+    public int lengthOfDisaster = 0;
     public String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
     //dorms start at a middle reputation (5/10) upon creation. (0/10 is the worst reputation, 10/10 is the best).
-    public int reputation = 0;
+    public int reputation = 5;
     private int dormType = 0;
     private float buildCost = 0;
     //per year maintenance cost
     private int maintenanceCostPerHour = 0;
     private int numRooms = 0;
     private float squareFeet;
+
+
+    public int getLengthOfDisaster() {
+        return lengthOfDisaster;
+    }
+
+    public void setLengthOfDisaster(int lengthOfDisaster) {
+        this.lengthOfDisaster = lengthOfDisaster;
+    }
+
 
     private DormitoryModel() {
     }

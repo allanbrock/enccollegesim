@@ -86,22 +86,23 @@ public class DormManager {
 
 
     //takes in the length of the flood, the dorm name affected by the flood, and the runId of the college.
-    public void floodAlert(int lengthOfFlood, String dormName, String runId){
-        List<DormitoryModel> dorms = dao.getDorms(runId);
+    public void floodAlert(int lengthOfFlood, String dormName, String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
         for(DormitoryModel d : dorms){
             if(d.name == dormName){
                 d.setCurDisaster("flood");
                 d.setLengthOfDisaster(lengthOfFlood);
             }
         }
+        dao.saveAllDorms(collegeId, dorms);
         //when lengthOfFlood number of hours is completed change curDisaster back to "none".
     }
 
     //handles one student being admitted to the college at a time:
     //takes in the runId of the college (String)
     //returns the name of the dorm (String) that student was placed in.
-    public String assignDorm(String runId){
-        List<DormitoryModel> dorms = dao.getDorms(runId);
+    public String assignDorm(String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
         for(DormitoryModel d : dorms){
             int s = d.getNumStudents();
@@ -112,14 +113,15 @@ public class DormManager {
                 break;
             }
         }
+        dao.saveAllDorms(collegeId, dorms);
         return dormName;
     }
 
     //handles one student leaving the college at a time:
     //takes in the runId of the college (String), and the name of the dorm the student is in (String)
     //returns nothing.
-    public void removeStudent(String runId, String dormName){
-        List<DormitoryModel> dorms = dao.getDorms(runId);
+    public void removeStudent(String collegeId, String dormName){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
         for(DormitoryModel d : dorms){
             int s = d.getNumStudents();
             if(d.name == dormName){
@@ -127,8 +129,11 @@ public class DormManager {
                 break;
             }
         }
+        dao.saveAllDorms(collegeId, dorms);
 
     }
+
+ 
 
 
 

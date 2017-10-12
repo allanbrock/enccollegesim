@@ -7,6 +7,7 @@ import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsFeedItemModel;
 import com.endicott.edu.models.NewsType;
+import com.endicott.edu.service.DormServices;
 
 import java.util.List;
 
@@ -40,24 +41,24 @@ public class DormManager {
         collegeRunId = college.getRunId();
 
     }
-    public void generateNewDorm(int dormType){
+    public static void setDormAttributesByDormType(DormitoryModel temp){
 
         //small size
-        if(dormType == 1){
+        if(temp.getDormType() == 1){
 //          int capacity, int hourLastUpdated, String name, int numStudents,
             //String curDisaster, int reputation, String runId, int numRooms,
             //float maintenanceCost
-            DormitoryModel temp = new DormitoryModel(700, 1, "take in from user 1", 0, "none",
+            temp = new DormitoryModel(700, 1, "take in from user 1", 0, "none",
                    5, " ",  350);
         }
         //normal size
-        else if(dormType == 2){
-            DormitoryModel temp = new DormitoryModel(1000, 1, "take in from user 2", 0, "none",
+        else if(temp.getDormType() == 2){
+            temp = new DormitoryModel(1000, 1, "take in from user 2", 0, "none",
                     5, " ",  500);
         }
         //large size
-        else if(dormType == 3){
-            DormitoryModel temp = new DormitoryModel(1500, 1, "take in from user 3", 0, "none",
+        else if(temp.getDormType() == 3){
+           temp = new DormitoryModel(1500, 1, "take in from user 3", 0, "none",
                     5, " ",  750);
         }
         else{
@@ -65,16 +66,19 @@ public class DormManager {
         }
 
     }
-//    private void setDormAttributes(DormitoryModel temp){
-//
-//        if(dormType == 1){
-//            this.buildCost = 1500000;
-//            this.squareFeet = 12000;
-//            this.maintenanceCost = 2 * this.squareFeet;
-//        }
-//
-//
-//    }
+    public static void createDorm(String runId, DormitoryModel dorm){
+        //need to get "dorm"
+        setDormAttributesByDormType(dorm);
+        dorm.setHourLastUpdated(0);
+        DormitoryDao dormDao = new DormitoryDao();
+        dorm.setNote("A new dorm has been created.");
+
+        dormDao.saveNewDorm(runId, dorm);
+
+
+
+
+    }
 
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {

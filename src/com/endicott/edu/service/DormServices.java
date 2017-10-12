@@ -3,6 +3,7 @@ package com.endicott.edu.service;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.simulators.DormManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
@@ -14,6 +15,10 @@ import java.util.List;
 @Path("/dorms")
 public class DormServices {
     private DormitoryDao dao = new DormitoryDao();
+
+
+
+    private static DormitoryModel dorm;
 
     /**
      * Create a new dorm.
@@ -41,10 +46,9 @@ public class DormServices {
         // Override some fields
         dorm.setHourLastUpdated(0);
 
+        DormManager.createDorm(runId, dorm);
         // Create a dorm
-        DormitoryDao dormDao = new DormitoryDao();
-        dormDao.saveNewDorm(runId, dorm);
-        dorm.setNote("created dorm.");
+
         return dorm;
     }
 
@@ -61,6 +65,13 @@ public class DormServices {
         return dao.getDorms(runId);
     }
 
+    public static DormitoryModel getDorm() {
+        return dorm;
+    }
+
+    private void setDorm(DormitoryModel dorm) {
+        this.dorm = dorm;
+    }
 }
 
 //    @GET

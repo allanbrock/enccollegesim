@@ -19,7 +19,7 @@ public class DormitoryModel implements Serializable {
     private String note = "no note";
     //dorms start at a middle reputation (5/10) upon creation. (0/10 is the worst reputation, 10/10 is the best).
     public int reputation = 5;
-    private int dormType = 0;
+    private int dormType = 0; //small (1), medium (2), large (3)
     private float buildCost = 0;
     //per year maintenance cost
     private int maintenanceCostPerHour = 0;

@@ -40,18 +40,14 @@ public class CollegeManager {
         // Create a dorm
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60,5);
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
 
-        //Create a default sport
-        logger.info("Creating sport");
-        SportModel sport = new SportModel(15, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId );
-        SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        logger.info("Calling CreateInitFaculty...");
-        createInitialFaculty(runId);
+        SportManager sportManager = new SportManager();
+        sportManager.addNewTeam("Men's Soccer", runId);
+        sportManager.addNewTeam("Men's Basketball", runId);
 
         logger.info("Done creating college");
         return college;
@@ -121,6 +117,9 @@ public class CollegeManager {
 
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
+
+        FloodManager floodManager = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
 
         return college;
     }

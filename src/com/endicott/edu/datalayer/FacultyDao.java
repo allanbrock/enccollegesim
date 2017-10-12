@@ -29,7 +29,6 @@ public class FacultyDao {
      * @return ArrayList<FacultyModel> faculty
      */
     public List<FacultyModel> getFaculty(String runId) {
-        logger.info("Loading all faculty...");
         ArrayList<FacultyModel> faculty = new ArrayList<>();
         FacultyModel facultyModel = null; //not sure why this is defined and not used.....
         try {

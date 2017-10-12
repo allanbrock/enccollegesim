@@ -16,7 +16,6 @@ public class DaoUtils {
 
     static private String getCollegeStorageDirectory() {
         String collegeDir = System.getenv("SystemDrive")+ File.separator +"collegesim";
-        logger.info("File location of colleges is: " + collegeDir);
         new File(collegeDir).mkdirs();
         return collegeDir;
     }

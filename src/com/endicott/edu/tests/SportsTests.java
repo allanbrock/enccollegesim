@@ -70,7 +70,7 @@ class SportsTests {
 
         Response response = invocationBuilder.get();
         if(response.getStatus() != 200) {
-            System.out.println("    Got bad college response or contents:" + response.getStatus());
+            System.out.print("    Got bad college response or contents:" + response.getStatus());
             System.out.println(" Result: FAIL");
             return;
         }
@@ -81,15 +81,15 @@ class SportsTests {
         try {
             sports = gson.fromJson(responseAsString, SportModel[].class);
         } catch (Exception e) {
-            System.out.println("    Didn't understand response of " + responseAsString);
-            System.out.println(" Result: FAIL");
+            System.out.print("    Didn't understand response of " + responseAsString);
+            System.out.println(" Result: fail");
             return;
         }
 
         if(sports.length != 1) {
-            System.out.println("    Thought there would be 1 sport team.  Saw: " + sports.length);
-            System.out.println(" Result: FAIL");
-            result = FAIL;
+            System.out.print("    Thought there would be 1 sport team.  Saw: " + sports.length);
+            System.out.println(" Result: fail");
+            return;
         }
 
         System.out.println(" Result: " + result );

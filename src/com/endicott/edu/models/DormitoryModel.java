@@ -7,15 +7,13 @@ import java.io.Serializable;
  */
 public class DormitoryModel implements Serializable {
     private int capacity = 0;
-    private float costPerHour = 0;
     private int hourLastUpdated = 0;
-    //hours to complete for construction
     private float hoursToComplete = 0;
-    //number of students currently living in the dorm
     public int numStudents = 0;
     //current disaster affecting the dorm
     public String curDisaster = "none";
-    //name of the dorm
+    //how long the disaster is supposed to last in hours
+    public int lengthOfDisaster = 0;
     public String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
@@ -24,14 +22,27 @@ public class DormitoryModel implements Serializable {
     private int dormType = 0;
     private float buildCost = 0;
     //per year maintenance cost
-    private float maintenanceCost = 0;
+    private int maintenanceCostPerHour = 0;
     private int numRooms = 0;
     private float squareFeet;
 
 
+    public int getLengthOfDisaster() {
+        return lengthOfDisaster;
+    }
+
+    public void setLengthOfDisaster(int lengthOfDisaster) {
+        this.lengthOfDisaster = lengthOfDisaster;
+    }
+
+
+    private DormitoryModel() {
+    }
+
+
+
     public DormitoryModel(int capacity, int hourLastUpdated, String name, int numStudents,
-                          String curDisaster, int reputation, String runId, int numRooms,
-                          float maintenanceCost) {
+                          String curDisaster, int reputation, String runId, int numRooms) {
         this.capacity = capacity;
         this.hourLastUpdated = hourLastUpdated;
         this.name = name;
@@ -41,16 +52,14 @@ public class DormitoryModel implements Serializable {
         this.runId = runId;
         this.numRooms = numRooms;
         this.squareFeet = 250 * numRooms;
-        this.maintenanceCost = maintenanceCost;
-        this.costPerHour = (squareFeet * 2) / 24;
+        this.maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
         this.hoursToComplete = squareFeet * 2;
     }
 
     public float getHoursToComplete() {
         return hoursToComplete;
     }
-
-    public void setHoursToComplete(int hoursToComplete) {
+    public void setHoursToComplete(float hoursToComplete) {
         this.hoursToComplete = hoursToComplete;
     }
 
@@ -86,17 +95,12 @@ public class DormitoryModel implements Serializable {
         this.reputation = reputation;
     }
 
-
-    public DormitoryModel() {
+    public float getBuildCost() {
+        return buildCost;
     }
 
-    public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, int hoursToComplete, int numStudents,
-                          String curDisaster, String dormClass, int reputation, String runId) {
-        this.capacity = capacity;
-        this.costPerHour = costPerHour;
-        this.hourLastUpdated = hourLastUpdated;
-        this.name = name;
-        this.runId = runId;
+    public void setBuildCost(float buildCost) {
+        this.buildCost = buildCost;
     }
 
     public int getCapacity() {
@@ -105,14 +109,6 @@ public class DormitoryModel implements Serializable {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
-    }
-
-    public float getCostPerHour() {
-        return costPerHour;
-    }
-
-    public void setCostPerHour(int costPerHour) {
-        this.costPerHour = costPerHour;
     }
 
     public int getHourLastUpdated() {
@@ -153,5 +149,31 @@ public class DormitoryModel implements Serializable {
 
     public void setDormType(int dormType) {
         this.dormType = dormType;
+    }
+    public float getSquareFeet() {
+        return squareFeet;
+    }
+
+    public void setSquareFeet(float squareFeet) {
+        this.squareFeet = squareFeet;
+    }
+
+    public int getNumRooms() {
+        return numRooms;
+    }
+
+    public void setNumRooms(int numRooms) {
+        this.numRooms = numRooms;
+    }
+
+    public float getMaintenanceCostPerHour() {
+        return maintenanceCostPerHour;
+    }
+
+    public void setMaintenanceCostPerHour(int maintenanceCostPerHour) {
+        this.maintenanceCostPerHour = maintenanceCostPerHour;
+    }
+
+    public void setCostPerHour(float costPerHour) {
     }
 }

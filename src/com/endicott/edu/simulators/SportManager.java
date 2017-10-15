@@ -29,7 +29,7 @@ public class SportManager {
         NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge);
     }
 
-    public void addNewTeam(String sportName, String runId){
+    public static void addNewTeam(String sportName, String runId){
         if (sportName.equals("Men's Basketball")){
             SportModel sportMBasketball = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 0, 0, "Men's Basketball", runId, false);
             SportsDao sportMBasketballDao = new SportsDao();

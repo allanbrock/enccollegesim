@@ -47,8 +47,7 @@ public class SportService {
 
         // Create a sport
         SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        sport.setNote("created sport.");
+        SportManager.addNewTeam(sport.getSportName(),runId);
         return sport;
 
 

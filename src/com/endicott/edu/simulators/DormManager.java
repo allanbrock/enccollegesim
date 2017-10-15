@@ -8,6 +8,7 @@ import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsFeedItemModel;
 import com.endicott.edu.models.NewsType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -133,7 +134,37 @@ public class DormManager {
 
     }
 
- 
+    //takes in the runId of the college, and returns a table of the
+    //name of each dorm and its corresponding reputation level (0-10).
+    public String[][] getDormReputation(String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        String [][] dormReputation = new String[dorms.size()][2];
+        int i = 0;
+        int j = 1;
+        for(DormitoryModel d : dorms){
+            int r = d.getReputation();
+            dormReputation[i][i] = d.getName();
+            dormReputation[i][j] = String.valueOf(r);
+
+            i++;
+            j++;
+        }
+
+        return dormReputation;
+    }
+
+    //takes in the runId of the college, and returns the number of open beds throughout
+    //of the dorms.
+    public int getOpenBeds(String collegeId){
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        int openBeds = 0;
+        for (DormitoryModel d : dorms){
+            int numStudents = d.getNumStudents();
+            int capacity = d.getCapacity();
+            openBeds += capacity - numStudents;
+        }
+        return openBeds;
+    }
 
 
 

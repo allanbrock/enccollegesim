@@ -83,6 +83,7 @@ public class CollegeManager {
             } else {
                 student.setGender("Female");
             }
+            student.setSick(false);
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
@@ -94,9 +95,11 @@ public class CollegeManager {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
+        SportsDao sportsDao = new SportsDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
+        sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
 

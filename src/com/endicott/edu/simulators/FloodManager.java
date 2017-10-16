@@ -46,12 +46,8 @@ public class FloodManager {
     private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
-            NewsFeedItemModel note = new NewsFeedItemModel();
-            note.setHour(hoursAlive);
-            note.setMessage("Dorm " + dorm.getName() + " has flooded.\n");
-            note.setNoteType(NewsType.GENERAL_NOTE);
-            NewsFeedDao noteDao = new NewsFeedDao();
-            noteDao.saveNote(runId, note);
+            NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n");
+
         }
     }
 

@@ -25,8 +25,11 @@ public class SportManager {
 
     private void billRunningCostofSport(String runId, int hoursAlive, SportModel sport) {
         int newCharge = (hoursAlive - sport.getHourLastUpdated()) * sport.getCostPerHour();
-        Accountant.payBill(runId, newCharge);
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge);
+        if(newCharge > 0)
+        {
+            Accountant.payBill(runId, newCharge);
+            NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge);
+        }
     }
 
     public static void addNewTeam(String sportName, String runId){

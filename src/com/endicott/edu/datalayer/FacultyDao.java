@@ -56,21 +56,20 @@ public class FacultyDao {
      * This creates a new faculty member and then saves them to the master list
      * After assigning them an ID
      * THIS NEEDS TO BE USED TO CREATE NEW MEMBERS
-     * todo: change how we assign ID
      * @param runId sim id
      * @param member faculty object
      */
     public void saveNewFaculty(String runId, FacultyModel member) {
-        logger.info("Saving new faculty...");
+       // logger.info("Saving new faculty...");
         List<FacultyModel> faculty = getFaculty(runId);
         member.setRunId(runId);
-        //sets the faculty id number to the number of faculty in the list +1
         if(member.getFacultyID() ==  -1){
-            member.setFacultyID(numberOfFaculty(runId) + 1);
+            member.setFacultyID(IdNumberGenDao.firstWrite(runId));
+        } else {
+            member.setFacultyID(IdNumberGenDao.getID(runId));
         }
-        logger.info("Creating faculty with ID: " + member.getFacultyID());
+        //logger.info("Creating faculty with ID: " + member.getFacultyID());
         faculty.add(member);
-
         saveAllFaculty(runId, faculty);
     }
 
@@ -156,12 +155,23 @@ public class FacultyDao {
         FacultyDao fao = new FacultyDao();
         List<FacultyModel> faculty = new ArrayList<>();
 
+        System.out.println("Checking id's");
+
         FacultyModel f1 = new FacultyModel("Dr. Test","Title","Comp","LSB",runId);
         FacultyModel f2 = new FacultyModel("Dr. Test2","LesserTitle","Programming",125000,"LSB",runId);
+        FacultyModel f3 = new FacultyModel("Dr. Test2","LesserTitle","Programming",125000,"LSB",runId);
+        f3.setFacultyID(-1);
+        fao.saveNewFaculty(runId,f3);
+        System.out.println( "ID of member 3: " + String.valueOf(f3.getFacultyID()));
+        fao.saveNewFaculty(runId,f2);
+        System.out.println( "ID of member 2: " + String.valueOf(f2.getFacultyID()));
+        fao.saveNewFaculty(runId,f1);
+        System.out.println( "ID of member 1: " + String.valueOf(f1.getFacultyID()));
 
-        faculty.add(f1);
+
+               faculty.add(f1);
         faculty.add(f2);
-
+        fao.removeSingleFaculty(runId,f3);
         fao.saveAllFaculty(runId,faculty);
         assert(fao.numberOfFaculty(runId) == 2);
         System.out.println(fao.numberOfFaculty(runId));
@@ -171,15 +181,14 @@ public class FacultyDao {
         assert(outMsgs.size() == 2);
         assert (outMsgs.get(0).getFacultyName().equals("Dr. Test"));
 
-        FacultyModel f3 = new FacultyModel("Dr. Test23","LesserTitle","Programming",125000,"LSB",runId);
-
-        fao.saveNewFaculty(runId,f3);
+        FacultyModel f4 = new FacultyModel("Dr. Test23","LesserTitle","Programming",125000,"LSB",runId);
+        fao.saveNewFaculty(runId,f4);
         outMsgs = fao.getFaculty(runId);
         System.out.println("Adding a new Faculty member..." + "ID: " + outMsgs.get(2).getFacultyID());
         assert(outMsgs.size() == 3);
 
-        System.out.println("Removing object:  " + f3.getFacultyName() + "ID: " + f3.getFacultyID());
-        fao.removeSingleFaculty(runId,f3);
+        System.out.println("Removing object:  " + f4.getFacultyName() + "ID: " + f4.getFacultyID());
+        fao.removeSingleFaculty(runId,f4);
         outMsgs = fao.getFaculty(runId);
         faculty.clear();
         System.out.println("Clearing list... ");
@@ -201,7 +210,25 @@ public class FacultyDao {
         System.out.println("End of testing faculty successful.");
     }
 
+private void testId(){
+    final String runId = "testFaculty01";
+    FacultyDao fao = new FacultyDao();
+    List<FacultyModel> faculty = new ArrayList<>();
 
+    System.out.println("Checking id's");
+    System.out.println("Checking id's");
+
+    FacultyModel f1 = new FacultyModel("Dr. Test","Title","Comp","LSB",runId);
+    FacultyModel f2 = new FacultyModel("Dr. Test2","LesserTitle","Programming",125000,"LSB",runId);
+    FacultyModel f3 = new FacultyModel("Dr. Test2","LesserTitle","Programming",125000,"LSB",runId);
+    f3.setFacultyID(-1);
+    fao.saveNewFaculty(runId,f3);
+    System.out.println( "ID of member 3: " + String.valueOf(f3.getFacultyID()));
+    fao.saveNewFaculty(runId,f2);
+    System.out.println( "ID of member 2: " + String.valueOf(f2.getFacultyID()));
+    fao.saveNewFaculty(runId,f1);
+    System.out.println( "ID of member 1: " + String.valueOf(f1.getFacultyID()));
+}
 
 
 }

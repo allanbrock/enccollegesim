@@ -2,8 +2,6 @@ package com.endicott.edu.models;
 
 import java.io.Serializable;
 
-
-
 public class DormitoryModel implements Serializable {
     private int capacity = 0;
     private int costPerHour = 0;
@@ -11,6 +9,11 @@ public class DormitoryModel implements Serializable {
     private String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
+    private int numStudents = 0;
+    private String curDisaster = "";
+    private int reputation = 0;
+    private int numRooms = 0;
+    private int lengthOfDisaster = 0;
 
     public DormitoryModel() {
     }
@@ -23,20 +26,16 @@ public class DormitoryModel implements Serializable {
         this.runId = runId;
     }
 
-
     public DormitoryModel(int capacity, int hourLastUpdated, String name, int numStudents,
                           String curDisaster, int reputation, String runId, int numRooms){
         this.capacity=capacity;
         this.hourLastUpdated=hourLastUpdated;
         this.name=name;
-        //this.numStudents=numStudents;
-        //this.curDisaster=curDisaster;
-        //this.reputation=reputation;
+        this.numStudents=numStudents;
+        this.curDisaster=curDisaster;
+        this.reputation=reputation;
         this.runId=runId;
-        //this.numRooms=numRooms;
-//this.squareFeet = 250 * numRooms;
-//this.maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
-//this.hoursToComplete = squareFeet * 2;
+        this.numRooms=numRooms;
     }
 
     public int getCapacity() {
@@ -88,6 +87,54 @@ public class DormitoryModel implements Serializable {
     }
 
     public int getMaintenanceCostPerHour() {
-        return 0;
+        float squareFeet = 250 * numRooms;
+        float maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
+        return (int) (maintenanceCostPerHour + 0.5);
+    }
+
+    public int getHoursToComplete() {
+        float squareFeet = 250 * numRooms;
+        float hoursToComplete = squareFeet * 2;
+        return (int) (hoursToComplete + 0.5);
+    }
+
+    public int getNumStudents() {
+        return numStudents;
+    }
+
+    public void setNumStudents(int numStudents) {
+        this.numStudents = numStudents;
+    }
+
+    public String getCurDisaster() {
+        return curDisaster;
+    }
+
+    public void setCurDisaster(String curDisaster) {
+        this.curDisaster = curDisaster;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
+    public int getNumRooms() {
+        return numRooms;
+    }
+
+    public void setNumRooms(int numRooms) {
+        this.numRooms = numRooms;
+    }
+
+    public int getLengthOfDisaster() {
+        return lengthOfDisaster;
+    }
+
+    public void setLengthOfDisaster(int lengthOfDisaster) {
+        this.lengthOfDisaster = lengthOfDisaster;
     }
 }

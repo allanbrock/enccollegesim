@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class FacultyModel implements Serializable {
 
-    private long facultyID = -1; // a uniqueid for that member of the faculty.
+    private long facultyID = -2; // a uniqueid for that member of the faculty.
     private String facultyName; //simply the name
     private String title; //EX: Assoicate prof, Dean, VP...
     private String department; //department of the faculty member EX: Math, Computer Science, Biology

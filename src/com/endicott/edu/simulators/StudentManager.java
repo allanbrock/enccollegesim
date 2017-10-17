@@ -7,11 +7,13 @@ import java.util.Random;
 public class StudentManager {
     StudentDao dao = new StudentDao();
     List<StudentModel> students;
+    Random rand = new Random();
 
     public void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive);
         runningTuitionOfStudent(runId, hoursAlive);
+        removeStudents(runId, hoursAlive);
         dao.saveAllStudents(runId, students);
     }
 
@@ -22,10 +24,7 @@ public class StudentManager {
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
-
-        Random rand = new Random();
-        int numStudents = 2 + rand.nextInt(3);
-        for (int i = 0; i < numStudents; i++) {
+        for (int i = 0; i < rand.nextInt(5); i++) {
             StudentModel student = new StudentModel();
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
@@ -42,8 +41,19 @@ public class StudentManager {
             student.setRunId(runId);
             students.add(student);
         }
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numStudents) + " new students have enrolled.");
+        NewsManager.createNews(runId, hoursAlive,  " Total students enrolled: " + Integer.toString(students.size()));
     }
-    
+
+    private void removeStudents(String runId, int hoursAlive) {
+        int currentSize = students.size();
+        int numStudents = rand.nextInt(3);
+        for(int i = 0; i < numStudents; i++){
+            students.remove(rand.nextInt(students.size()));
+        }
+        if ((currentSize - students.size()) > 0){
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students transferred / dropped out of college today");
+        }
+    }
+
 
 }

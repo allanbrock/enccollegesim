@@ -24,7 +24,6 @@ public class StudentManager {
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
-        int currentSize = students.size();
         int numStudents = 2 + rand.nextInt(3);
         for (int i = 0; i < numStudents; i++) {
             StudentModel student = new StudentModel();
@@ -55,8 +54,6 @@ public class StudentManager {
         if ((currentSize - students.size()) > 0){
             NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students transferred / dropped out of college today");
         }
-
-
     }
 
 

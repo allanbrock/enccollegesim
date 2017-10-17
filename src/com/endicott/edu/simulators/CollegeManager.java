@@ -127,6 +127,8 @@ public class CollegeManager {
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);
 
+        FacultyManager.handleTimeChange(runId,hoursAlive);
+
         return college;
     }
 

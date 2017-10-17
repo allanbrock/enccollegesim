@@ -2,12 +2,7 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.datalayer.NewsFeedDao;
-import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.NewsFeedItemModel;
-import com.endicott.edu.models.NewsType;
-import com.endicott.edu.service.DormServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +41,7 @@ public class DormManager {
 
         //small size
         if(temp.getDormType() == 1){
-//          int capacity, int hourLastUpdated, String name, int numStudents,
+//          int capacity, int hourLastUpdated, String dormName, int numStudents,
             //String curDisaster, int reputation, String runId, int numRooms,
             //float maintenanceCost
             temp = new DormitoryModel(700, 1, "take in from user 1", 0, "none",
@@ -67,6 +62,7 @@ public class DormManager {
         }
 
     }
+
     public static void createDorm(String runId, DormitoryModel dorm){
         //need to get "dorm"
         setDormAttributesByDormType(dorm);
@@ -75,12 +71,7 @@ public class DormManager {
         dorm.setNote("A new dorm has been created.");
 
         dormDao.saveNewDorm(runId, dorm);
-
-
-
-
     }
-
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
@@ -90,7 +81,7 @@ public class DormManager {
 
 
 
-    //takes in the length of the flood, the dorm name affected by the flood, and the runId of the college.
+    //takes in the length of the flood, the dorm dormName affected by the flood, and the runId of the college.
     public void floodAlert(int lengthOfFlood, String dormName, String collegeId){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         for(DormitoryModel d : dorms){
@@ -105,7 +96,7 @@ public class DormManager {
 
     //handles one student being admitted to the college at a time:
     //takes in the runId of the college (String)
-    //returns the name of the dorm (String) that student was placed in.
+    //returns the dormName of the dorm (String) that student was placed in.
     public String assignDorm(String collegeId){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
@@ -123,7 +114,7 @@ public class DormManager {
     }
 
     //handles one student leaving the college at a time:
-    //takes in the runId of the college (String), and the name of the dorm the student is in (String)
+    //takes in the runId of the college (String), and the dormName of the dorm the student is in (String)
     //returns nothing.
     public void removeStudent(String collegeId, String dormName){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);

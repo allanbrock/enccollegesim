@@ -18,8 +18,6 @@ public class DormServices {
 
 
 
-    private static DormitoryModel dorm;
-
     /**
      * Create a new dorm.
      * Notice that it consumes "text plain".  It really should be  APPLICATION_JSON
@@ -34,7 +32,7 @@ public class DormServices {
         Gson g = new Gson();
         DormitoryModel dorm = g.fromJson(dormJsonString, DormitoryModel.class);
 
-        // What if we already have a dorm with the same name?
+        // What if we already have a dorm with the same dormName?
         // We should return an error.
 
         // Make sure the college exists, return error if not.
@@ -65,13 +63,7 @@ public class DormServices {
         return dao.getDorms(runId);
     }
 
-    public static DormitoryModel getDorm() {
-        return dorm;
-    }
 
-    private void setDorm(DormitoryModel dorm) {
-        this.dorm = dorm;
-    }
 }
 
 //    @GET

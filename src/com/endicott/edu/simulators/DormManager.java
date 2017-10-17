@@ -91,8 +91,8 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         for(DormitoryModel d : dorms){
             if(d.getName() == dormName){
-                //d.setCurDisaster("flood");
-                //d.setLengthOfDisaster(lengthOfFlood);
+                d.setCurDisaster("flood");
+                d.setLengthOfDisaster(lengthOfFlood);
             }
         }
         dao.saveAllDorms(collegeId, dorms);
@@ -106,13 +106,13 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
         for(DormitoryModel d : dorms){
-//            int s = d.getNumStudents();
-//            int c = d.getCapacity();
-//            dormName = d.getName();
-//            if(s < c){
-//                d.setNumStudents(s + 1);
-//                break;
-//            }
+            int s = d.getNumStudents();
+            int c = d.getCapacity();
+            dormName = d.getName();
+            if(s < c){
+                d.setNumStudents(s + 1);
+                break;
+            }
         }
         dao.saveAllDorms(collegeId, dorms);
         return dormName;
@@ -124,11 +124,11 @@ public class DormManager {
     public void removeStudent(String collegeId, String dormName){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         for(DormitoryModel d : dorms){
-//            int s = d.getNumStudents();
-//            if(d.name == dormName){
-//                d.setNumStudents(s - 1);
-//                break;
-//            }
+            int s = d.getNumStudents();
+            if(d.getName() == dormName){
+                d.setNumStudents(s - 1);
+                break;
+            }
         }
         dao.saveAllDorms(collegeId, dorms);
 
@@ -158,11 +158,11 @@ public class DormManager {
     public int getOpenBeds(String collegeId){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
-//        for (DormitoryModel d : dorms){
-//            int numStudents = d.getNumStudents();
-//            int capacity = d.getCapacity();
-//            openBeds += capacity - numStudents;
-//        }
+        for (DormitoryModel d : dorms){
+            int numStudents = d.getNumStudents();
+            int capacity = d.getCapacity();
+            openBeds += capacity - numStudents;
+        }
         return openBeds;
     }
 

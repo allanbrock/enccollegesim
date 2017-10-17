@@ -24,8 +24,7 @@ public class StudentManager {
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
-        int numStudents = 2 + rand.nextInt(3);
-        for (int i = 0; i < numStudents; i++) {
+        for (int i = 0; i < rand.nextInt(5);; i++) {
             StudentModel student = new StudentModel();
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));

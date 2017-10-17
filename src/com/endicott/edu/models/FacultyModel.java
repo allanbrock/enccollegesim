@@ -9,15 +9,14 @@ import java.io.Serializable;
  */
 public class FacultyModel implements Serializable {
 
-    private long facultyID = -1; // a uniqueid for that member of the faculty.
+    private long facultyID = -2; // a unique id for that member of the faculty.
     private String facultyName; //simply the name
     private String title; //EX: Assoicate prof, Dean, VP...
     private String department; //department of the faculty member EX: Math, Computer Science, Biology
-    private long salary = 115000; //yearly salary
+    private int salary = 115000; //yearly salary
     private String officeLocation; //office building and number
     private String runId;
-
-    public FacultyModel(String facultyName, String title, String department, long salary, String officeLocation, String runId) {
+    public FacultyModel(String facultyName, String title, String department, int salary, String officeLocation, String runId) {
         this.facultyName = facultyName;
         this.title = title;
         this.department = department;
@@ -61,11 +60,11 @@ public class FacultyModel implements Serializable {
         this.department = department;
     }
 
-    public long getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(long salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 

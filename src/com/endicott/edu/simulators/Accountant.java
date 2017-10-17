@@ -14,4 +14,13 @@ public class Accountant {
         college.setAvailableCash(college.getAvailableCash() - amount);
         collegeDao.saveCollege(college);
     }
+
+    static public void studentIncome(String runId, int amount) {
+        CollegeDao collegeDao = new CollegeDao();
+
+        CollegeModel college = collegeDao.getCollege(runId);
+        college.setAvailableCash(college.getAvailableCash() + amount);
+        collegeDao.saveCollege(college);
+    }
 }
+

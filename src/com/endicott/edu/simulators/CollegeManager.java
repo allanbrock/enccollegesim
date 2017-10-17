@@ -50,15 +50,15 @@ public class CollegeManager {
         sportManager.addNewTeam("Men's Basketball", runId);
 
         logger.info("Done creating college");
+        createInitialFaculty(runId);
         return college;
     }
 
     static private void createInitialFaculty(String runId){
         Logger logger = Logger.getLogger("CollegeManager");
-
         logger.info("Creating Initial Faculty..");
-
         FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
+        member.setFacultyID(-1); //set the id to -1 so we know this is the first id we set
         FacultyDao fao = new FacultyDao();
         fao.saveNewFaculty(runId,member);
         logger.info("Created new faculty member ID: " + member.getFacultyID());
@@ -95,9 +95,11 @@ public class CollegeManager {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
+        SportsDao sportsDao = new SportsDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
+        sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
 
@@ -121,6 +123,11 @@ public class CollegeManager {
 
         FloodManager floodManager = new FloodManager();
         floodManager.handleTimeChange(runId, hoursAlive);
+
+        StudentManager studentManager = new StudentManager();
+        studentManager.handleTimeChange(runId, hoursAlive);
+
+        FacultyManager.handleTimeChange(runId,hoursAlive);
 
         return college;
     }

@@ -2,105 +2,41 @@ package com.endicott.edu.models;
 
 import java.io.Serializable;
 
-/**
- * Created by abrocken on 7/10/2017.
- */
+
+
 public class DormitoryModel implements Serializable {
     private int capacity = 0;
+    private int costPerHour = 0;
     private int hourLastUpdated = 0;
-    private float hoursToComplete = 0;
-    public int numStudents = 0;
-    //current disaster affecting the dorm
-    public String curDisaster = "none";
-    //how long the disaster is supposed to last in hours
-    public int lengthOfDisaster = 0;
-    public String name = "unknown";
+    private String name = "unknown";
     private String runId = "unknown";
     private String note = "no note";
-    //dorms start at a middle reputation (5/10) upon creation. (0/10 is the worst reputation, 10/10 is the best).
-    public int reputation = 5;
-    private int dormType = 0; //small (1), medium (2), large (3)
-    private float buildCost = 0;
-    //per year maintenance cost
-    private int maintenanceCostPerHour = 0;
-    private int numRooms = 0;
-    private float squareFeet;
 
-
-    public int getLengthOfDisaster() {
-        return lengthOfDisaster;
+    public DormitoryModel() {
     }
 
-    public void setLengthOfDisaster(int lengthOfDisaster) {
-        this.lengthOfDisaster = lengthOfDisaster;
+    public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, String runId) {
+        this.capacity = capacity;
+        this.costPerHour = costPerHour;
+        this.hourLastUpdated = hourLastUpdated;
+        this.name = name;
+        this.runId = runId;
     }
-
-
-    private DormitoryModel() {
-    }
-
 
 
     public DormitoryModel(int capacity, int hourLastUpdated, String name, int numStudents,
-                          String curDisaster, int reputation, String runId, int numRooms) {
-        this.capacity = capacity;
-        this.hourLastUpdated = hourLastUpdated;
-        this.name = name;
-        this.numStudents=numStudents;
-        this.curDisaster = curDisaster;
-        this.reputation = reputation;
-        this.runId = runId;
-        this.numRooms = numRooms;
-        this.squareFeet = 250 * numRooms;
-        this.maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
-        this.hoursToComplete = squareFeet * 2;
-    }
-
-    public float getHoursToComplete() {
-        return hoursToComplete;
-    }
-    public void setHoursToComplete(float hoursToComplete) {
-        this.hoursToComplete = hoursToComplete;
-    }
-
-    public int getNumStudents() {
-        return numStudents;
-    }
-
-    public void setNumStudents(int numStudents) {
-        this.numStudents = numStudents;
-    }
-
-    public String getCurDisaster() {
-        return curDisaster;
-    }
-
-    public void setCurDisaster(String curDisaster) {
-        this.curDisaster = curDisaster;
-    }
-
-//    public String getDormClass() {
-//        return dormClass;
-//    }
-//
-//    public void setDormClass(String dormClass) {
-//        this.dormClass = dormClass;
-//    }
-
-    public int getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
-    }
-
-    public float getBuildCost() {
-        return buildCost;
-    }
-
-    public void setBuildCost(float buildCost) {
-        this.buildCost = buildCost;
+                          String curDisaster, int reputation, String runId, int numRooms){
+        this.capacity=capacity;
+        this.hourLastUpdated=hourLastUpdated;
+        this.name=name;
+        //this.numStudents=numStudents;
+        //this.curDisaster=curDisaster;
+        //this.reputation=reputation;
+        this.runId=runId;
+        //this.numRooms=numRooms;
+//this.squareFeet = 250 * numRooms;
+//this.maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
+//this.hoursToComplete = squareFeet * 2;
     }
 
     public int getCapacity() {
@@ -109,6 +45,14 @@ public class DormitoryModel implements Serializable {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public int getCostPerHour() {
+        return costPerHour;
+    }
+
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
     }
 
     public int getHourLastUpdated() {
@@ -143,37 +87,7 @@ public class DormitoryModel implements Serializable {
         this.note = note;
     }
 
-    public int getDormType() {
-        return dormType;
-    }
-
-    public void setDormType(int dormType) {
-        this.dormType = dormType;
-    }
-    public float getSquareFeet() {
-        return squareFeet;
-    }
-
-    public void setSquareFeet(float squareFeet) {
-        this.squareFeet = squareFeet;
-    }
-
-    public int getNumRooms() {
-        return numRooms;
-    }
-
-    public void setNumRooms(int numRooms) {
-        this.numRooms = numRooms;
-    }
-
-    public float getMaintenanceCostPerHour() {
-        return maintenanceCostPerHour;
-    }
-
-    public void setMaintenanceCostPerHour(int maintenanceCostPerHour) {
-        this.maintenanceCostPerHour = maintenanceCostPerHour;
-    }
-
-    public void setCostPerHour(float costPerHour) {
+    public int getMaintenanceCostPerHour() {
+        return 0;
     }
 }

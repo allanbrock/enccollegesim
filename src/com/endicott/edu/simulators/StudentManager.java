@@ -42,7 +42,7 @@ public class StudentManager {
             student.setRunId(runId);
             students.add(student);
         }
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(students.size()) + " students are enrolled");
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numStudents) + " new students have enrolled.");
     }
     
 

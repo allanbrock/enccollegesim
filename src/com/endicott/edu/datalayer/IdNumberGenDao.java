@@ -32,17 +32,14 @@ public class IdNumberGenDao {
     }
 
     /**
-     * This method should be run the first time you need an id..
      * Creates the first id and writes it to the disk
      * @param runId College instance id
      * @return unique id#
      */
     public static int firstWrite(String runId){
-
         ID id = new ID(0);
         Gson gson = new Gson();
-       // id.id = 1;
-        FileWriter fw = null;
+        FileWriter fw;
         try {
             fw = new FileWriter(getFilePath(runId));
             fw.write(gson.toJson(id));
@@ -73,7 +70,7 @@ public class IdNumberGenDao {
             fw.close();
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            return firstWrite(runId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,15 +78,25 @@ public class IdNumberGenDao {
     }
 
 
+    public void deleteIDs(String runId) {
+        File file = new File(getFilePath(runId));
+        file.delete();
+    }
+
     public static void main(String[] args) {
         final String runId = "testIdGen2";
         IdNumberGenDao idGen = new IdNumberGenDao();
-        //System.out.println("The result of calling getID for first time: " + idGen.getID(runId));
-        //firstWrite(runId);
-        for(int i = 0; i < 30; i++){
-            System.out.println("Try #" + i + "result: " + getID(runId));
+        idGen.deleteIDs(runId);
+        if (getID(runId) == 0) {
+            System.out.println("PASS");
+        } else {
+            System.out.println("FAIL");
         }
-
+        if (getID(runId) == 1) {
+            System.out.println("PASS");
+        } else {
+            System.out.println("FAIL");
+        }
     }
 
 }

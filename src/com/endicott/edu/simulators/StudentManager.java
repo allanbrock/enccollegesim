@@ -24,7 +24,8 @@ public class StudentManager {
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
-        for (int i = 0; i < rand.nextInt(5); i++) {
+        int numNewStudents = rand.nextInt(5);
+        for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             student.setIdNumber(100000 + rand.nextInt(900000));
             student.setHappinessLevel(rand.nextInt(100));
@@ -41,7 +42,7 @@ public class StudentManager {
             student.setRunId(runId);
             students.add(student);
         }
-        NewsManager.createNews(runId, hoursAlive,  " Total students enrolled: " + Integer.toString(students.size()));
+        NewsManager.createNews(runId, hoursAlive,  Integer.toString(numNewStudents) + " students joined the college.");
     }
 
     private void removeStudents(String runId, int hoursAlive) {

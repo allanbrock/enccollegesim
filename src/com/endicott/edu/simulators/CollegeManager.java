@@ -115,14 +115,14 @@ public class CollegeManager {
         int hoursAlive = college.getHoursAlive();
 
         // Tell everyone about the time change.
+        FloodManager floodManager = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
+
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
-
-        FloodManager floodManager = new FloodManager();
-        floodManager.handleTimeChange(runId, hoursAlive);
 
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);

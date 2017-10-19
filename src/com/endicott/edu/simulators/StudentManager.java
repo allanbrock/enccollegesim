@@ -20,7 +20,7 @@ public class StudentManager {
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
         int tuitionSum = StudentModel.getTuitionCost() * students.size();
         Accountant.studentIncome(runId, tuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "+$" + tuitionSum + " for student tuition");
+        NewsManager.createNews(runId, hoursAlive, "Received $" + tuitionSum + " from student tuition");
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
@@ -51,7 +51,7 @@ public class StudentManager {
             students.remove(rand.nextInt(students.size()));
         }
         if ((currentSize - students.size()) > 0){
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students transferred / dropped out of college today");
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.");
         }
     }
 

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 100000;
+    static public final int STARTUP_FUNDING = 10000;
 
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
@@ -40,7 +40,9 @@ public class CollegeManager {
         // Create a dorm
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60);
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
+                120,"none", 5, "none", 60);
+        dorm.setCostPerHour(450);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
@@ -69,7 +71,7 @@ public class CollegeManager {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
         Random rand = new Random();
-        int numStudents = 2 + rand.nextInt(3);
+        int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
             student.setIdNumber(100000 + rand.nextInt(900000));

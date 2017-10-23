@@ -27,31 +27,15 @@ public class SportService {
      * @return college in JSON format
      */
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/{runId}/{sportName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public SportModel addSport(String sportJsonString) {
-        Gson g = new Gson();
-        SportModel sport = g.fromJson(sportJsonString, SportModel.class);
-
-        // What if we already have a dorm with the same name?
-        // We should return an error.
-
-        // Make sure the college exists, return error if not.
-        String runId = sport.getRunId();
+    public SportModel addSport(@PathParam("runId") String runId,@PathParam("sportName") String sportName) {
         if (!CollegeManager.doesCollegeExist(runId)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-
-        // Override some fields
-        sport.setHourLastUpdated(0);
-
         // Create a sport
         SportsDao sportDao = new SportsDao();
-        sportDao.saveNewSport(runId, sport);
-        sport.setNote("created sport.");
-        return sport;
-
-
+        return(SportManager.addNewTeam(sportName,runId));
     }
 
     /**

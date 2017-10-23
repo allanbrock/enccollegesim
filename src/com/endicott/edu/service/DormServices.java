@@ -3,6 +3,7 @@ package com.endicott.edu.service;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.simulators.DormManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
@@ -14,6 +15,8 @@ import java.util.List;
 @Path("/dorms")
 public class DormServices {
     private DormitoryDao dao = new DormitoryDao();
+
+
 
     /**
      * Create a new dorm.
@@ -29,7 +32,7 @@ public class DormServices {
         Gson g = new Gson();
         DormitoryModel dorm = g.fromJson(dormJsonString, DormitoryModel.class);
 
-        // What if we already have a dorm with the same name?
+        // What if we already have a dorm with the same dormName?
         // We should return an error.
 
         // Make sure the college exists, return error if not.
@@ -41,10 +44,9 @@ public class DormServices {
         // Override some fields
         dorm.setHourLastUpdated(0);
 
+        DormManager.createDorm(runId, dorm);
         // Create a dorm
-        DormitoryDao dormDao = new DormitoryDao();
-        dormDao.saveNewDorm(runId, dorm);
-        dorm.setNote("created dorm.");
+
         return dorm;
     }
 
@@ -60,6 +62,7 @@ public class DormServices {
     public List<DormitoryModel> getDorms(@PathParam("runId") String runId) {
         return dao.getDorms(runId);
     }
+
 
 }
 

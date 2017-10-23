@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 100000;
+    static public final int STARTUP_FUNDING = 10000;
 
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
@@ -40,7 +40,9 @@ public class CollegeManager {
         // Create a dorm
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall", 120,"none", 5, "none", 60);
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
+                120,"none", 5, "none", 60);
+        dorm.setCostPerHour(450);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
@@ -50,15 +52,15 @@ public class CollegeManager {
         sportManager.addNewTeam("Men's Basketball", runId);
 
         logger.info("Done creating college");
+        createInitialFaculty(runId);
         return college;
     }
 
     static private void createInitialFaculty(String runId){
         Logger logger = Logger.getLogger("CollegeManager");
-
         logger.info("Creating Initial Faculty..");
-
         FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
+        member.setFacultyID(-1); //set the id to -1 so we know this is the first id we set
         FacultyDao fao = new FacultyDao();
         fao.saveNewFaculty(runId,member);
         logger.info("Created new faculty member ID: " + member.getFacultyID());
@@ -69,7 +71,7 @@ public class CollegeManager {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
         Random rand = new Random();
-        int numStudents = 2 + rand.nextInt(3);
+        int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
             student.setIdNumber(100000 + rand.nextInt(900000));
@@ -83,6 +85,7 @@ public class CollegeManager {
             } else {
                 student.setGender("Female");
             }
+            student.setSick(false);
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
@@ -94,9 +97,11 @@ public class CollegeManager {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
+        SportsDao sportsDao = new SportsDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
+        sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
 
@@ -112,14 +117,19 @@ public class CollegeManager {
         int hoursAlive = college.getHoursAlive();
 
         // Tell everyone about the time change.
+        FloodManager floodManager = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
+
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
 
-        FloodManager floodManager = new FloodManager();
-        floodManager.handleTimeChange(runId, hoursAlive);
+        StudentManager studentManager = new StudentManager();
+        studentManager.handleTimeChange(runId, hoursAlive);
+
+        FacultyManager.handleTimeChange(runId,hoursAlive);
 
         return college;
     }

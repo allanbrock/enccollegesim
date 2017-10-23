@@ -38,20 +38,19 @@ public class FloodManager {
     private void billCostOfFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, (int) (newCharge));
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge);
-    }
+        if(newCharge > 0){
+            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge);
+
+        }
+        }
 
 
     // Checks to see if a flood happened
     private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
-            NewsFeedItemModel note = new NewsFeedItemModel();
-            note.setHour(hoursAlive);
-            note.setMessage("Dorm " + dorm.getName() + " has flooded.\n");
-            note.setNoteType(NewsType.GENERAL_NOTE);
-            NewsFeedDao noteDao = new NewsFeedDao();
-            noteDao.saveNote(runId, note);
+            NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n");
+
         }
     }
 

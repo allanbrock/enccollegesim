@@ -17,11 +17,13 @@ public class PlagueModel implements Serializable {
     private String note = "no note";
     private String runId = "unknown";
     private String dormName = "unknown";
+    private int hourLastUpdated;  // the time we last updated this record
+    private int numberOfHoursLeftInPlague;  // if 0, then plague is over.  No one new can get sick.
 
     public PlagueModel() {
     }
 
-    public PlagueModel(int daysLasted, int dayLastUpdated, String dormName, String runId, int studentsSick, int studentsGone, int costToCure) {
+    public PlagueModel(int daysLasted, int dayLastUpdated, String dormName, String runId, int studentsSick, int studentsGone, int costToCure, int numberOfHoursLeftInPlague, int hourLastUpdated) {
         this.daysLasted = daysLasted;
         this.dayLastUpdated = dayLastUpdated;
         this.dormName = dormName;
@@ -30,6 +32,8 @@ public class PlagueModel implements Serializable {
         this.studentsGone = studentsGone;
         this.name = "Sickness";
         this.costToCure = costToCure;
+        this.numberOfHoursLeftInPlague = numberOfHoursLeftInPlague;
+        this.hourLastUpdated = hourLastUpdated;
     }
 
 
@@ -72,5 +76,17 @@ public class PlagueModel implements Serializable {
     public int getCostToCure() { return costToCure; }
 
     public void setCostToCure(int costToCure) { this.costToCure = costToCure; }
+
+    public int getHourLastUpdated() {
+        return hourLastUpdated;
+    }
+
+    public void setHourLastUpdated(int hourLastUpdated) {
+        this.hourLastUpdated = hourLastUpdated;
+    }
+
+    public int getNumberOfHoursLeftInPlague() { return numberOfHoursLeftInPlague; }
+
+    public void setNumberOfHoursLeftInPlague(int numberOfHoursLeftInPlague) { this.numberOfHoursLeftInPlague = numberOfHoursLeftInPlague; }
 
 }

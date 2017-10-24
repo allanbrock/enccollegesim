@@ -84,8 +84,8 @@ public class PlagueDao {
     private static void testNotes() {
         final String runId = "testplague001";
         PlagueDao dao = new PlagueDao();
-        PlagueModel m1 = new PlagueModel(100, 10, "Hampshire Hall", runId, 5, 0, 1000 );
-        PlagueModel m2 = new PlagueModel(200, 20,"Vermont House", runId, 5, 0, 1000);
+        PlagueModel m1 = new PlagueModel(100, 10, "Hampshire Hall", runId, 5, 0, 1000, 72, 0 );
+        PlagueModel m2 = new PlagueModel(200, 20,"Vermont House", runId, 5, 0, 1000, 72, 0);
         ArrayList<PlagueModel> plagues = new ArrayList<>();
         plagues.add(m1);
         plagues.add(m2);
@@ -95,7 +95,7 @@ public class PlagueDao {
 
         assert(outMsgs.size() == 2);
 
-        PlagueModel m3 = new PlagueModel(300, 10,"Maine Manor", runId, 5, 0, 0);
+        PlagueModel m3 = new PlagueModel(300, 10,"Maine Manor", runId, 5, 0, 0, 72, 0);
         dao.saveNewPlague(runId, m3);
         outMsgs = dao.getPlagues(runId);
         assert(outMsgs.size() == 3);

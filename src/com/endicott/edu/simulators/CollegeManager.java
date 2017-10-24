@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 10000;
+    static public final int STARTUP_FUNDING = 5000;
 
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();

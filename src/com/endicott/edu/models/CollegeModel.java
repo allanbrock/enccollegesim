@@ -10,6 +10,15 @@ public class CollegeModel implements Serializable {
     private int hoursAlive = 0;
     private int availableCash = 0;
     private int yearlyTuitionCost = 40000; //the amount it costs to attend the school for a single year
+    private int reputation = 50; //reputation of college based on 1-100
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
 
     public int getYearlyTuitionCost() {
         return yearlyTuitionCost;

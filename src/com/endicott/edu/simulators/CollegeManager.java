@@ -11,6 +11,21 @@ import java.util.logging.Logger;
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 10000;
 
+    /**
+     * This functions updates the amount that the college costs per year
+     * @param runId id of college instance
+     * @return an instance of a college model
+     */
+    public static CollegeModel updateCollegeTuition(String runId, int amount){
+        CollegeDao cao = new CollegeDao();
+        CollegeModel college = cao.getCollege(runId); //get the college for this runID
+        college.setYearlyTuitionCost(amount); //set the amount via setter
+        cao.saveCollege(college); //write to disk
+        return college;
+    }
+
+
+
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 

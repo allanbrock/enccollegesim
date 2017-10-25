@@ -4,10 +4,10 @@ import java.util.List;
 
 // created by Cam Bleck 10/3/17
 public class StudentsModel {
-    static private List<StudentModel> studentList;
-    static private int retentionRate;
-    static private int happinessLevel;
-    static private int graduationRate;
+    private List<StudentModel> studentList;
+    private int retentionRate;
+    private int happinessLevel;
+    private int graduationRate;
 
     public List<StudentModel> getStudentList() {return studentList; }
 
@@ -36,25 +36,5 @@ public class StudentsModel {
     public void setGraduationRate(int graduationRate) {
         this.graduationRate = graduationRate;
     }
-
-
-    public static void calculateStudentsStats(){
-        int happinessSum = 0;
-        for(int i = 0; i < studentList.size(); i++){
-            happinessSum += studentList.get(i).getHappinessLevel();
-        }
-        happinessLevel = happinessSum/studentList.size();
-
-        //need calculation for grad rate
-        //  based off days alive and happiness + reputation
-
-
-        //need calculation for retention rate
-        //  based off happiness level
-
-
-    }
-
-
 
 }

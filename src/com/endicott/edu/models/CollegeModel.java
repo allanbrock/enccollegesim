@@ -11,6 +11,7 @@ public class CollegeModel implements Serializable {
     private int availableCash = 0;
     private String runId = "unknown";
     private String note = "empty";
+    private int studentBodyHappiness;
 
     public int getAvailableCash() {
         return availableCash;
@@ -52,4 +53,8 @@ public class CollegeModel implements Serializable {
     public int getCurrentDay() {
         return hoursAlive / 24 + 1;
     }
+
+    public int getStudentBodyHappiness() { return studentBodyHappiness; }
+
+    public void setStudentBodyHappiness(int studentBodyHappiness) { this.studentBodyHappiness = studentBodyHappiness; }
 }

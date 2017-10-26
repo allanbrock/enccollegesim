@@ -1,13 +1,9 @@
 package com.endicott.edu.service;
 
-import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.SportsDao;
-import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.SportModel;
-import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.SportManager;
-import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

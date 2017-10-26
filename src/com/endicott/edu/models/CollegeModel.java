@@ -14,7 +14,7 @@ public class CollegeModel implements Serializable {
     private String runId = "unknown";
     private String note = "empty";
     private int studentBodyHappiness;
-    
+
     public int getReputation() { return reputation; }
 
     public void setReputation(int reputation) { this.reputation = reputation; }

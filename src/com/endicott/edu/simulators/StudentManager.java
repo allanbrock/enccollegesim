@@ -1,7 +1,9 @@
 package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
+import com.endicott.edu.datalayer.FacultyDao;
 import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.CollegeModel;
+import com.endicott.edu.models.FacultyModel;
 import com.endicott.edu.models.StudentModel;
 import com.endicott.edu.models.StudentsModel;
 
@@ -14,6 +16,8 @@ public class StudentManager {
     List<StudentModel> students;
     Random rand = new Random();
     DormManager dormManager = new DormManager();
+    FacultyDao facultyDao = new FacultyDao();
+    List<FacultyModel> faculty;
 
     public void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
@@ -21,11 +25,11 @@ public class StudentManager {
         runningTuitionOfStudent(runId, hoursAlive);
         removeStudents(runId, hoursAlive);
         dao.saveAllStudents(runId, students);
+        faculty = facultyDao.getFaculty(runId);
 
         //get students into student body
         StudentsModel studentBody = new StudentsModel();
-        List<StudentModel> studentList = dao.getStudents(runId);
-        studentBody.setStudentList(studentList);
+        studentBody.setStudentList(students);
 
         //get college
         CollegeModel college = new CollegeModel();
@@ -33,7 +37,7 @@ public class StudentManager {
         college = collegeDao.getCollege(runId);
 
         //calculate happiness and set it in the college
-        college.setStudentBodyHappiness(calculateStudentsStats(studentBody));
+        college.setStudentBodyHappiness(calculateStudentsHappiness(studentBody, college, faculty));
 
         //save the college
         collegeDao.saveCollege(college);
@@ -79,11 +83,14 @@ public class StudentManager {
         }
     }
 
-    public int calculateStudentsStats(StudentsModel studentBody) {
+    private int calculateStudentsHappiness(StudentsModel studentBody, CollegeModel college, List <FacultyModel> faculty) {
+        //calculate affects of college stats on individual student happiness
+        calculateCollegeAffect(studentBody, college.getReputation(), faculty.size(), college.getYearlyTuitionCost());
+
         int happinessSum = 0;
         students =  studentBody.getStudentList();
         int happinessLevel;
-        for (int i = 0; i < students.size() ; i++) {
+        for (int i = 0; i < students.size(); i++) {
             happinessSum += students.get(i).getHappinessLevel();
         }
         happinessLevel = happinessSum / students.size();
@@ -91,5 +98,22 @@ public class StudentManager {
         return happinessLevel;
 
     }
+
+    private void calculateCollegeAffect(StudentsModel studentBody, int reputation, int numberOfFaculty, int tuitionCost){
+        students = studentBody.getStudentList();
+        int reputationAffect = (reputation - 60)/10;
+        int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
+        int tuitionAffect = -(tuitionCost - 40000)/1000;
+
+        for(int i = 0; i < students.size(); i++){
+            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect);
+        }
+    }
+
+
+
+
+
+
 
 }

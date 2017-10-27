@@ -51,7 +51,9 @@ public class StudentManager {
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
-        int numNewStudents = rand.nextInt(3);
+        DormManager dormManager = new DormManager();
+        int openBeds = dormManager.getOpenBeds(runId);
+        int numNewStudents = rand.nextInt(openBeds);
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             student.setIdNumber(100000 + rand.nextInt(900000));

@@ -71,6 +71,7 @@ public class StudentManager {
             student.setRunId(runId);
             students.add(student);
         }
+        dao.saveAllStudents(runId, students);
         NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.");
     }
 

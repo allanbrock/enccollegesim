@@ -17,6 +17,7 @@ public class DormitoryModel implements Serializable {
 
 
 
+
     private int dormType = 1;
 
     public DormitoryModel() {
@@ -62,10 +63,6 @@ public class DormitoryModel implements Serializable {
         return costPerHour;
     }
 
-    public void setCostPerHour(int costPerHour) {
-        this.costPerHour = costPerHour;
-    }
-
     public int getHourLastUpdated() {
         return hourLastUpdated;
     }
@@ -99,8 +96,10 @@ public class DormitoryModel implements Serializable {
     }
 
     public int getMaintenanceCostPerHour() {
-        float squareFeet = 250 * numRooms;
-        float maintenanceCostPerHour = (int)(squareFeet * 2)/(365*24);
+        return  costPerHour;
+    }
+    public int setMaintenanceCostPerHour(int numRooms){
+        float maintenanceCostPerHour = (int)((numRooms * 250) * 2)/(365*24);
         return (int) (maintenanceCostPerHour + 0.5);
     }
 
@@ -148,5 +147,12 @@ public class DormitoryModel implements Serializable {
 
     public void setLengthOfDisaster(int lengthOfDisaster) {
         this.lengthOfDisaster = lengthOfDisaster;
+    }
+    public String checkIfBeingBuilt(){
+        if(this.getHoursToComplete() > 0){
+            return "Under Construction";
+        }
+        else
+            return "Built";
     }
 }

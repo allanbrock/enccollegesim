@@ -24,9 +24,9 @@ public class StudentManager {
         addNewStudents(runId, hoursAlive);
         runningTuitionOfStudent(runId, hoursAlive);
         removeStudents(runId, hoursAlive);
+        updateStudentsTime(hoursAlive, students);
         dao.saveAllStudents(runId, students);
         faculty = facultyDao.getFaculty(runId);
-
         //get students into student body
         StudentsModel studentBody = new StudentsModel();
         studentBody.setStudentList(students);
@@ -45,9 +45,9 @@ public class StudentManager {
     }
 
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
-        int tuitionSum = StudentModel.getTuitionCost() * students.size();
-        Accountant.studentIncome(runId, tuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + tuitionSum + " from student tuition");
+        int dailyTuitionSum = (CollegeModel.getYearlyTuitionCost() / 365) * students.size();
+        Accountant.studentIncome(runId, dailyTuitionSum);
+        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition");
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
@@ -67,7 +67,6 @@ public class StudentManager {
             } else {
                 student.setGender("Female");
             }
-            student.setSick(false);
             student.setRunId(runId);
             students.add(student);
         }
@@ -111,6 +110,13 @@ public class StudentManager {
         for(int i = 0; i < students.size(); i++){
             students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect);
         }
+    }
+
+    private void updateStudentsTime(int hoursAlive, List<StudentModel> students){
+        for(int i = 0; i < students.size(); i++){
+            students.get(i).setHourLastUpdated(hoursAlive);
+        }
+
     }
 
 

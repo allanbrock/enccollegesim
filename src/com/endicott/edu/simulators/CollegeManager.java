@@ -109,7 +109,6 @@ public class CollegeManager {
             } else {
                 student.setGender("Female");
             }
-            student.setSick(false);
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }

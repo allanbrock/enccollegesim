@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class CollegeModel implements Serializable {
     private int hoursAlive = 0;
     private int availableCash = 0;
-    private int yearlyTuitionCost = 40000; //the amount it costs to attend the school for a single year
+    private static int yearlyTuitionCost = 40000; //the amount it costs to attend the school for a single year
     private int reputation = 50; //reputation of college based on 1-100
     private String runId = "unknown";
     private String note = "empty";
@@ -19,12 +19,12 @@ public class CollegeModel implements Serializable {
 
     public void setReputation(int reputation) { this.reputation = reputation; }
 
-    public int getYearlyTuitionCost() {
+    public static int getYearlyTuitionCost() {
         return yearlyTuitionCost;
     }
 
-    public void setYearlyTuitionCost(int yearlyTuitionCost) {
-        this.yearlyTuitionCost = yearlyTuitionCost;
+    public static void setYearlyTuitionCost(int yearlyTuitionCost) {
+        yearlyTuitionCost = yearlyTuitionCost;
     }
 
     public int getAvailableCash() {

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 10000;
-
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -98,7 +97,7 @@ public class CollegeManager {
         int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
-            student.setIdNumber(100000 + rand.nextInt(900000));
+            student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(100));

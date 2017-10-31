@@ -3,6 +3,7 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.NewsType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class DormManager {
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, (int) (newCharge));
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge);
+        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
     }
 
 

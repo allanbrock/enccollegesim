@@ -2,10 +2,7 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.FacultyDao;
 import com.endicott.edu.datalayer.StudentDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.FacultyModel;
-import com.endicott.edu.models.StudentModel;
-import com.endicott.edu.models.StudentsModel;
+import com.endicott.edu.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +45,7 @@ public class StudentManager {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId, dailyTuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition");
+        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition", NewsType.FINANCIAL_NEWS);
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
@@ -72,7 +69,7 @@ public class StudentManager {
             students.add(student);
         }
         dao.saveAllStudents(runId, students);
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.");
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
     }
 
     private void removeStudents(String runId, int hoursAlive) {
@@ -87,7 +84,7 @@ public class StudentManager {
             }
         }
         if ((currentSize - students.size()) > 0) {
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.");
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.GENERAL_NOTE);
         }
 
     }

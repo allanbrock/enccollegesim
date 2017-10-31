@@ -16,14 +16,14 @@ public class NewsManager {
             return;
         }
 
-        createNews(collegeId, college.getCurrentDay(), message);
+        createNews(collegeId, college.getCurrentDay(), message, NewsType.GENERAL_NOTE);
     }
 
-    public static void createNews(String collegeId, int newsHour, String message) {
+    public static void createNews(String collegeId, int newsHour, String message, NewsType newsType) {
         NewsFeedItemModel note = new NewsFeedItemModel();
         note.setHour(newsHour);
         note.setMessage(message);
-        note.setNoteType(NewsType.GENERAL_NOTE);
+        note.setNoteType(newsType);
         NewsFeedDao noteDao = new NewsFeedDao();
         noteDao.saveNote(collegeId, note);
     }

@@ -59,6 +59,10 @@ public class DormitoryModel implements Serializable {
         this.capacity = capacity;
     }
 
+    public void setCostPerHour(int costPerHour) {
+        this.costPerHour = costPerHour;
+    }
+
     public int getCostPerHour() {
         return costPerHour;
     }

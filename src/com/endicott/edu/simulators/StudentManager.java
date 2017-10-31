@@ -47,7 +47,7 @@ public class StudentManager {
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
         int dailyTuitionSum = (CollegeModel.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId, dailyTuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition");
+        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition!!");
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
@@ -75,14 +75,24 @@ public class StudentManager {
     }
 
     private void removeStudents(String runId, int hoursAlive) {
+        float scalingFactor = .001f;
         int currentSize = students.size();
-        int numStudents = rand.nextInt(3);
-        for (int i = 0; i < numStudents; i++) {
-            students.remove(rand.nextInt(students.size()));
+
+        for (int i = 0; i < students.size(); i++){
+            int h = students.get(i).getHappinessLevel();
+            float odds = (100f - h) * scalingFactor;
+            if (didItHappen(odds)) {
+                students.remove(i);
+            }
         }
         if ((currentSize - students.size()) > 0) {
             NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.");
         }
+
+    }
+
+    private boolean didItHappen(float oddsBetween0And1) {
+        return (Math.random() < oddsBetween0And1);
     }
 
     private int calculateStudentsHappiness(StudentsModel studentBody, CollegeModel college, List <FacultyModel> faculty) {
@@ -118,11 +128,5 @@ public class StudentManager {
         }
 
     }
-
-
-
-
-
-
 
 }

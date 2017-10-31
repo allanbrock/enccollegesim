@@ -93,6 +93,7 @@ public class CollegeManager {
     static private void createInitialStudents(String runId, int currentDay) {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
+        DormManager dormManager = new DormManager();
         Random rand = new Random();
         int numStudents = 100;
 
@@ -102,7 +103,7 @@ public class CollegeManager {
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(100));
             student.setTeam("");
-            student.setDorm("");
+            student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {

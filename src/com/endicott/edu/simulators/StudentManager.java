@@ -60,7 +60,7 @@ public class StudentManager {
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
             student.setTeam("");
-            student.setDorm("");
+            student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {
@@ -74,6 +74,7 @@ public class StudentManager {
     }
 
     private void removeStudents(String runId, int hoursAlive) {
+        DormManager dormManager = new DormManager();
         float scalingFactor = .001f;
         int currentSize = students.size();
 
@@ -81,7 +82,9 @@ public class StudentManager {
             int h = students.get(i).getHappinessLevel();
             float odds = (100f - h) * scalingFactor;
             if (didItHappen(odds)) {
+                dormManager.removeStudent(runId, students.get(i).getDorm());
                 students.remove(i);
+
             }
         }
         if ((currentSize - students.size()) > 0) {

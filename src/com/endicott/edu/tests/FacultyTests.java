@@ -86,8 +86,8 @@ public class FacultyTests {
         }
 
         //when we create the college we create a dean.. lets make sure the only faculty is them..
-        if(!member[0].getTitle().equals("Dean")){
-            System.out.println("Was expecting title to be dean...was: " + member[0].getTitle());
+        if(member == null || member.length < 1 || member[0].getTitle() == null || !member[0].getTitle().equals("Dean")){
+            System.out.println("Was expecting title to be dean. Response: " + responseAsString + " from " + serviceUrl + "faculty/" + runId);
             result = FAIL;
             return;
         }

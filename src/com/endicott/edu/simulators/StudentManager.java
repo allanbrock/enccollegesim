@@ -18,6 +18,8 @@ public class StudentManager {
     DormManager dormManager = new DormManager();
     FacultyDao facultyDao = new FacultyDao();
     List<FacultyModel> faculty;
+    CollegeModel college = new CollegeModel();
+    CollegeDao collegeDao = new CollegeDao();
 
     public void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
@@ -32,8 +34,6 @@ public class StudentManager {
         studentBody.setStudentList(students);
 
         //get college
-        CollegeModel college = new CollegeModel();
-        CollegeDao collegeDao = new CollegeDao();
         college = collegeDao.getCollege(runId);
 
         //calculate happiness and set it in the college
@@ -45,9 +45,10 @@ public class StudentManager {
     }
 
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
-        int dailyTuitionSum = (CollegeModel.getYearlyTuitionCost() / 365) * students.size();
+        college = collegeDao.getCollege(runId);
+        int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId, dailyTuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition!!");
+        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition");
     }
 
     private void addNewStudents(String runId, int hoursAlive) {

@@ -3,9 +3,11 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.NewsType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by abrocken on 7/29/2017.
@@ -15,6 +17,7 @@ public class DormManager {
     //how much the college loses everytime a dorm floods.
     private static final int COST_OF_FLOOD = 500;
     DormitoryDao dao = new DormitoryDao();
+    static private Logger logger = Logger.getLogger("DormManager");
 
     CollegeDao collegeDao = new CollegeDao();
 
@@ -37,46 +40,69 @@ public class DormManager {
 //        collegeRunId = college.getRunId();
 
     }
-    public static void setDormAttributesByDormType(DormitoryModel temp){
+    private static void setDormAttributesByDormType(DormitoryModel temp){
+
 
         //small size
         if(temp.getDormType() == 1){
 //          int capacity, int hourLastUpdated, String dormName, int numStudents,
             //String curDisaster, int reputation, String runId, int numRooms,
             //float maintenanceCost
-            temp = new DormitoryModel(700, 1, "take in from user 1", 0, "none",
-                   5, " ",  350);
+            temp.setCapacity(700);
+            temp.setNumRooms(350);
+
         }
         //normal size
         else if(temp.getDormType() == 2){
-            temp = new DormitoryModel(1000, 1, "take in from user 2", 0, "none",
-                    5, " ",  500);
+            temp.setCapacity(1000);
+            temp.setNumRooms(500);
+
         }
         //large size
         else if(temp.getDormType() == 3){
-           temp = new DormitoryModel(1500, 1, "take in from user 3", 0, "none",
-                    5, " ",  750);
+            temp.setCapacity(1500);
+            temp.setNumRooms(750);
+
         }
         else{
             //not a type only 3 types of dorms
+            logger.severe("Could not add dorm: '" + temp.getName() + "'");
         }
+
+
 
     }
 
-    public static void createDorm(String runId, DormitoryModel dorm){
+    public static DormitoryModel createDorm(String runId, String dormName, String dormType){
         //need to get "dorm"
-        setDormAttributesByDormType(dorm);
-        dorm.setHourLastUpdated(0);
-        DormitoryDao dormDao = new DormitoryDao();
-        dorm.setNote("A new dorm has been created.");
+        DormitoryModel temp = new DormitoryModel();
+        temp.setName(dormName);
+        if(dormType == "Small"){
+            temp.setDormType(1);
+        }
+        else if(dormType == "Medium"){
+            temp.setDormType(2);
+        }
+        else if(dormType == "Large"){
+            temp.setDormType(3);
+        }
 
-        dormDao.saveNewDorm(runId, dorm);
+        setDormAttributesByDormType(temp);
+        temp.setHourLastUpdated(0);
+        temp.setReputation(5);
+        temp.setCurDisaster("none");
+        temp.setMaintenanceCostPerHour(temp.getNumRooms());
+        DormitoryDao dormDao = new DormitoryDao();
+        temp.setNote("A new dorm has been created.");
+
+        dormDao.saveNewDorm(runId, temp);
+        return temp;
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
-        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getCostPerHour();
+        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, (int) (newCharge));
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge);
+        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
     }
 
 

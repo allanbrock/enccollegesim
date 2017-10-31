@@ -8,30 +8,33 @@ import java.io.Serializable;
 public class StudentModel implements Serializable {
 
     private int idNumber = 0;
-    private int happinessLevel = 0; //0-100
+    private int happinessLevel = 75; //0-100
     private boolean athlete = false;
     private int athleticAbility = 0; //0-10
-    private static int tuitionCost = 100;
     private String team = "unknown";
     private String dorm = "unknown";
     private String gender = "unknown";
-    private boolean isSick = false;
     private String runId = "unknown";
     private String note = "no note";
+    private int numberHoursBeenSick = 0; // number of hours of current illness -- 0 if well
+    private int numberHoursLeftBeingSick = 0;
+    private int hourLastUpdated = 0;
 
 
     public StudentModel() {
     }
 
-    public StudentModel(int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String gender, boolean isSick, String runId) {
+    public StudentModel(int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String gender, String runId, int numberHoursBeenSick, int numberHoursLeftBeingSick, int hourLastUpdated) {
         this.idNumber = idNumber;
         this.happinessLevel = happinessLevel;
         this.athlete = athlete;
         this.athleticAbility = athleticAbility;
         this.dorm = dorm;
         this.gender = gender;
-        this.isSick = isSick;
         this.runId = runId;
+        this.numberHoursBeenSick = numberHoursBeenSick;
+        this.numberHoursLeftBeingSick = numberHoursLeftBeingSick;
+        this.hourLastUpdated = hourLastUpdated;
     }
 
     public int getIdNumber() {
@@ -62,13 +65,11 @@ public class StudentModel implements Serializable {
         return gender;
     }
 
-    public boolean isSick() { return isSick; }
-
     public String getRunId() {
         return runId;
     }
 
-    public static int getTuitionCost(){ return tuitionCost; }
+//    public static int getTuitionCost(){ return dailyTuitionCost; }
 
     public void setIdNumber(int idNumber) {
         this.idNumber = idNumber;
@@ -98,15 +99,20 @@ public class StudentModel implements Serializable {
         this.gender = gender;
     }
 
-    public void setSick(boolean sick) { isSick = sick; }
-
     public void setRunId(String runId) { this.runId = runId; }
 
     public void setNote(String note) { this.note = note; }
 
-    public static void setTuitionCost(int tuitionCost) { tuitionCost = tuitionCost; }
+    public int getNumberHoursBeenSick() { return numberHoursBeenSick; }
 
+    public void setNumberHoursBeenSick(int numberHoursBeenSick) { this.numberHoursBeenSick = numberHoursBeenSick; }
 
+    public int getNumberHoursLeftBeingSick() {  return numberHoursLeftBeingSick; }
 
+    public void setNumberHoursLeftBeingSick(int numberHoursLeftBeingSick) { this.numberHoursLeftBeingSick = numberHoursLeftBeingSick; }
+
+    public int getHourLastUpdated() { return hourLastUpdated; }
+
+    public void setHourLastUpdated(int hourLastUpdated) { this.hourLastUpdated = hourLastUpdated; }
 }
 

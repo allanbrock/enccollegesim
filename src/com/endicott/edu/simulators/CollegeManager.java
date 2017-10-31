@@ -9,7 +9,22 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 5000;
+    static public final int STARTUP_FUNDING = 10000;
+
+    /**
+     * This functions updates the amount that the college costs per year
+     * @param runId id of college instance
+     * @return an instance of a college model
+     */
+    public static CollegeModel updateCollegeTuition(String runId, int amount){
+        CollegeDao cao = new CollegeDao();
+        CollegeModel college = cao.getCollege(runId); //get the college for this runID
+        college.setYearlyTuitionCost(amount); //set the amount via setter
+        cao.saveCollege(college); //write to disk
+        return college;
+    }
+
+
 
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
@@ -33,7 +48,7 @@ public class CollegeManager {
         college.setHoursAlive(1);
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
-        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
         // Creating students
         createInitialStudents(runId, college.getCurrentDay());
 
@@ -45,7 +60,7 @@ public class CollegeManager {
         dorm.setCostPerHour(450);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
 
         // Create a plague
         // Make students sick.
@@ -54,7 +69,7 @@ public class CollegeManager {
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
         int sickStudents = plague.getStudentSick();
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.", NewsType.GENERAL_NOTE);
 
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);
@@ -94,12 +109,11 @@ public class CollegeManager {
             } else {
                 student.setGender("Female");
             }
-            student.setSick(false);
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
 
-        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.");
+        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 
     static public void sellCollege(String runId) {

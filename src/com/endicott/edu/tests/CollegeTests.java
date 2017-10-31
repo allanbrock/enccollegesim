@@ -1,13 +1,11 @@
 package com.endicott.edu.tests;
 
+import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.simulators.CollegeManager;
 import org.glassfish.jersey.client.ClientConfig;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -39,6 +37,7 @@ class CollegeTests {
         tester.testCreateCollege(TEST_COLLEGE_ID);
         tester.testGetCollege(TEST_COLLEGE_ID);
         tester.testDeleteCollege(TEST_COLLEGE_ID);
+        tester.testUpdateTuition(TEST_COLLEGE_ID);
     }
 
     private void testFetchMissingCollege(String runId) {
@@ -134,5 +133,48 @@ class CollegeTests {
         System.out.println(" Result: " + result );
     }
 
+    /**
+     * This function tests the updating of tuition.
+     * @param runId run id of college instance
+     */
+    private void testUpdateTuition(String runId){
+        CollegeDao cao = new CollegeDao();
+        CollegeModel college;
+        String result = PASS;
+        WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
+        Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.delete();
+
+        response = invocationBuilder.post(null);
+        System.out.print("Test case name: testUpdateTuition...");
+
+        college = cao.getCollege(runId);
+        if(college.getYearlyTuitionCost() != 40000){
+            result = FAIL;
+            System.out.println("Something went wrong with the default college..");
+        }
+
+        webTarget = client.target(serviceUrl + "college/" + runId + "/tuition/35000");
+        invocationBuilder =  webTarget.request();
+        //we need an empty entity to call a put request with no body
+        Entity<?> empty = Entity.text("");
+        webTarget.request().put(empty);
+        response = invocationBuilder.put(empty);
+
+        if(response.getStatus() != 200) {
+            System.out.println("    Got unexpected response." + response.getStatus());
+            result = FAIL;
+        }
+
+        college = cao.getCollege(runId);
+        //lets make sure the college updated
+        if(college.getYearlyTuitionCost() != 35000){
+            System.out.println("The update of tuition failed...");
+            result = FAIL;
+        }
+        //delete everything..
+        cao.deleteCollege(runId);
+        System.out.println(" Result: " + result );
+    }
 
 }

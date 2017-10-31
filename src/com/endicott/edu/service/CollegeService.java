@@ -76,6 +76,27 @@ public class CollegeService {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
     }
+    /**
+     * Update the college based on a command
+     *Currently supports:
+     *  updateTuition -> this updates the amount that the college costs
+     * @param runId the unique id for the simulation run
+     * @return college in JSON format
+     */
+    @PUT
+    @Path("/{runId}/{command}/{arguments}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CollegeModel updateCollege(@PathParam("runId") String runId, @PathParam("command") String command,@PathParam("arguments") String args) {
+        System.out.println("College command: " + command);
+
+        if (command.equalsIgnoreCase("tuition")) { //this changes the tuition of the college.
+            return CollegeManager.updateCollegeTuition(runId,Integer.valueOf(args)) ;
+        } else {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+    }
+
+
 
     /**
      * A simple test service.

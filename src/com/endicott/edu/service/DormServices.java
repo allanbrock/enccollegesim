@@ -26,28 +26,17 @@ public class DormServices {
      * @return college in JSON format
      */
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/{runId}/{dormName}/{dormType}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DormitoryModel postDorm(String dormJsonString) {
-        Gson g = new Gson();
-        DormitoryModel dorm = g.fromJson(dormJsonString, DormitoryModel.class);
+    public DormitoryModel addDorm(@PathParam("runId") String runId,@PathParam("dormName") String dormName,
+                                  @PathParam("dormType") String dormType) {
 
-        // What if we already have a dorm with the same dormName?
-        // We should return an error.
-
-        // Make sure the college exists, return error if not.
-        String runId = dorm.getRunId();
         if (!CollegeManager.doesCollegeExist(runId)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-
         // Override some fields
-        dorm.setHourLastUpdated(0);
-
-        DormManager.createDorm(runId, dorm);
-        // Create a dorm
-
-        return dorm;
+        DormitoryDao dormitoryDao = new DormitoryDao();
+        return (DormManager.createDorm(runId, dormName, dormType));
     }
 
     /**

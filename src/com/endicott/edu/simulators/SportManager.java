@@ -3,6 +3,7 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.SportModel;
+import com.endicott.edu.models.SportsModel;
 
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ public class SportManager {
         for (SportModel sport : sports) {
             billRunningCostofSport(runId, hoursAlive, sport);
             sport.setHourLastUpdated(hoursAlive);
+            checkIfGameDay(sport, hoursAlive, runId);
+            System.out.println(hoursAlive + "this is the hours alive");
+            System.out.println(sport.getHourLastUpdated() + "this is the hour last updated of " + sport.getName());
         }
 
         dao.saveAllSports(runId, sports);
@@ -82,5 +86,15 @@ public class SportManager {
                 }
             }
         return avalibleSports;
+    }
+
+    public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
+        if(sport.getHoursUntilNextGame() <= 0){
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.");
+            sport.setHoursUntilNextGame(48);
+        }else{
+            sport.setHoursUntilNextGame(sport.getHoursUntilNextGame() -24);
+
+        }
     }
 }

@@ -177,4 +177,11 @@ public class SportModel implements Serializable {
     public void setSportName(String sportName) {
         this.sportName = sportName;
     }
+
+    public int getHoursUntilNextGame() { return hoursUntilNextGame; }
+
+    public void setHoursUntilNextGame(int hoursUntilNextGame) {
+        this.hoursUntilNextGame = hoursUntilNextGame;
+    }
+
 }

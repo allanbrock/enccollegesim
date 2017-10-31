@@ -2,12 +2,14 @@ package com.endicott.edu.service;
 
 import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.SportModel;
+import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.SportManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 // The Java class will be hosted at the URI path "/finances"
@@ -55,6 +57,26 @@ public class SportService {
         SportManager president = new SportManager();
         SportManager.sellSport(runId);
         return "Sport has been deleted.\n";
+    }
+
+    /**
+     * Update an existing simulation run.
+     *
+     * @param runId the unique id for the simulation run
+     * @return a sport list of type string
+     */
+    @PUT
+    @Path("/{runId}/{command}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public ArrayList<String> putSports(@PathParam("runId") String runId, @PathParam("command") String command) {
+        System.out.println("College command: " + command);
+        SportManager sportManager = new SportManager();
+
+        if (command.equalsIgnoreCase("available")) {
+            return sportManager.checkAvailableSports(runId);
+        } else {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
     }
 
 }

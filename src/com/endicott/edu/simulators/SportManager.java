@@ -21,8 +21,6 @@ public class SportManager {
             billRunningCostofSport(runId, hoursAlive, sport);
             sport.setHourLastUpdated(hoursAlive);
             checkIfGameDay(sport, hoursAlive, runId);
-            System.out.println(hoursAlive + "this is the hours alive");
-            System.out.println(sport.getHourLastUpdated() + "this is the hour last updated of " + sport.getName());
         }
 
         dao.saveAllSports(runId, sports);
@@ -55,10 +53,10 @@ public class SportManager {
             result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Women's Basketball", runId, false, 48);
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Women's Soccer", runId, false,48 );
+            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 0, "Women's Soccer", runId, false,48 );
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 100, "Men's Soccer", runId, false, 48 );
+            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 0, "Men's Soccer", runId, false, 48 );
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
         }
@@ -93,8 +91,8 @@ public class SportManager {
             NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.");
             sport.setHoursUntilNextGame(48);
         }else{
-            sport.setHoursUntilNextGame(sport.getHoursUntilNextGame() -24);
-
+            sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
+
     }
 }

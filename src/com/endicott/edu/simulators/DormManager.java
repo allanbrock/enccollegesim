@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-// Dorm Manager Class
+// Dorm Manager
 public class DormManager {
     private static final float PROBABILTY_OF_FLOOD = 0.005f;
     //how much the college loses everytime a dorm floods.

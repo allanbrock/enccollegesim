@@ -37,7 +37,7 @@ public class IdNumberGenDao {
      * @return unique id#
      */
     public static int firstWrite(String runId){
-        ID id = new ID(0);
+        ID id = new ID(1000);
         Gson gson = new Gson();
         FileWriter fw;
         try {

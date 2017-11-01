@@ -55,7 +55,7 @@ public class CollegeManager {
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
-                120,"none", 5, "none", 60);
+                0,"none", 5, "none", 60);
         dorm.setCostPerHour(450);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);

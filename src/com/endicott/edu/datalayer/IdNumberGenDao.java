@@ -37,7 +37,7 @@ public class IdNumberGenDao {
      * @return unique id#
      */
     public static int firstWrite(String runId){
-        ID id = new ID(0);
+        ID id = new ID(1000);
         Gson gson = new Gson();
         FileWriter fw;
         try {
@@ -56,7 +56,7 @@ public class IdNumberGenDao {
      * @param runId college instance ID
      * @return unique id
      */
-    public static long getID(String runId){
+    public static int getID(String runId){
        // logger.info("Fetching ID...");
         Gson gson = new Gson();
         ID id = new ID(-1);

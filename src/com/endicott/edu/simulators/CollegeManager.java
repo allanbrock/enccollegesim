@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 10000;
-
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -48,7 +47,7 @@ public class CollegeManager {
         college.setHoursAlive(1);
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
-        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
         // Creating students
         createInitialStudents(runId, college.getCurrentDay());
 
@@ -56,11 +55,11 @@ public class CollegeManager {
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
-                120,"none", 5, "none", 60);
+                0,"none", 5, "none", 60);
         dorm.setCostPerHour(450);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
 
         // Create a plague
         // Make students sick.
@@ -69,7 +68,7 @@ public class CollegeManager {
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
         int sickStudents = plague.getStudentSick();
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.");
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.", NewsType.GENERAL_NOTE);
 
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);
@@ -94,16 +93,17 @@ public class CollegeManager {
     static private void createInitialStudents(String runId, int currentDay) {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
+        DormManager dormManager = new DormManager();
         Random rand = new Random();
         int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
-            student.setIdNumber(100000 + rand.nextInt(900000));
+            student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(100));
             student.setTeam("");
-            student.setDorm("");
+            student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {
@@ -113,7 +113,7 @@ public class CollegeManager {
             studentDao.saveNewStudent(runId, student);
         }
 
-        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.");
+        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 
     static public void sellCollege(String runId) {

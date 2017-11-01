@@ -39,7 +39,7 @@ public class FloodManager {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, (int) (newCharge));
         if(newCharge > 0){
-            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge);
+            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge, NewsType.FINANCIAL_NEWS);
 
         }
         }
@@ -49,7 +49,7 @@ public class FloodManager {
     private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
-            NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n");
+            NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n", NewsType.GENERAL_NOTE);
 
         }
     }

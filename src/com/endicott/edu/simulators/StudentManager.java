@@ -1,11 +1,9 @@
 package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.FacultyDao;
+import com.endicott.edu.datalayer.IdNumberGenDao;
 import com.endicott.edu.datalayer.StudentDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.FacultyModel;
-import com.endicott.edu.models.StudentModel;
-import com.endicott.edu.models.StudentsModel;
+import com.endicott.edu.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,7 @@ public class StudentManager {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId, dailyTuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition");
+        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition", NewsType.FINANCIAL_NEWS);
     }
 
     private void addNewStudents(String runId, int hoursAlive) {
@@ -57,25 +55,26 @@ public class StudentManager {
         int numNewStudents = rand.nextInt(openBeds);
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
-            student.setIdNumber(100000 + rand.nextInt(900000));
+            student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
-            student.setAthleticAbility(rand.nextInt(100));
+            student.setAthleticAbility(rand.nextInt(10));
             student.setTeam("");
-            student.setDorm("");
+            student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {
                 student.setGender("Male");
             } else {
                 student.setGender("Female");
             }
             student.setRunId(runId);
-            students.add(student);
+            dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
         }
-        dao.saveAllStudents(runId, students);
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.");
+
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
     }
 
     private void removeStudents(String runId, int hoursAlive) {
+        DormManager dormManager = new DormManager();
         float scalingFactor = .001f;
         int currentSize = students.size();
 
@@ -83,11 +82,13 @@ public class StudentManager {
             int h = students.get(i).getHappinessLevel();
             float odds = (100f - h) * scalingFactor;
             if (didItHappen(odds)) {
+                dormManager.removeStudent(runId, students.get(i).getDorm());
                 students.remove(i);
+
             }
         }
         if ((currentSize - students.size()) > 0) {
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.");
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.GENERAL_NOTE);
         }
 
     }

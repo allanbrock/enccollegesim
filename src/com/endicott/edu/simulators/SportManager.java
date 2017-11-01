@@ -2,6 +2,7 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.datalayer.SportsDao;
+import com.endicott.edu.models.NewsType;
 import com.endicott.edu.models.SportModel;
 import com.endicott.edu.models.SportsModel;
 
@@ -31,7 +32,7 @@ public class SportManager {
         if(newCharge > 0)
         {
             Accountant.payBill(runId, newCharge);
-            NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge);
+            NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
         }
     }
 
@@ -88,7 +89,7 @@ public class SportManager {
 
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.");
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.FINANCIAL_NEWS);
             sport.setHoursUntilNextGame(48);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());

@@ -2,6 +2,7 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.FacultyDao;
 import com.endicott.edu.models.FacultyModel;
+import com.endicott.edu.models.NewsType;
 
 
 import java.util.List;
@@ -27,6 +28,6 @@ public class FacultyManager {
             total += tmp;
         }
         Accountant.payBill(runId,total);
-        NewsManager.createNews(runId,hoursAlive,"Faculty have been payed for the day, Total payout:  $" + String.valueOf(total));
+        NewsManager.createNews(runId,hoursAlive,"Faculty have been payed for the day, Total payout:  $" + String.valueOf(total), NewsType.FINANCIAL_NEWS);
    }
 }

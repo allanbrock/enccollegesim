@@ -56,7 +56,7 @@ public class CollegeManager {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
                 0,"none", 5, "none", 60);
-        dorm.setCostPerHour(450);
+        dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
@@ -100,8 +100,13 @@ public class CollegeManager {
         for(int i = 0; i < numStudents; i++) {
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
-            student.setAthlete(false);
-            student.setAthleticAbility(rand.nextInt(100));
+            student.setAthleticAbility(rand.nextInt(10));
+            if(student.getAthleticAbility() > 6){
+                student.setAthlete(true);
+            }
+            else {
+                student.setAthlete(false);
+            }
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {

@@ -5,6 +5,8 @@ import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.NewsType;
 import com.endicott.edu.models.SportModel;
 import com.endicott.edu.models.SportsModel;
+import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.models.StudentModel;
 
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class SportManager {
             billRunningCostofSport(runId, hoursAlive, sport);
             sport.setHourLastUpdated(hoursAlive);
             checkIfGameDay(sport, hoursAlive, runId);
+            System.out.println(hoursAlive + "this is the hours alive");
+            System.out.println(sport.getHourLastUpdated() + "this is the hour last updated of " + sport.getName());
         }
 
         dao.saveAllSports(runId, sports);
@@ -51,18 +55,37 @@ public class SportManager {
             result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Baseball", runId, false,48);
         }
         else if(sportName.equals("Softball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Women's Basketball", runId, false, 48);
+            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Softball", runId, false, 48);
+
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 0, "Women's Soccer", runId, false,48 );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Women's Soccer", runId, false,48 );
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 30, 10, 0, 0, 0 , 0 , 0, 14, 0, "Men's Soccer", runId, false, 48 );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Men's Soccer", runId, false, 48 );
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
         }
+
+        addPlayers(runId, result);
         newSportDao.saveNewSport(runId, result);
         return result;
+    }
+
+    public static SportModel addPlayers(String runId, SportModel sport){
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        for(int i = 0; i < students.size(); i++) {
+            if (students.get(i).isAthlete() && ((students.get(i).getTeam().equals("")) || students.get(i).getTeam().equals("unknown"))) {
+                if (sport.getCurrentPlayers() < sport.getMaxPlayers()) {
+                    students.get(i).setTeam(sport.getSportName());
+                    sport.setCurrentPlayers((sport.getCurrentPlayers() + 1));
+                }
+            }
+        }
+
+        return sport;
+
     }
 
     static public void sellSport(String runId) {
@@ -94,6 +117,5 @@ public class SportManager {
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
-
     }
 }

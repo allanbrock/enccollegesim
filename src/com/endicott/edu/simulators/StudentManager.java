@@ -1,9 +1,9 @@
 package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.FacultyDao;
-import com.endicott.edu.datalayer.IdNumberGenDao;
 import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.*;
+import com.endicott.edu.datalayer.IdNumberGenDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +57,14 @@ public class StudentManager {
             StudentModel student = new StudentModel();
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
-            student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
+            if(student.getAthleticAbility() > 6){
+                student.setAthlete(true);
+            }
+            else {
+                student.setAthlete(false);
+            }
+
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
             if (rand.nextInt(1) == 1) {

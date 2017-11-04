@@ -65,10 +65,10 @@ public class SportService {
      * @param runId the unique id for the simulation run
      * @return a sport list of type string
      */
-    @PUT
+    @GET
     @Path("/{runId}/{command}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public ArrayList<String> putSports(@PathParam("runId") String runId, @PathParam("command") String command) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
         System.out.println("College command: " + command);
         SportManager sportManager = new SportManager();
 

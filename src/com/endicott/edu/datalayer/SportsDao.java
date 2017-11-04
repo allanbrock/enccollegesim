@@ -108,12 +108,9 @@ public class SportsDao {
 
         sportNames.add("Men's Basketball");
         sportNames.add("Women's Basketball");
-        sportNames.add("Women's Basketball");
         sportNames.add("Baseball");
-        sportNames.add("Women's Basketball");
         sportNames.add("Softball");
         sportNames.add("Women's Soccer");
-        sportNames.add("Women's Basketball");
         sportNames.add("Men's Soccer");
         return sportNames;
     }

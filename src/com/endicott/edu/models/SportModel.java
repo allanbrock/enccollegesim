@@ -7,6 +7,9 @@ import java.io.Serializable;
  */
 public class SportModel implements Serializable {
     private int minPlayers = 0;
+
+
+
     private int currentPlayers = 0;
     private int maxPlayers = 0;
     private int costPerDay = 0;
@@ -183,5 +186,9 @@ public class SportModel implements Serializable {
     public void setHoursUntilNextGame(int hoursUntilNextGame) {
         this.hoursUntilNextGame = hoursUntilNextGame;
     }
+
+    public int getCurrentPlayers() { return currentPlayers; }
+
+    public void setCurrentPlayers(int currentPlayers) { this.currentPlayers = currentPlayers; }
 
 }

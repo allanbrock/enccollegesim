@@ -95,18 +95,37 @@ public class SportManager {
         sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
-
-    public static ArrayList<String> checkAvailableSports(String runId) {
-        ArrayList<String> avalibleSports = new ArrayList<>();
+    /*
+    * this method takes
+    */
+    public static ArrayList<SportModel> checkAvailableSports(String runId) {
         SportsDao dao = new SportsDao();
-            for (int i = 0; i < dao.getSports(runId).size(); i++) {
-                for (int x = 0; x < dao.seeAllSportNames().size(); x++) {
-                    if (dao.getSports(runId).get(i).getName().equals(dao.seeAllSportNames().get(i))) {
-                        avalibleSports.add(dao.getSports(runId).get(i).getName());
-                        System.out.println(dao.getSports(runId).get(i).getName() + "This is sports name");
-                    }
+
+        //creates a list called availbleSportNames of all sports names a college can make
+        ArrayList<String> avalibleSportsNames = new ArrayList<>();
+        for (int i = 0; i < dao.seeAllSportNames().size(); i++ ){
+            avalibleSportsNames.add(dao.seeAllSportNames().get(i));
+        }
+
+        //compares the currents sports names w the names in the availbleSportsNames array and takes out any sports that are already created
+        for(int x = 0; x < dao.getSports(runId).size(); x++){
+            for(int y = 0; y < avalibleSportsNames.size(); y++){
+                if( avalibleSportsNames.get(y).equals(dao.getSports(runId).get(x).getName())){
+                    avalibleSportsNames.remove(y);
                 }
             }
+        }
+        //takes the modified availbleSportsNames array and converts/creates objects of sport model with the left...
+        // over names in availblesportsnames and stores them in abvaibleSports
+        ArrayList<SportModel> avalibleSports = new ArrayList<>();
+        for(int yz = 0; yz < avalibleSportsNames.size(); yz++){
+            System.out.println(avalibleSportsNames.get(yz) + "This is a check");
+            logger.info("list of the names after the check " + avalibleSportsNames.get(yz));
+            SportModel tempSport = new SportModel();
+            tempSport.setName(avalibleSportsNames.get(yz));
+            avalibleSports.add(tempSport);
+
+        }
         return avalibleSports;
     }
 

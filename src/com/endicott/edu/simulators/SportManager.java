@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class SportManager {
-    SportsDao dao = new SportsDao();
+     SportsDao dao = new SportsDao();
     static private Logger logger = Logger.getLogger("SportManager");
 
     public void handleTimeChange(String runId, int hoursAlive) {
@@ -95,9 +95,7 @@ public class SportManager {
         sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
     }
-    /*
-    * this method takes
-    */
+
     public static ArrayList<SportModel> checkAvailableSports(String runId) {
         SportsDao dao = new SportsDao();
 
@@ -136,5 +134,16 @@ public class SportManager {
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
+    }
+    public static void deleteSelectedSport(String runId, SportModel sport){
+        SportsDao dao = new SportsDao();
+        List<SportModel> sports = dao.getSports(runId);
+        for(int i =0; i < sports.size(); i++){
+            if(sport.getName().equals(sports.get(i).getName())){
+                sports.remove(i);
+            }
+        }
+        dao.saveAllSports(runId,sports);
+
     }
 }

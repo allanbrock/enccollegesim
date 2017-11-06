@@ -126,11 +126,13 @@ public class CollegeManager {
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
         SportsDao sportsDao = new SportsDao();
+        StudentDao studentsDao = new StudentDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
         sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
+        studentsDao.deleteStudents(runId);
     }
 
     static public CollegeModel nextDay(String runId) {

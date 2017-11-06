@@ -88,8 +88,7 @@ public class DormManager {
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, (int) (newCharge));
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
+        Accountant.payBill(runId,"Maintenance of dorm " + dorm.getName() + " $ " + newCharge,(int) (newCharge));
     }
 
 

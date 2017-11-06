@@ -37,12 +37,12 @@ public class FloodManager {
     // Charges the college for the dorm flooding
     private void billCostOfFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, (int) (newCharge));
-        if(newCharge > 0){
-            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge, NewsType.FINANCIAL_NEWS);
-
-        }
-        }
+        Accountant.payBill(runId,"Flooding cost for dorm " + dorm.getName() + " Costs $ " + newCharge,(int) (newCharge));
+//        if(newCharge > 0){
+//            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge, NewsType.FINANCIAL_NEWS);
+//
+//        }
+    }
 
 
     // Checks to see if a flood happened

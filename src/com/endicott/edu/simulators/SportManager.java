@@ -35,8 +35,7 @@ public class SportManager {
         int newCharge = ((hoursAlive - sport.getHourLastUpdated()) * sport.getCostPerHour()) / 24;
         if(newCharge > 0)
         {
-            Accountant.payBill(runId, newCharge);
-            NewsManager.createNews(runId, hoursAlive, "Charge for " + sport.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
+            Accountant.payBill(runId,"Charge for " + sport.getName() + " $ " + newCharge, newCharge);
         }
     }
 
@@ -129,7 +128,7 @@ public class SportManager {
 
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.FINANCIAL_NEWS);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.GENERAL_NOTE);
             sport.setHoursUntilNextGame(48);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());

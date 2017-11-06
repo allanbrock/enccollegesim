@@ -5,6 +5,7 @@ import com.endicott.edu.models.SportModel;
 import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.SportManager;
+import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +17,8 @@ import java.util.List;
 @Path("/sports")
 public class SportService {
     private SportsDao dao = new SportsDao();
+    Gson gson = new Gson();
+    private SportManager sportManager = new SportManager();
 
     /**
      * Create a new dorm.
@@ -50,13 +53,21 @@ public class SportService {
     }
 
 
-    @DELETE
-    @Path("/{runId}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String deleteSport(@PathParam("runId") String runId) {
-        SportManager president = new SportManager();
-        SportManager.sellSport(runId);
-        return "Sport has been deleted.\n";
+    @POST
+    @Path("/delete")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteSport(String sportJson) {
+        SportModel sport = gson.fromJson(sportJson,SportModel.class);
+        String runId = sport.getRunId();
+
+        if (!CollegeManager.doesCollegeExist(runId)) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+
+        sportManager.deleteSelectedSport(runId,sport);
+        return gson.toJson(sport);
     }
 
     /**

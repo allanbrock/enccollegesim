@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 10000;
+    static public final int STARTUP_FUNDING = 100000;
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance

@@ -18,7 +18,6 @@ public class CollegeModel implements Serializable {
     public int getReputation() { return reputation; }
 
     public void setReputation(int reputation) { this.reputation = reputation; }
-    }
 
     public int getYearlyTuitionCost() {
         return yearlyTuitionCost;

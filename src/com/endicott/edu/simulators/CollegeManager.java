@@ -20,7 +20,7 @@ public class CollegeManager {
         CollegeModel college = cao.getCollege(runId); //get the college for this runID
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
-        NewsManager.createNews(runId, college.getCurrentDay(),"Tuition Updated to: $" + amount, NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS);
         return college;
     }
 

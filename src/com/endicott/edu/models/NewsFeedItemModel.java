@@ -12,7 +12,7 @@ public class NewsFeedItemModel implements Serializable {
     NewsType noteType = NewsType.UNKNOWN_NOTE;
     String runId = "unknown";
     int amount;
-    // add amount
+
     public NewsFeedItemModel() {
     }
 

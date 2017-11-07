@@ -59,19 +59,19 @@ public class DormServices {
      * Delete a selected dorm
      *
      */
-    @POST
-    @Path("/delete")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void deleteDorm(String runId, String dormName) {
-
-        DormManager dormManager = new DormManager();
-        if (!CollegeManager.doesCollegeExist(runId)) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-
-        dormManager.sellDorm(runId, dormName);
-    }
+//    @POST
+//    @Path("/delete")
+//    @Consumes(MediaType.TEXT_PLAIN)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public void deleteDorm(String runId, String dormName) {
+//
+//        DormManager dormManager = new DormManager();
+//        if (!CollegeManager.doesCollegeExist(runId)) {
+//            throw new WebApplicationException(Response.Status.NOT_FOUND);
+//        }
+//
+//        dormManager.sellDorm(runId, dormName);
+//    }
 
 
 //    @GET

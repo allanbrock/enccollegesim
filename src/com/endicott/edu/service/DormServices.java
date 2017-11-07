@@ -74,19 +74,19 @@ public class DormServices {
     }
 
 
-    @GET
-    @Path("/{runId}/{command}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
-        System.out.println("College command: " + command);
-        DormManager dormManager = new DormManager();
-
-        if (command.equalsIgnoreCase("available")) {
-            return dormManager.checkAvailableDorms();
-        } else {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-    }
+//    @GET
+//    @Path("/{runId}/{command}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
+//        System.out.println("College command: " + command);
+//        DormManager dormManager = new DormManager();
+//
+//        if (command.equalsIgnoreCase("available")) {
+//            return dormManager.checkAvailableDorms();
+//        } else {
+//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+//        }
+//    }
 
 //    @GET
 //    @Produces("text/plain")

@@ -102,6 +102,7 @@ public class DormitoryModel implements Serializable {
     public int getMaintenanceCostPerHour() {
         return  costPerHour;
     }
+
     public int setMaintenanceCostPerHour(int numRooms){
         this.costPerHour = (int)(((numRooms * 250))/(365*24)*0.10);
         return (int)(costPerHour + 0.5);
@@ -152,6 +153,7 @@ public class DormitoryModel implements Serializable {
     public void setLengthOfDisaster(int lengthOfDisaster) {
         this.lengthOfDisaster = lengthOfDisaster;
     }
+
     public String checkIfBeingBuilt(){
         if(this.getHoursToComplete() > 0){
             return "Under Construction";
@@ -159,5 +161,6 @@ public class DormitoryModel implements Serializable {
         else
             return "Built";
     }
+
 
 }

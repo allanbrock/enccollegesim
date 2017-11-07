@@ -27,4 +27,15 @@ public class NewsManager {
         NewsFeedDao noteDao = new NewsFeedDao();
         noteDao.saveNote(collegeId, note);
     }
+    public static void createFinancialNews(String collegeId, int newsHour, String message, int amount) {
+        NewsFeedItemModel note = new NewsFeedItemModel();
+        note.setHour(newsHour);
+        note.setMessage(message);
+        note.setAmount(amount);
+        note.setNoteType(NewsType.FINANCIAL_NEWS);
+        NewsFeedDao noteDao = new NewsFeedDao();
+        noteDao.saveNote(collegeId, note);
+    }
+
+
 }

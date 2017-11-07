@@ -35,8 +35,7 @@ public class StudentManager {
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
-        Accountant.studentIncome(runId, dailyTuitionSum);
-        NewsManager.createNews(runId, hoursAlive, "Received $" + dailyTuitionSum + " from student tuition", NewsType.FINANCIAL_NEWS);
+        Accountant.studentIncome(runId,"Student tuition received $ " + dailyTuitionSum ,dailyTuitionSum);
     }
 
     private void addNewStudents(String runId, int hoursAlive) {

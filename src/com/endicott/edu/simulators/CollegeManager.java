@@ -99,6 +99,13 @@ public class CollegeManager {
         int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
+            if(rand.nextInt(10) + 1 > 5){
+                student.setName(NameGenDao.generateName(false));
+                student.setGender("Male");
+            } else {
+                student.setName(NameGenDao.generateName(true));
+                student.setGender("Female");
+            }
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthleticAbility(rand.nextInt(10));
@@ -110,11 +117,6 @@ public class CollegeManager {
             }
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
-            if (rand.nextInt(1) == 1) {
-                student.setGender("Male");
-            } else {
-                student.setGender("Female");
-            }
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }

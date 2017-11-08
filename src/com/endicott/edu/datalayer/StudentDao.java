@@ -83,8 +83,8 @@ public class StudentDao {
     private static void testNotes() {
         final String runId = "teststudent001";
         StudentDao dao = new StudentDao();
-        StudentModel s1 = new StudentModel(337714, 80, true, 7, "Standish", "Male", runId, 0,0,0);
-        StudentModel s2 = new StudentModel(555555, 75, true, 9, "Winthrop", "Male", runId, 0,0,0);
+        StudentModel s1 = new StudentModel("name",337714, 80, true, 7, "Standish", "Male", runId, 0,0,0);
+        StudentModel s2 = new StudentModel("name", 555555, 75, true, 9, "Winthrop", "Male", runId, 0,0,0);
         ArrayList<StudentModel> students = new ArrayList<>();
         students.add(s1);
         students.add(s2);
@@ -95,7 +95,7 @@ public class StudentDao {
         assert(outMsgs.size() == 2);
         //assert(outMsgs.get(1).getCapacity() == 100);
 
-        StudentModel s3 = new StudentModel(010101, 50, false, 0, "Marblehead", "Male", runId, 0, 0,0);
+        StudentModel s3 = new StudentModel("name", 010101, 50, false, 0, "Marblehead", "Male", runId, 0, 0,0);
         dao.saveNewStudent(runId, s3);
         outMsgs = dao.getStudents(runId);
         assert(outMsgs.size() == 3);

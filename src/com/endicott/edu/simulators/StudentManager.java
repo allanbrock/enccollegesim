@@ -1,8 +1,5 @@
 package com.endicott.edu.simulators;
-import com.endicott.edu.datalayer.CollegeDao;
-import com.endicott.edu.datalayer.FacultyDao;
-import com.endicott.edu.datalayer.IdNumberGenDao;
-import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.datalayer.*;
 import com.endicott.edu.models.*;
 
 import java.util.List;
@@ -43,17 +40,19 @@ public class StudentManager {
         int numNewStudents = rand.nextInt(openBeds);
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
+            if(rand.nextInt(10) + 1 > 5){
+                student.setName(NameGenDao.generateName(false));
+                student.setGender("Male");
+            } else {
+                student.setName(NameGenDao.generateName(true));
+                student.setGender("Female");
+            }
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
-            if (rand.nextInt(1) == 1) {
-                student.setGender("Male");
-            } else {
-                student.setGender("Female");
-            }
             student.setRunId(runId);
             dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
         }

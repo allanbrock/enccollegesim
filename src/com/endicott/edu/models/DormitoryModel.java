@@ -1,5 +1,7 @@
 package com.endicott.edu.models;
 
+import com.endicott.edu.simulators.Accountant;
+
 import java.io.Serializable;
 
 public class DormitoryModel implements Serializable {
@@ -154,8 +156,20 @@ public class DormitoryModel implements Serializable {
         this.lengthOfDisaster = lengthOfDisaster;
     }
 
-    public String checkIfBeingBuilt(){
+    public String checkIfBeingBuilt(String runId){
+        double chance = Math.random();
         if(this.getHoursToComplete() > 0){
+            if(chance < 0.25){
+                //25% chance of gaining $1000 dollars
+                Accountant.studentIncome(runId, "You found $1,000 during construction!", 1000);
+            }
+            else if(chance < 0.35){
+                //35% chance of losing $500 dollars
+                Accountant.studentIncome(runId,"A pipe burst! You paid $500 for repairs.", 500);
+            }
+            else{
+                //40% chance of nothing happening
+            }
             return "Under Construction";
         }
         else

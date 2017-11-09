@@ -7,9 +7,7 @@ import java.io.Serializable;
  */
 public class SportModel implements Serializable {
     private int minPlayers = 0;
-
-
-
+    private String gender = "unknown";
     private int currentPlayers = 0;
     private int maxPlayers = 0;
     private int costPerDay = 0;
@@ -30,7 +28,7 @@ public class SportModel implements Serializable {
 
     }
 
-    public SportModel(int minPlayers, int currentPlayers, int maxPlayers, int costPerDay, int gamesLost, int gamesTied, int gamesWon, int numGames, int startupCost, int reputation, int hourLastUpdated, String sportName, String runId, Boolean isActive, int hoursUntilNextGame) {
+    public SportModel(int minPlayers, int currentPlayers, int maxPlayers, int costPerDay, int gamesLost, int gamesTied, int gamesWon, int numGames, int startupCost, int reputation, int hourLastUpdated, String sportName, String runId, Boolean isActive, int hoursUntilNextGame, String gender) {
         this.minPlayers = minPlayers;
         this.currentPlayers = currentPlayers;
         this.maxPlayers = maxPlayers;
@@ -46,6 +44,7 @@ public class SportModel implements Serializable {
         this.runId = runId;
         this.isActive = isActive;
         this.hoursUntilNextGame = hoursUntilNextGame;
+        this.gender = gender;
     }
 
     public SportModel(String sportName, String runId){
@@ -190,5 +189,10 @@ public class SportModel implements Serializable {
     public int getCurrentPlayers() { return currentPlayers; }
 
     public void setCurrentPlayers(int currentPlayers) { this.currentPlayers = currentPlayers; }
+
+
+    public String getGender() { return gender; }
+
+    public void setGender(String gender) { this.gender = gender; }
 
 }

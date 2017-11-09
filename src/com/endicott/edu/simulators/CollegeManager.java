@@ -74,7 +74,7 @@ public class CollegeManager {
         sportManager.addNewTeam("Men's Soccer", runId);
         sportManager.addNewTeam("Men's Basketball", runId);
 
-        FloodModel flood = new FloodModel(0,  0, 0, "none", runId);
+        FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
         FloodDao floodDao = new FloodDao();
         floodDao.saveNewFlood(runId, flood);
 

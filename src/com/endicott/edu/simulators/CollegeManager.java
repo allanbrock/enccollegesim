@@ -9,8 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 10000;
-
+    static public final int STARTUP_FUNDING = 1000000;
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -21,6 +20,7 @@ public class CollegeManager {
         CollegeModel college = cao.getCollege(runId); //get the college for this runID
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
+        NewsManager.createNews(runId, college.getCurrentDay(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS);
         return college;
     }
 
@@ -56,8 +56,8 @@ public class CollegeManager {
         // We need to add the students to the dorm.
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
-                120,"none", 5, "none", 60);
-        dorm.setCostPerHour(450);
+                0,"none", 5, "none", 60);
+        dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
@@ -94,21 +94,29 @@ public class CollegeManager {
     static private void createInitialStudents(String runId, int currentDay) {
         StudentModel student = new StudentModel();
         StudentDao studentDao = new StudentDao();
+        DormManager dormManager = new DormManager();
         Random rand = new Random();
         int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
-            student.setIdNumber(100000 + rand.nextInt(900000));
-            student.setHappinessLevel(rand.nextInt(100));
-            student.setAthlete(false);
-            student.setAthleticAbility(rand.nextInt(100));
-            student.setTeam("");
-            student.setDorm("");
-            if (rand.nextInt(1) == 1) {
+            if(rand.nextInt(10) + 1 > 5){
+                student.setName(NameGenDao.generateName(false));
                 student.setGender("Male");
             } else {
+                student.setName(NameGenDao.generateName(true));
                 student.setGender("Female");
             }
+            student.setIdNumber(IdNumberGenDao.getID(runId));
+            student.setHappinessLevel(rand.nextInt(100));
+            student.setAthleticAbility(rand.nextInt(10));
+            if(student.getAthleticAbility() > 6){
+                student.setAthlete(true);
+            }
+            else {
+                student.setAthlete(false);
+            }
+            student.setTeam("");
+            student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
@@ -121,11 +129,13 @@ public class CollegeManager {
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
         SportsDao sportsDao = new SportsDao();
+        StudentDao studentsDao = new StudentDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
         sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
+        studentsDao.deleteStudents(runId);
     }
 
     static public CollegeModel nextDay(String runId) {

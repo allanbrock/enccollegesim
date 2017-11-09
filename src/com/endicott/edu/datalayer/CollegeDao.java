@@ -39,9 +39,7 @@ public class CollegeDao {
 
     public void deleteCollege(String runId) {
         File file = new File(getFilePath(runId));
-        System.out.println("About to delete file: " + getFilePath(runId));
         boolean result = file.delete();
-        System.out.println("Result = " + result);
     }
 
     public void saveCollege(CollegeModel college){

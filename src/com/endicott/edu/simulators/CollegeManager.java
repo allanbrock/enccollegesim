@@ -143,6 +143,10 @@ public class CollegeManager {
         FloodManager floodManager = new FloodManager();
         floodManager.handleTimeChange(runId, hoursAlive);
 
+        //Plague time change
+        PlagueManager plagueManager = new PlagueManager();
+        plagueManager.handleTimeChange(runId, hoursAlive);
+
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 

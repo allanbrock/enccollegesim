@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class FloodModel implements Serializable {
 
-
+    private int lengthOfFlood = 0;
     private int hoursLeftInFlood = 0;
     private int hourLastUpdated = 0;
     private String note = "no note";
@@ -17,15 +17,18 @@ public class FloodModel implements Serializable {
     public FloodModel() {
     }
 
-    public FloodModel(int hoursLeftInFlood, int hourLastUpdated, String dormName, String runId) {
+
+    public FloodModel(int lengthOfFlood, int hoursLeftInFlood, int hourLastUpdated, String dormName, String runId) {
+        this.lengthOfFlood = lengthOfFlood;
         this.hoursLeftInFlood = hoursLeftInFlood;
         this.hourLastUpdated = hourLastUpdated;
         this.dormName = dormName;
         this.runId = runId;
     }
 
+    public int getLengthOfFlood() { return lengthOfFlood; }
 
-
+    public void setLengthOfFlood(int lengthOfFlood) { this.lengthOfFlood = lengthOfFlood; }
 
     public int getHourLastUpdated() {
         return hourLastUpdated;

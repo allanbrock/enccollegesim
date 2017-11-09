@@ -49,8 +49,9 @@ public class FloodManager {
     // Charges the college for the dorm flooding
     private void billCostOfFlood(String runId, int hoursAlive, DormitoryModel dorm) {
 
-        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId,"Flooding cost for dorm " + dorm.getName() + " Costs $ " + 100, 100);
+        // Comment out and using a fixed value for the time being (change later)
+        // int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
+        Accountant.payBill(runId,"Flood cost for dorm " + dorm.getName() + " Cost is $ " + 1000, 1000);
 
     }
 
@@ -59,12 +60,12 @@ public class FloodManager {
     private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
-
+            DormManager dormMan = new DormManager();
             NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n", NewsType.GENERAL_NOTE);
 
-            FloodModel flood = new FloodModel(72, dorm.getHourLastUpdated(), dorm.getName(), runId);
+            FloodModel flood = new FloodModel(72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
             NewsManager.createNews(runId, hoursAlive, "Dorm " + flood.getDormName() + " has flooded.\n", NewsType.GENERAL_NOTE);
-
+            dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
 
         }
     }

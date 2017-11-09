@@ -13,13 +13,15 @@ import java.util.List;
 public class PlagueManager {
     PlagueDao dao = new PlagueDao();
 
+
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
 
         for (PlagueModel plague : plagues) {
+            int timePassed = hoursAlive - plague.getHourLastUpdated();
             plague.setHourLastUpdated(hoursAlive);
-            System.out.println(hoursAlive + "this is the hours alive");
-            System.out.println(plague.getHourLastUpdated() + "this is the hour last updated of " + plague.getName());
+            int hoursLeftInPlague = plague.getNumberOfHoursLeftInPlague() - timePassed;
+            plague.setNumberOfHoursLeftInPlague(hoursLeftInPlague);
         }
 
         dao.saveAllPlagues(runId, plagues);

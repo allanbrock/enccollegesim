@@ -65,11 +65,10 @@ public class CollegeManager {
         // Create a plague
         // Make students sick.
         logger.info("Generating Plague");
-        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 5, 0, 1000, 72, 0);
+        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 1, 0, 1000, 72, 0);
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
-        int sickStudents = plague.getStudentSick();
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 1 student(s) are sick.", NewsType.GENERAL_NOTE);
 
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);
@@ -116,12 +115,24 @@ public class CollegeManager {
                 student.setAthlete(false);
             }
             student.setTeam("");
+            makeStudentSick(student, runId, currentDay);
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
 
         NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
+    }
+
+    private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
+        Random rand = new Random();
+
+        if(rand.nextInt(10) + 1 > 9){
+            student.setNumberHoursLeftBeingSick(72);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
+        } else {
+            student.setNumberHoursLeftBeingSick(0);
+        }
     }
 
     static public void sellCollege(String runId) {

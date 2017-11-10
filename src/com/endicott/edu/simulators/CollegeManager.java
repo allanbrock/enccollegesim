@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 100000;
+    static public final int STARTUP_FUNDING = 1000000;
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -20,6 +20,7 @@ public class CollegeManager {
         CollegeModel college = cao.getCollege(runId); //get the college for this runID
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
+        NewsManager.createNews(runId, college.getCurrentDay(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS);
         return college;
     }
 
@@ -64,15 +65,19 @@ public class CollegeManager {
         // Create a plague
         // Make students sick.
         logger.info("Generating Plague");
-        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 5, 0, 1000, 72, 0);
+        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 1, 0, 1000, 72, 0);
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
-        int sickStudents = plague.getStudentSick();
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 5 students are sick.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 1 student(s) are sick.", NewsType.GENERAL_NOTE);
 
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);
         sportManager.addNewTeam("Men's Basketball", runId);
+
+        FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
+        FloodDao floodDao = new FloodDao();
+        floodDao.saveNewFlood(runId, flood);
+
 
         logger.info("Done creating college");
         createInitialFaculty(runId);
@@ -98,6 +103,13 @@ public class CollegeManager {
         int numStudents = 100;
 
         for(int i = 0; i < numStudents; i++) {
+            if(rand.nextInt(10) + 1 > 5){
+                student.setName(NameGenDao.generateName(false));
+                student.setGender("Male");
+            } else {
+                student.setName(NameGenDao.generateName(true));
+                student.setGender("Female");
+            }
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(rand.nextInt(100));
             student.setAthleticAbility(rand.nextInt(10));
@@ -108,12 +120,8 @@ public class CollegeManager {
                 student.setAthlete(false);
             }
             student.setTeam("");
+            makeStudentSick(student, runId, currentDay);
             student.setDorm(dormManager.assignDorm(runId));
-            if (rand.nextInt(1) == 1) {
-                student.setGender("Male");
-            } else {
-                student.setGender("Female");
-            }
             student.setRunId(runId);
             studentDao.saveNewStudent(runId, student);
         }
@@ -121,16 +129,29 @@ public class CollegeManager {
         NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 
+    private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
+        Random rand = new Random();
+
+        if(rand.nextInt(10) + 1 > 9){
+            student.setNumberHoursLeftBeingSick(72);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
+        } else {
+            student.setNumberHoursLeftBeingSick(0);
+        }
+    }
+
     static public void sellCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
         DormitoryDao dormitoryDao = new DormitoryDao();
         NewsFeedDao noteDao = new NewsFeedDao();
         SportsDao sportsDao = new SportsDao();
+        StudentDao studentsDao = new StudentDao();
 
         collegeDao.deleteCollege(runId);
         dormitoryDao.deleteDorms(runId);
         sportsDao.deleteSports(runId);
         noteDao.deleteNotes(runId);
+        studentsDao.deleteStudents(runId);
     }
 
     static public CollegeModel nextDay(String runId) {
@@ -147,6 +168,10 @@ public class CollegeManager {
         // Tell everyone about the time change.
         FloodManager floodManager = new FloodManager();
         floodManager.handleTimeChange(runId, hoursAlive);
+
+        //Plague time change
+        PlagueManager plagueManager = new PlagueManager();
+        plagueManager.handleTimeChange(runId, hoursAlive);
 
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);

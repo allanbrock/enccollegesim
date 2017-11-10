@@ -11,6 +11,7 @@ public class NewsFeedItemModel implements Serializable {
     String message = "Nothing is new.";
     NewsType noteType = NewsType.UNKNOWN_NOTE;
     String runId = "unknown";
+    int amount;
 
     public NewsFeedItemModel() {
     }
@@ -20,6 +21,14 @@ public class NewsFeedItemModel implements Serializable {
         this.message = message;
         this.noteType = message_type;
         this.runId = runId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public NewsType getNoteType() {

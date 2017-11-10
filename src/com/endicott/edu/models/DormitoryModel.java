@@ -1,5 +1,7 @@
 package com.endicott.edu.models;
 
+import com.endicott.edu.simulators.Accountant;
+
 import java.io.Serializable;
 
 public class DormitoryModel implements Serializable {
@@ -102,6 +104,7 @@ public class DormitoryModel implements Serializable {
     public int getMaintenanceCostPerHour() {
         return  costPerHour;
     }
+
     public int setMaintenanceCostPerHour(int numRooms){
         this.costPerHour = (int)(((numRooms * 250))/(365*24)*0.10);
         return (int)(costPerHour + 0.5);
@@ -152,12 +155,15 @@ public class DormitoryModel implements Serializable {
     public void setLengthOfDisaster(int lengthOfDisaster) {
         this.lengthOfDisaster = lengthOfDisaster;
     }
-    public String checkIfBeingBuilt(){
+
+    public String checkIfBeingBuilt(String runId){
         if(this.getHoursToComplete() > 0){
+
             return "Under Construction";
         }
         else
             return "Built";
     }
+
 
 }

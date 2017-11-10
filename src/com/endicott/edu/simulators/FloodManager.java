@@ -22,34 +22,51 @@ public class FloodManager {
         List<FloodModel> floods = dao.getFloods(runId);
         List<DormitoryModel> dorms = dormDao.getDorms(runId);
 
-        for (DormitoryModel dorm : dorms) {
+        if(floods.size() <= 0) {
+            for (DormitoryModel dorm : dorms) {
+                checkForFlood(runId, hoursAlive, dorm);
+            }
+        }else{
+            for (DormitoryModel dorm : dorms) {
+                billCostOfFlood(runId, hoursAlive, dorm);
+            }
+            for (FloodModel flood : floods){
+                int elapsedTime = hoursAlive - flood.getHourLastUpdated();
+                int timeLeft = Math.max(0,flood.getHoursLeftInFlood() - elapsedTime);
+                if(timeLeft <= 0){
+                    dao.deleteFloods(runId);
+                }else{
+                    flood.setHoursLeftInFlood(timeLeft);
+                    dao.saveAllFloods(runId, floods);
+                }
 
-            checkForFlood(runId, hoursAlive, dorm);
-            billCostOfFlood(runId, hoursAlive, dorm);
-
-            dorm.setHourLastUpdated(hoursAlive);
+            }
         }
-
         dao.saveAllFloods(runId, floods);
     }
 
 
     // Charges the college for the dorm flooding
     private void billCostOfFlood(String runId, int hoursAlive, DormitoryModel dorm) {
-        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, (int) (newCharge));
-        if(newCharge > 0){
-            NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " flooding is $" + newCharge, NewsType.FINANCIAL_NEWS);
 
-        }
-        }
+        // Comment out and using a fixed value for the time being (change later)
+        // int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
+        Accountant.payBill(runId,"Flood cost for dorm " + dorm.getName() + " Cost is $ " + 1000, 1000);
+
+    }
 
 
     // Checks to see if a flood happened
     private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
+            DormManager dormMan = new DormManager();
             NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n", NewsType.GENERAL_NOTE);
+
+            FloodModel flood = new FloodModel(1000,72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
+            NewsManager.createNews(runId, hoursAlive, "Dorm " + flood.getDormName() + " has flooded.\n", NewsType.GENERAL_NOTE);
+            Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName() + " is $" + flood.getCostOfFlood(), flood.getCostOfFlood());
+            dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
 
         }
     }

@@ -2,8 +2,12 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
+import com.endicott.edu.models.CollegeModel;
+import com.endicott.edu.models.DormitoriesModel;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsType;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,7 +38,7 @@ public class DormManager {
         if(temp.getDormType() == 1){
 //          int capacity, int hourLastUpdated, String dormName, int numStudents,
             //String curDisaster, int reputation, String runId, int numRooms,
-            //float maintenanceCost
+            //float maintenanceCost, build cost
             temp.setCapacity(700);
             temp.setNumRooms(350);
 
@@ -61,7 +65,9 @@ public class DormManager {
     }
 
     public static DormitoryModel createDorm(String runId, String dormName, String dormType){
+        //charge the college for the dorm created.
         //need to get "dorm"
+        //need to set build cost and charge the overall funds
         DormitoryModel temp = new DormitoryModel();
         temp.setName(dormName);
         if(dormType == "Small"){
@@ -87,9 +93,8 @@ public class DormManager {
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
-        float newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, (int) (newCharge));
-        NewsManager.createNews(runId, hoursAlive, "Charge for " + dorm.getName() + " $" + newCharge, NewsType.FINANCIAL_NEWS);
+        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
+        Accountant.payBill(runId,"Maintenance of dorm " + dorm.getName() + " $ " + newCharge,(int) (newCharge));
     }
 
 
@@ -110,6 +115,7 @@ public class DormManager {
     /*Handles one student being admitted to the college at a time:
     Takes in the runId of the college (String)
     returns the name of the dorm (String) that student was placed in.*/
+    //fix this
     public String assignDorm(String collegeId){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
@@ -154,12 +160,46 @@ public class DormManager {
         return openBeds;
     }
 
+//put this in service
+    public void sellDorm(String runId, String dormName){
+        List<DormitoryModel> dorms = dao.getDorms(runId);
+        //take 20% of buildcost
+        //call acountant.studentIncome with this amount
+        for(DormitoryModel d : dorms){
+            String name = d.getName();
+            if(name == dormName){
+                dorms.remove(d);
+                break;
+            }
+        }
+        dao.saveAllDorms(runId, dorms);
+    }
 
+//    public ArrayList checkAvailableDorms(String runId){
+//        CollegeDao collegeDao = new CollegeDao();
+//        CollegeModel college = collegeDao.getCollege(runId);
+//        int availableCash = college.getAvailableCash();
+//        List<String> availableDormTypes;
+//
+//
+//        return availableDormTypes;
+//    }
 
+    public void chanceOfEventDuringConstruction(String runId){
+        double chance = Math.random();
+        if(chance < 0.25){
+            //25% chance of gaining $1000 dollars
+            Accountant.studentIncome(runId, "You found $1,000 during construction!", 1000);
+        }
+        else if(chance < 0.35){
+            //35% chance of losing $500 dollars
+            Accountant.studentIncome(runId,"A pipe burst! You paid $500 for repairs.", 500);
+        }
+        else{
+            //40% chance of nothing happening
+        }
 
-
-
-
+    }
 
 
 

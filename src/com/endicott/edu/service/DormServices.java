@@ -2,20 +2,22 @@ package com.endicott.edu.service;
 
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.DormManager;
+import com.endicott.edu.simulators.SportManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 // The Java class will be hosted at the URI path "/finances"
 @Path("/dorms")
 public class DormServices {
     private DormitoryDao dao = new DormitoryDao();
-
 
 
     /**
@@ -28,7 +30,7 @@ public class DormServices {
     @POST
     @Path("/{runId}/{dormName}/{dormType}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DormitoryModel addDorm(@PathParam("runId") String runId,@PathParam("dormName") String dormName,
+    public DormitoryModel addDorm(@PathParam("runId") String runId, @PathParam("dormName") String dormName,
                                   @PathParam("dormType") String dormType) {
 
         if (!CollegeManager.doesCollegeExist(runId)) {
@@ -53,7 +55,38 @@ public class DormServices {
     }
 
 
-}
+    /**
+     * Delete a selected dorm
+     *
+     */
+//    @POST
+//    @Path("/delete")
+//    @Consumes(MediaType.TEXT_PLAIN)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public void deleteDorm(String runId, String dormName) {
+//
+//        DormManager dormManager = new DormManager();
+//        if (!CollegeManager.doesCollegeExist(runId)) {
+//            throw new WebApplicationException(Response.Status.NOT_FOUND);
+//        }
+//
+//        dormManager.sellDorm(runId, dormName);
+//    }
+
+
+//    @GET
+//    @Path("/{runId}/{command}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
+//        System.out.println("College command: " + command);
+//        DormManager dormManager = new DormManager();
+//
+//        if (command.equalsIgnoreCase("available")) {
+//            return dormManager.checkAvailableDorms();
+//        } else {
+//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+//        }
+//    }
 
 //    @GET
 //    @Produces("text/plain")
@@ -82,3 +115,6 @@ public class DormServices {
 //        DormitoryModel bankAccount = dao.getFinances("8");
 //        return bankAccount;
 //    }
+
+
+}

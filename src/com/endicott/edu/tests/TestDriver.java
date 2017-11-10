@@ -19,6 +19,7 @@ public class TestDriver {
         SportsTests.runTests(serviceUrl);
         FacultyTests.runTests(serviceUrl);
         StudentTests.runTests(serviceUrl);
+        FloodTest.runTests(serviceUrl);
     }
 
 }

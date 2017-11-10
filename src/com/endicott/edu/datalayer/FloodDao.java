@@ -84,8 +84,8 @@ public class FloodDao {
     private static void testNotes() {
         final String runId = "testflood001";
         FloodDao dao = new FloodDao();
-        FloodModel m1 = new FloodModel(100, 10, "Hampshire Hall", runId );
-        FloodModel m2 = new FloodModel(200, 20,"Vermont House", runId);
+        FloodModel m1 = new FloodModel(1000, 72, 100, 10, "Hampshire Hall", runId );
+        FloodModel m2 = new FloodModel(1500, 96, 200, 20,"Vermont House", runId);
         ArrayList<FloodModel> floods = new ArrayList<>();
         floods.add(m1);
         floods.add(m2);
@@ -95,7 +95,7 @@ public class FloodDao {
 
         assert(outMsgs.size() == 2);
 
-        FloodModel m3 = new FloodModel(300, 10,"Maine Manor", runId);
+        FloodModel m3 = new FloodModel(1000, 72, 300, 10,"Maine Manor", runId);
         dao.saveNewFlood(runId, m3);
         outMsgs = dao.getFloods(runId);
         assert(outMsgs.size() == 3);

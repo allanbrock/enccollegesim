@@ -45,23 +45,23 @@ public class SportManager {
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
-            result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 0, 0, "Men's Basketball", runId, false, 48);
+            result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 0, 0, "Men's Basketball", runId, false, 48, "Male");
         }
         else if(sportName.equals("Women's Basketball")){
-            result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,0,0,"Women's Basketball", runId, false,48);
+            result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,0,0,"Women's Basketball", runId, false,48, "Female");
         }
         else if(sportName.equals("Baseball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Baseball", runId, false,48);
+            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Baseball", runId, false,48, "Male");
         }
         else if(sportName.equals("Softball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Softball", runId, false, 48);
+            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Softball", runId, false, 48,"Female");
 
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Women's Soccer", runId, false,48 );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Women's Soccer", runId, false,48, "Female" );
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Men's Soccer", runId, false, 48 );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Men's Soccer", runId, false, 48,"Male" );
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
         }
@@ -76,9 +76,11 @@ public class SportManager {
         List<StudentModel> students = dao.getStudents(runId);
         for(int i = 0; i < students.size(); i++) {
             if (students.get(i).isAthlete() && ((students.get(i).getTeam().equals("")) || students.get(i).getTeam().equals("unknown"))) {
-                if (sport.getCurrentPlayers() < sport.getMaxPlayers()) {
-                    students.get(i).setTeam(sport.getSportName());
-                    sport.setCurrentPlayers((sport.getCurrentPlayers() + 1));
+                if (students.get(i).getGender().equals(sport.getGender())) {
+                    if (sport.getCurrentPlayers() < sport.getMaxPlayers()) {
+                        students.get(i).setTeam(sport.getSportName());
+                        sport.setCurrentPlayers((sport.getCurrentPlayers() + 1));
+                    }
                 }
             }
         }

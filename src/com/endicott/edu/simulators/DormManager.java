@@ -115,6 +115,7 @@ public class DormManager {
     /*Handles one student being admitted to the college at a time:
     Takes in the runId of the college (String)
     returns the name of the dorm (String) that student was placed in.*/
+    //fix this
     public String assignDorm(String collegeId){
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
@@ -178,11 +179,27 @@ public class DormManager {
 //        CollegeDao collegeDao = new CollegeDao();
 //        CollegeModel college = collegeDao.getCollege(runId);
 //        int availableCash = college.getAvailableCash();
-//        List<DormitoryModel> dormsToBuild;
+//        List<String> availableDormTypes;
 //
 //
-//        return dormsToBuild;
+//        return availableDormTypes;
 //    }
+
+    public void chanceOfEventDuringConstruction(String runId){
+        double chance = Math.random();
+        if(chance < 0.25){
+            //25% chance of gaining $1000 dollars
+            Accountant.studentIncome(runId, "You found $1,000 during construction!", 1000);
+        }
+        else if(chance < 0.35){
+            //35% chance of losing $500 dollars
+            Accountant.studentIncome(runId,"A pipe burst! You paid $500 for repairs.", 500);
+        }
+        else{
+            //40% chance of nothing happening
+        }
+
+    }
 
 
 

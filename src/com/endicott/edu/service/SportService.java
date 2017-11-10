@@ -53,8 +53,8 @@ public class SportService {
     }
 
 
-    @POST
-    @Path("/delete")
+    @DELETE
+    @Path("/{runId}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteSport(String sportJson) {

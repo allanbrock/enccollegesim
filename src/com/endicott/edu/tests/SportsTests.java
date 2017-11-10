@@ -1,7 +1,10 @@
 package com.endicott.edu.tests;
 
+import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.SportModel;
+import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.simulators.SportManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.glassfish.jersey.client.ClientConfig;
@@ -38,7 +41,7 @@ class SportsTests {
         tester.setServiceUrl(serviceUrl);
         tester.testCreateCollege(COLLEGE_TEST_ID);
         tester.testSports(COLLEGE_TEST_ID);
-        tester.testDeleteCollege(COLLEGE_TEST_ID);
+        tester.testDeleteSport(COLLEGE_TEST_ID);
     }
 
     private boolean testCreateCollege(String runId) {
@@ -53,7 +56,7 @@ class SportsTests {
         Response response = invocationBuilder.post(null);
 
         //Response response = invocationBuilder.post(Entity.entity(college, MediaType.APPLICATION_JSON));
-        if (response.getStatus() != 200) {
+        if (response.getStatus() != 0) {
             System.out.println("    Got bad response creating college: " + response.getStatus());
             return false;
         }
@@ -93,14 +96,14 @@ class SportsTests {
             result = FAIL;
         }
 
+
         System.out.println(" Result: " + result );
     }
 
-
-    private void testDeleteCollege(String runId) {
+    private void testDeleteSport(String runId) {
         String result = PASS;
 
-        System.out.print("Test case name: testDeleteCollege...");
+        System.out.print("Test case name: testDeleteSport...");
 
         WebTarget webTarget = client.target(serviceUrl + "college/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request();
@@ -116,6 +119,7 @@ class SportsTests {
             System.out.println("    Got unexpected get response college: " + response.getStatus());
             result = FAIL;
         }
+
 
         System.out.println(" Result: " + result );
     }

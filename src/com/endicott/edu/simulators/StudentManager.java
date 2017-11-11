@@ -48,7 +48,7 @@ public class StudentManager {
                 student.setGender("Female");
             }
             student.setIdNumber(IdNumberGenDao.getID(runId));
-            student.setHappinessLevel(rand.nextInt(100));
+            student.setHappinessLevel(70);
             student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
             student.setTeam("");

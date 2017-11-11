@@ -95,7 +95,9 @@ public class StudentManager {
         for (int i = 0; i < students.size(); i++) {
             happinessSum += students.get(i).getHappinessLevel();
         }
-        happinessLevel = happinessSum / students.size();
+
+        // Make sure happiness is never less than 0.
+        happinessLevel = Math.max(0,happinessSum / students.size());
 
         return happinessLevel;
 

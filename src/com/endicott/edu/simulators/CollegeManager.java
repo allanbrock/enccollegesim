@@ -149,6 +149,7 @@ public class CollegeManager {
         PlagueDao.deletePlagues(runId);
         SportsDao.deleteSports(runId);
         StudentDao.deleteStudents(runId);
+        IdNumberGenDao.deleteIDs(runId);
     }
 
     static public CollegeModel nextDay(String runId) {

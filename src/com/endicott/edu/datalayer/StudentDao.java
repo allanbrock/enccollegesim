@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 // Created by Connor Frazier on 9/28/2017.
 
 public class StudentDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "student.dat";
     }
     private Logger logger = Logger.getLogger("StudentDao");
@@ -71,7 +71,7 @@ public class StudentDao {
         saveAllStudents(runId, students);
     }
 
-    public void deleteStudents(String runId) {
+    public static void deleteStudents(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

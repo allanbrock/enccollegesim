@@ -16,11 +16,11 @@ import java.util.logging.Logger;
  *
  */
 public class FacultyDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "faculty.dat";
     }
 
-    private Logger logger = Logger.getLogger("FacultyDao");
+    private static Logger logger = Logger.getLogger("FacultyDao");
 
     /**
      * This function returns a list of all the faculty for a college
@@ -106,9 +106,8 @@ public class FacultyDao {
      * Deletes the faculty file
      * @param runId
      */
-    public void removeAllFaculty(String runId){
+    public static void removeAllFaculty(String runId){
         File file = new File(getFilePath(runId));
-        logger.info("Removing all faculty from: " + getFilePath(runId));
         file.delete();
     }
 

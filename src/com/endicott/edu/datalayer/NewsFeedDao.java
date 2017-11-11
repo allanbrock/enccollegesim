@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class NewsFeedDao {
     private Logger logger = Logger.getLogger("NewFeedDao");
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "newsfeed.dat";
     }
 
@@ -79,7 +79,7 @@ public class NewsFeedDao {
         saveAllNotes(runId, allNotes);
     }
 
-    public void deleteNotes(String runId) {
+    public static void deleteNotes(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

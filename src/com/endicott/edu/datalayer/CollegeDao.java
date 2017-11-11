@@ -9,7 +9,7 @@ import java.io.*;
 // Created by abrocken on 7/17/2017.
 
 public class CollegeDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "college.dat";
     }
 
@@ -37,9 +37,17 @@ public class CollegeDao {
         return college;
     }
 
-    public void deleteCollege(String runId) {
+    public static void deleteCollege(String runId) {
         File file = new File(getFilePath(runId));
         boolean result = file.delete();
+
+        DormitoryDao.deleteDorms(runId);
+        FacultyDao.removeAllFaculty(runId);
+        FloodDao.deleteFloods(runId);
+        NewsFeedDao.deleteNotes(runId);
+        PlagueDao.deletePlagues(runId);
+        SportsDao.deleteSports(runId);
+        StudentDao.deleteStudents(runId);
     }
 
     public void saveCollege(CollegeModel college){

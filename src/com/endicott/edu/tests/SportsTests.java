@@ -56,7 +56,7 @@ class SportsTests {
         Response response = invocationBuilder.post(null);
 
         //Response response = invocationBuilder.post(Entity.entity(college, MediaType.APPLICATION_JSON));
-        if (response.getStatus() != 0) {
+        if (response.getStatus() != 200) {
             System.out.println("    Got bad response creating college: " + response.getStatus());
             return false;
         }

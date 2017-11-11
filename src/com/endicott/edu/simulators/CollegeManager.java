@@ -141,17 +141,14 @@ public class CollegeManager {
     }
 
     static public void sellCollege(String runId) {
-        CollegeDao collegeDao = new CollegeDao();
-        DormitoryDao dormitoryDao = new DormitoryDao();
-        NewsFeedDao noteDao = new NewsFeedDao();
-        SportsDao sportsDao = new SportsDao();
-        StudentDao studentsDao = new StudentDao();
-
-        collegeDao.deleteCollege(runId);
-        dormitoryDao.deleteDorms(runId);
-        sportsDao.deleteSports(runId);
-        noteDao.deleteNotes(runId);
-        studentsDao.deleteStudents(runId);
+        CollegeDao.deleteCollege(runId);
+        DormitoryDao.deleteDorms(runId);
+        FacultyDao.removeAllFaculty(runId);
+        FloodDao.deleteFloods(runId);
+        NewsFeedDao.deleteNotes(runId);
+        PlagueDao.deletePlagues(runId);
+        SportsDao.deleteSports(runId);
+        StudentDao.deleteStudents(runId);
     }
 
     static public CollegeModel nextDay(String runId) {

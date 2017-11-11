@@ -109,12 +109,6 @@ class DormTests {
             result = FAIL;
         }
 
-        response = invocationBuilder.get();
-        if(response.getStatus() != 404) {
-            System.out.println("    Got unexpected get response college: " + response.getStatus());
-            result = FAIL;
-        }
-
         System.out.println(" Result: " + result );
     }
 

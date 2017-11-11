@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 // Created by cseidl on 7/17/2017.
 
 public class FloodDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "flood.dat";
     }
     private Logger logger = Logger.getLogger("FloodDao");
@@ -72,7 +72,7 @@ public class FloodDao {
         saveAllFloods(runId, floods);
     }
 
-    public void deleteFloods(String runId) {
+    public static void deleteFloods(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

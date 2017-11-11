@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 // Created by dyannone on 10/10/2017.
 
 public class PlagueDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "plague.dat";
     }
     private Logger logger = Logger.getLogger("PlagueDao");
@@ -72,7 +72,7 @@ public class PlagueDao {
         saveAllPlagues(runId, plagues);
     }
 
-    public void deletePlagues(String runId) {
+    public static void deletePlagues(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

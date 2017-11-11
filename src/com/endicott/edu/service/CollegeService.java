@@ -50,15 +50,11 @@ public class CollegeService {
      * @return a useless plain text message
      */
     @DELETE
-    @Path("/{runId}/{command}")
+    @Path("/{runId}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteCollege(@PathParam("runId") String runId, @PathParam("command") String command) {
-        if (command.equalsIgnoreCase("delete")) {
-            CollegeManager.sellCollege(runId);
-            return "College might have been deleted.\n";
-        } else {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+    public String deleteCollege(@PathParam("runId") String runId) {
+        CollegeManager.sellCollege(runId);
+        return "College might have been deleted.\n";
     }
 
     /**

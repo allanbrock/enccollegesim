@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/17/2017.
 
 public class DormitoryDao {
-    private String getFilePath(String runId) {
+    private static String getFilePath(String runId) {
         return DaoUtils.getFilePathPrefix(runId) +  "dormitory.dat";
     }
     private Logger logger = Logger.getLogger("DormitoryDao");
@@ -72,7 +72,7 @@ public class DormitoryDao {
 
     }
 
-    public void deleteDorms(String runId) {
+    public static void deleteDorms(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

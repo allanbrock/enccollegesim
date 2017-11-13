@@ -111,7 +111,7 @@ public class CollegeManager {
                 student.setGender("Female");
             }
             student.setIdNumber(IdNumberGenDao.getID(runId));
-            student.setHappinessLevel(rand.nextInt(100));
+            student.setHappinessLevel(75);
             student.setAthleticAbility(rand.nextInt(10));
             if(student.getAthleticAbility() > 6){
                 student.setAthlete(true);

@@ -62,13 +62,9 @@ public class CollegeManager {
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
 
-        // Create a plague
-        // Make students sick.
-        logger.info("Generating Plague");
-        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 1, 0, 1000, 72, 0);
-        PlagueDao plagueDao = new PlagueDao();
-        plagueDao.saveNewPlague(runId, plague);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 1 student(s) are sick.", NewsType.GENERAL_NOTE);
+        //Create Plague
+        PlagueManager plague = new PlagueManager();
+        plague.createInitialPlague(runId);
 
         SportManager sportManager = new SportManager();
         sportManager.addNewTeam("Men's Soccer", runId);

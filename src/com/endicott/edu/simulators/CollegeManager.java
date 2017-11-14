@@ -52,37 +52,20 @@ public class CollegeManager {
         // Creating students
         //moved to student manager
        createInitialStudents(runId, college.getCurrentDay());
-
         // Create a dorm
         // We need to add the students to the dorm.
        DormManager dormManager = new DormManager();
        dormManager.establishCollege(runId, college);
-
         // Create a plague
         PlagueManager plague = new PlagueManager();
         plague.createInitialPlague(runId);
-
-
-
-
 
         //save new flood
         FloodManager.initFloodOnCollegeCreate(runId);
         FacultyManager.createInitFaculty(runId); //create init faculty
         logger.info("Done creating college");
-        createInitialFaculty(runId);
+
         return college;
-    }
-
-    static private void createInitialFaculty(String runId){
-        Logger logger = Logger.getLogger("CollegeManager");
-        logger.info("Creating Initial Faculty..");
-        FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
-        member.setFacultyID(-1); //set the id to -1 so we know this is the first id we set
-        FacultyDao fao = new FacultyDao();
-        fao.saveNewFaculty(runId,member);
-        logger.info("Created new faculty member ID: " + member.getFacultyID());
-
     }
 
     static private void createInitialStudents(String runId, int currentDay) {

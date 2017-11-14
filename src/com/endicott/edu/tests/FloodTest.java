@@ -65,7 +65,7 @@ class FloodTest {
         String result = PASS;
         FloodModel[] flood;
         Client client = ClientBuilder.newClient(new ClientConfig());
-        WebTarget webTarget = client.target(serviceUrl + "flood/" + runId);
+        WebTarget webTarget = client.target(serviceUrl + "floods/" + runId);
         Invocation.Builder invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 
         Response response = invocationBuilder.get();

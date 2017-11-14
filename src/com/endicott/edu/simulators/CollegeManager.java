@@ -50,7 +50,8 @@ public class CollegeManager {
         collegeDao.saveCollege(college);
         NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
         // Creating students
-        createInitialStudents(runId, college.getCurrentDay());
+        //moved to student manager
+       createInitialStudents(runId, college.getCurrentDay());
 
         // Create a dorm
         // We need to add the students to the dorm.
@@ -62,15 +63,12 @@ public class CollegeManager {
         plague.createInitialPlague(runId);
 
 
-        SportManager sportManager = new SportManager();
-        sportManager.addNewTeam("Men's Soccer", runId);
-        sportManager.addNewTeam("Men's Basketball", runId);
-
-        FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
-        FloodDao floodDao = new FloodDao();
-        floodDao.saveNewFlood(runId, flood);
 
 
+
+        //save new flood
+        FloodManager.initFloodOnCollegeCreate(runId);
+        FacultyManager.createInitFaculty(runId); //create init faculty
         logger.info("Done creating college");
         createInitialFaculty(runId);
         return college;
@@ -91,7 +89,7 @@ public class CollegeManager {
         StudentManager studentManager = new StudentManager();
         studentManager.addNewStudents(runId, currentDay/24, true);
         int numStudents = 100;
-        
+
         NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 

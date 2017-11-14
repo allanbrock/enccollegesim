@@ -18,7 +18,7 @@ public class StudentManager {
 
     public void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
-        addNewStudents(runId, hoursAlive);
+        addNewStudents(runId, hoursAlive, false);
         runningTuitionOfStudent(runId, hoursAlive);
         removeStudents(runId, hoursAlive);
         updateStudentsTime(hoursAlive);
@@ -35,9 +35,14 @@ public class StudentManager {
         Accountant.studentIncome(runId,"Student tuition received $ " + dailyTuitionSum ,dailyTuitionSum);
     }
 
-    private void addNewStudents(String runId, int hoursAlive) {
+    public void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
-        int numNewStudents = rand.nextInt(openBeds);
+        int numNewStudents = 0;
+        if(initial == true){
+            numNewStudents = 100;
+        } else {
+            numNewStudents = rand.nextInt(openBeds);
+        }
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             if(rand.nextInt(10) + 1 > 5){

@@ -96,36 +96,10 @@ public class CollegeManager {
     }
 
     static private void createInitialStudents(String runId, int currentDay) {
-        StudentModel student = new StudentModel();
-        StudentDao studentDao = new StudentDao();
-        DormManager dormManager = new DormManager();
-        Random rand = new Random();
+        StudentManager studentManager = new StudentManager();
+        studentManager.addNewStudents(runId, currentDay/24, true);
         int numStudents = 100;
-
-        for(int i = 0; i < numStudents; i++) {
-            if(rand.nextInt(10) + 1 > 5){
-                student.setName(NameGenDao.generateName(false));
-                student.setGender("Male");
-            } else {
-                student.setName(NameGenDao.generateName(true));
-                student.setGender("Female");
-            }
-            student.setIdNumber(IdNumberGenDao.getID(runId));
-            student.setHappinessLevel(75);
-            student.setAthleticAbility(rand.nextInt(10));
-            if(student.getAthleticAbility() > 6){
-                student.setAthlete(true);
-            }
-            else {
-                student.setAthlete(false);
-            }
-            student.setTeam("");
-            makeStudentSick(student, runId, currentDay);
-            student.setDorm(dormManager.assignDorm(runId));
-            student.setRunId(runId);
-            studentDao.saveNewStudent(runId, student);
-        }
-
+        
         NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 

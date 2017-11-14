@@ -76,6 +76,7 @@ public class CollegeManager {
         FloodManager.initFloodOnCollegeCreate(runId);
         FacultyManager.createInitFaculty(runId); //create init faculty
         logger.info("Done creating college");
+        createInitialFaculty(runId);
         return college;
     }
 

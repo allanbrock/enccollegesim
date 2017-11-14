@@ -2,8 +2,10 @@ package com.endicott.edu.simulators;
 
 
 import com.endicott.edu.datalayer.PlagueDao;
+import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.PlagueModel;
 import com.endicott.edu.models.NewsType;
+import com.endicott.edu.models.StudentModel;
 
 import java.util.List;
 
@@ -27,6 +29,15 @@ public class PlagueManager {
         dao.saveAllPlagues(runId, plagues);
     }
 
+//    private void updateStudentsTime(int hoursAlive){
+//        StudentDao dao = new StudentDao();
+//        List<StudentModel> students = dao.getStudents();
+//        for(int i = 0; i < students.size(); i++){
+//            students.get(i).setHourLastUpdated(hoursAlive);
+//        }
+//
+//    }
+
     //look into this
     public void handleStudentsSick(int numOfStudentsSick, int hoursLeft){
         if(numOfStudentsSick > 5 && hoursLeft >=72){
@@ -39,6 +50,14 @@ public class PlagueManager {
             numOfStudentsSick = numOfStudentsSick - 1;
         }
 
+    }
+
+    public void createInitialPlague(String runId){
+        // Create a plague
+        // Make students sick.
+        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 0, 0, 1000, 72, 0);
+        PlagueDao plagueDao = new PlagueDao();
+        plagueDao.saveNewPlague(runId, plague);
     }
 
     private boolean didItHappen(float oddsBetween0And1

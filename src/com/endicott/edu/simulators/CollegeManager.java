@@ -61,7 +61,7 @@ public class CollegeManager {
         dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
 
         // Create a plague
         //moved to plague manger
@@ -70,17 +70,12 @@ public class CollegeManager {
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 1, 0, 1000, 72, 0);
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 1 student(s) are sick.", NewsType.COLLEGE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has been infected. 1 student(s) are sick.", NewsType.GENERAL_NOTE);
 
         //save new flood
-        //moved to flood manger
-        FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
-        FloodDao floodDao = new FloodDao();
-        floodDao.saveNewFlood(runId, flood);
-
-
+        FloodManager.initFloodOnCollegeCreate(runId);
+        FacultyManager.createInitFaculty(runId); //create init faculty
         logger.info("Done creating college");
-        createInitialFaculty(runId);
         return college;
     }
 
@@ -126,7 +121,7 @@ public class CollegeManager {
             studentDao.saveNewStudent(runId, student);
         }
 
-        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.COLLEGE_NEWS);
+        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 
     private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
@@ -134,7 +129,7 @@ public class CollegeManager {
 
         if(rand.nextInt(10) + 1 > 9){
             student.setNumberHoursLeftBeingSick(72);
-            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
         } else {
             student.setNumberHoursLeftBeingSick(0);
         }

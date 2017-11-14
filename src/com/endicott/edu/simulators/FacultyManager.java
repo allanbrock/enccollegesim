@@ -29,4 +29,10 @@ public class FacultyManager {
         }
         Accountant.payBill(runId,"Faculty has been paid  $ " + total,total);
    }
+   public static void createInitFaculty(String runId){
+       FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
+       member.setFacultyID(-1); //set the id to -1 so we know this is the first id we set
+       FacultyDao fao = new FacultyDao();
+       fao.saveNewFaculty(runId,member);
+   }
 }

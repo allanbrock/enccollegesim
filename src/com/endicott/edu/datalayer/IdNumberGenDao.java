@@ -78,7 +78,7 @@ public class IdNumberGenDao {
     }
 
 
-    public void deleteIDs(String runId) {
+    public static void deleteIDs(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

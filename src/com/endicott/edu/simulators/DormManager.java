@@ -186,14 +186,15 @@ public class DormManager {
 //    }
 
     public void chanceOfEventDuringConstruction(String runId){
+        String dormName = "";
         double chance = Math.random();
         if(chance < 0.25){
             //25% chance of gaining $1000 dollars
-            Accountant.studentIncome(runId, "You found $1,000 during construction!", 1000);
+            Accountant.studentIncome(runId, "Donation received for building " + dormName, 1000);
         }
         else if(chance < 0.35){
             //35% chance of losing $500 dollars
-            Accountant.studentIncome(runId,"A pipe burst! You paid $500 for repairs.", 500);
+            Accountant.studentIncome(runId,"Ran into unexpected construction costs building " + dormName, 500);
         }
         else{
             //40% chance of nothing happening

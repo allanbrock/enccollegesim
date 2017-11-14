@@ -54,20 +54,12 @@ public class CollegeManager {
 
         // Create a dorm
         // We need to add the students to the dorm.
-        logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
-                0,"none", 5, "none", 60);
-        dorm.setMaintenanceCostPerHour(60);
-        DormitoryDao dormDao = new DormitoryDao();
-        dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
+       DormManager dormManager = new DormManager();
+       dormManager.establishCollege(runId, college);
 
         // Create a plague
         PlagueManager plague = new PlagueManager();
         plague.createInitialPlague(runId);
-
-
-
 
 
         SportManager sportManager = new SportManager();

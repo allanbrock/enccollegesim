@@ -202,6 +202,17 @@ public class DormManager {
 
     }
 
+    public void establishCollege(String runId, CollegeModel college){
+        logger.info("Creating dorm");
+        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
+                0,"none", 5, "none", 60);
+        dorm.setMaintenanceCostPerHour(60);
+        DormitoryDao dormDao = new DormitoryDao();
+        dormDao.saveNewDorm(runId, dorm);
+        NewsManager.createNews(runId, college.getCurrentDay(),"Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
+
+    }
+
 
 
 

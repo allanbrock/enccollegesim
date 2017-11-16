@@ -63,6 +63,7 @@ public class StudentManager {
         }
 
         NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
+
     }
 
     private void removeStudents(String runId, int hoursAlive) {

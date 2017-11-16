@@ -14,7 +14,7 @@ public class TestDriver {
     private static void runTests(String serviceUrl) {
         System.out.println("Testing service: " + serviceUrl);
 
-        CollegeTests.runTests(serviceUrl);
+        //CollegeTests.runTests(serviceUrl);
         DormTests.runTests(serviceUrl);
         SportsTests.runTests(serviceUrl);
         //FacultyTests.runTests(serviceUrl);

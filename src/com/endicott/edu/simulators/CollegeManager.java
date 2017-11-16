@@ -49,13 +49,16 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
         NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
+
+        // Create a dorm
+        // We need to add the students to the dorm.
+        DormManager dormManager = new DormManager();
+        dormManager.establishCollege(runId, college);
         // Creating students
         //moved to student manager
        createInitialStudents(runId, college.getCurrentDay());
-        // Create a dorm
-        // We need to add the students to the dorm.
-       DormManager dormManager = new DormManager();
-       dormManager.establishCollege(runId, college);
+
+
         // Create a plague
         PlagueManager plague = new PlagueManager();
         plague.createInitialPlague(runId);

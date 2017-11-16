@@ -33,7 +33,7 @@ public class FacultyManager {
     /**
      * This function creates the init faculty for the college
      * This is the dean in this case
-     * @param runId instance of the simulation 
+     * @param runId instance of the simulation
      */
    public static void createInitFaculty(String runId){
        FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);

@@ -90,8 +90,8 @@ class SportsTests {
             return;
         }
 
-        if(sports.length != 2) {
-            System.out.println("    Thought there would be 2 sports teams.  Saw: " + sports.length);
+        if(sports.length != 0) {
+            System.out.println("    Thought there would be 0 sports teams.  Saw: " + sports.length);
             System.out.println(" Result: FAIL");
             result = FAIL;
         }

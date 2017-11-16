@@ -49,13 +49,16 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
         NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
-        // Creating students
-        //moved to student manager
-       createInitialStudents(runId, college.getCurrentDay());
+
         // Create a dorm
         // We need to add the students to the dorm.
-       DormManager dormManager = new DormManager();
-       dormManager.establishCollege(runId, college);
+        DormManager dormManager = new DormManager();
+        dormManager.establishCollege(runId, college);
+
+        // Creating students
+        StudentManager studentManager = new StudentManager();
+        studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
+
         // Create a plague
         PlagueManager plague = new PlagueManager();
         plague.createInitialPlague(runId);
@@ -66,14 +69,6 @@ public class CollegeManager {
         logger.info("Done creating college");
 
         return college;
-    }
-
-    static private void createInitialStudents(String runId, int currentDay) {
-        StudentManager studentManager = new StudentManager();
-        studentManager.addNewStudents(runId, currentDay/24, true);
-        int numStudents = 100;
-
-        NewsManager.createNews(runId, currentDay,Integer.toString(numStudents) + " students have enrolled.", NewsType.GENERAL_NOTE);
     }
 
     private static void makeStudentSick(StudentModel student, String runId, int currentDay) {

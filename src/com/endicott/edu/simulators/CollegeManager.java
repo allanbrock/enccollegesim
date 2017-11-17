@@ -9,7 +9,8 @@ import java.util.logging.Logger;
 // Created by abrocken on 7/24/2017.
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 1000000;
+    static public final int STARTUP_FUNDING = 100000;
+    
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -24,17 +25,13 @@ public class CollegeManager {
         return college;
     }
 
-
-
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
-
         Logger logger = Logger.getLogger("CollegeManager");
         logger.info("Establishing the college");
 
         // See if there already is a college for this run.
         // We don't expect this, but if so, just return it.
-        logger.info("Checking if college exists.");
         try {
             logger.info("College exists.");
             return collegeDao.getCollege(runId);
@@ -42,44 +39,24 @@ public class CollegeManager {
         }
 
         // Create the college.
-        logger.info("Creating college");
         CollegeModel college = new CollegeModel();
         college.setRunId(runId);
         college.setHoursAlive(1);
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
+
         NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
 
-        // Create a dorm
-        // We need to add the students to the dorm.
-        DormManager dormManager = new DormManager();
-        dormManager.establishCollege(runId, college);
+        DormManager.establishCollege(runId, college);
 
-        // Creating students
         StudentManager studentManager = new StudentManager();
         studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
-        // Create a plague
-        PlagueManager plague = new PlagueManager();
-        plague.createInitialPlague(runId);
-
-        //save new flood
-        FloodManager.initFloodOnCollegeCreate(runId);
-        FacultyManager.createInitFaculty(runId); //create init faculty
-        logger.info("Done creating college");
+        PlagueManager.establishCollege(runId);
+        FloodManager.establishCollege(runId);
+        FacultyManager.establishCollege(runId);
 
         return college;
-    }
-
-    private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
-        Random rand = new Random();
-
-        if(rand.nextInt(10) + 1 > 9){
-            student.setNumberHoursLeftBeingSick(72);
-            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
-        } else {
-            student.setNumberHoursLeftBeingSick(0);
-        }
     }
 
     static public void sellCollege(String runId) {
@@ -130,8 +107,6 @@ public class CollegeManager {
     static public boolean doesCollegeExist(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
-        // See if there already is a college for this run.
-        // We don't expect this, but if so, just return it.
         try {
             CollegeModel college = collegeDao.getCollege(runId);
             return true;

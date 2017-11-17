@@ -76,7 +76,7 @@ public class FloodManager {
         return (Math.random() < oddsBetween0And1);
     }
 
-    public static void initFloodOnCollegeCreate(String runId){
+    public static void establishCollege(String runId){
         FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
         FloodDao floodDao = new FloodDao();
         floodDao.saveNewFlood(runId, flood);

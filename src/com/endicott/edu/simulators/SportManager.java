@@ -1,12 +1,10 @@
 package com.endicott.edu.simulators;
 
+import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.datalayer.SportsDao;
-import com.endicott.edu.models.NewsType;
-import com.endicott.edu.models.SportModel;
-import com.endicott.edu.models.SportsModel;
+import com.endicott.edu.models.*;
 import com.endicott.edu.datalayer.StudentDao;
-import com.endicott.edu.models.StudentModel;
 
 
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class SportManager {
-     SportsDao dao = new SportsDao();
+    SportsDao dao = new SportsDao();
     static private Logger logger = Logger.getLogger("SportManager");
 
     public void handleTimeChange(String runId, int hoursAlive) {
@@ -42,26 +40,35 @@ public class SportManager {
     public static SportModel addNewTeam(String sportName, String runId){
         SportsDao newSportDao = new SportsDao();
         logger.info("Attempt to add sport: '" + sportName + "' to '" + runId + "'");
+        SportModel sport = new SportModel();
+
+
+
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
             result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 0, 0, "Men's Basketball", runId, false, 48, "Male");
+            Accountant.payBill(runId, "Men's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Basketball")){
             result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,0,0,"Women's Basketball", runId, false,48, "Female");
+            Accountant.payBill(runId, "Women's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Baseball")){
             result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Baseball", runId, false,48, "Male");
+            Accountant.payBill(runId, "Baseball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Softball")){
             result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Softball", runId, false, 48,"Female");
-
+            Accountant.payBill(runId, "Softball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Women's Soccer", runId, false,48, "Female" );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 0, 0, "Women's Soccer", runId, false,48, "Female" );
+            Accountant.payBill(runId, "Women's Soccer start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 0, 0, 0, "Men's Soccer", runId, false, 48,"Male" );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 0, 0, "Men's Soccer", runId, false, 48,"Male" );
+            Accountant.payBill(runId, "Men's Soccer start up fee", result.getStartupCost());
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
         }
@@ -99,6 +106,9 @@ public class SportManager {
 
     public static ArrayList<SportModel> checkAvailableSports(String runId) {
         SportsDao dao = new SportsDao();
+        CollegeDao cao = new CollegeDao();
+        CollegeModel college = cao.getCollege(runId);
+        int collegeFunds = college.getAvailableCash();
 
         //creates a list called availbleSportNames of all sports names a college can make
         ArrayList<String> avalibleSportsNames = new ArrayList<>();
@@ -116,6 +126,8 @@ public class SportManager {
         }
         //takes the modified availbleSportsNames array and converts/creates objects of sport model with the left...
         // over names in availblesportsnames and stores them in abvaibleSports
+
+
         ArrayList<SportModel> avalibleSports = new ArrayList<>();
         for(int yz = 0; yz < avalibleSportsNames.size(); yz++){
             System.out.println(avalibleSportsNames.get(yz) + "This is a check");

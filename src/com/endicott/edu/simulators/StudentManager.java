@@ -5,7 +5,7 @@ import com.endicott.edu.models.*;
 import java.util.List;
 import java.util.Random;
 
-public class StudentManager {
+public class  StudentManager {
     StudentDao dao = new StudentDao();
     CollegeDao collegeDao = new CollegeDao();
     FacultyDao facultyDao = new FacultyDao();
@@ -54,8 +54,13 @@ public class StudentManager {
             }
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(70);
-            student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
+            if(student.getAthleticAbility() > 6) {
+                student.setAthlete(true);
+            }
+            else {
+                student.setAthlete(false);
+            }
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);

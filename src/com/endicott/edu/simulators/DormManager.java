@@ -173,7 +173,7 @@ public class DormManager {
         }
     }
 
-    public void establishCollege(String runId, CollegeModel college) {
+    static public void establishCollege(String runId, CollegeModel college) {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
                 0, "none", 5, "none", 60);

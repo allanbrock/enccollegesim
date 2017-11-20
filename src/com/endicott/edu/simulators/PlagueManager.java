@@ -8,6 +8,7 @@ import com.endicott.edu.models.NewsType;
 import com.endicott.edu.models.StudentModel;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by abrocken on 7/29/2017.
@@ -52,7 +53,7 @@ public class PlagueManager {
 
     }
 
-    public void createInitialPlague(String runId){
+    static public void establishCollege(String runId){
         // Create a plague
         // Make students sick.
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 0, 0, 1000, 72, 0);
@@ -60,8 +61,18 @@ public class PlagueManager {
         plagueDao.saveNewPlague(runId, plague);
     }
 
-    private boolean didItHappen(float oddsBetween0And1
-    ) {
+    private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
+        Random rand = new Random();
+
+        if(rand.nextInt(10) + 1 > 9){
+            student.setNumberHoursLeftBeingSick(72);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
+        } else {
+            student.setNumberHoursLeftBeingSick(0);
+        }
+    }
+
+    private boolean didItHappen(float oddsBetween0And1) {
         return (Math.random() < oddsBetween0And1);
     }
 }

@@ -40,6 +40,18 @@ public class StudentDao {
         return students;
     }
 
+    public List<StudentModel> getStudentsOnSport(String runId, String teamName) {
+        List<StudentModel> students = new ArrayList<>();
+        ArrayList<StudentModel> playerList = new ArrayList<>();
+        students = getStudents(runId);
+        for( StudentModel student : students){
+            if(student.getTeam().equals(teamName)){
+                playerList.add(student);
+            }
+        }
+        return playerList;
+    }
+
     public void saveAllStudents(String runId, List<StudentModel> students){
         logger.info("Saving all students...");
         try {

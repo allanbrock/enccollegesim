@@ -14,6 +14,7 @@ public class CollegeModel implements Serializable {
     private String runId = "unknown";
     private String note = "empty";
     private int studentBodyHappiness;
+    private int collegeScore; //where this college ranks against the other instances.
 
     public int getReputation() { return reputation; }
 

@@ -57,14 +57,12 @@ public class SportService {
     @Path("/{runId}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteSport(String sportJson) {
+    public String deleteSport(@PathParam("runId") String runId, String sportJson) {
         SportModel sport = gson.fromJson(sportJson,SportModel.class);
-        String runId = sport.getRunId();
 
         if (!CollegeManager.doesCollegeExist(runId)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-
 
         sportManager.deleteSelectedSport(runId,sport);
         return gson.toJson(sport);

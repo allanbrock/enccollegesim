@@ -64,7 +64,20 @@ public class StudentServices {
         return dao.getStudents(runId);
     }
 
+    /**
+     * Get a list of the students that are on a specific sports team.
+     *
+     * @param runId simulation ID
+     * @param teamName for specifiing a team.
+     * @return JSON formatted list.
+     */
+    @GET
+    @Path("/{runId}/{command}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<StudentModel> getStudentOnSport(@PathParam("runId") String runId, @PathParam("command") String teamName) { return dao.getStudentsOnSport(runId,teamName); }
+
 }
+
 
 //    @GET
 //    @Produces("text/plain")

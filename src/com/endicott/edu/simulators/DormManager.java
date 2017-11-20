@@ -13,6 +13,8 @@ public class DormManager {
     DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
     CollegeDao collegeDao = new CollegeDao();
+    CollegeModel college = new CollegeModel();
+    List<DormitoryModel> dorms = dao.getDorms(college.getRunId());
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<DormitoryModel> dorms = dao.getDorms(runId);
@@ -135,18 +137,11 @@ public class DormManager {
         return openBeds;
     }
 
-    public void sellDorm(String runId, String dormName) {
-        List<DormitoryModel> dorms = dao.getDorms(runId);
-        //take 20% of buildcost
-        //call acountant.studentIncome with this amount
-        for (DormitoryModel d : dorms) {
-            String name = d.getName();
-            if (name == dormName) {
-                dorms.remove(d);
-                break;
-            }
-        }
-        dao.saveAllDorms(runId, dorms);
+    public static void sellDorm(String runId) {
+        DormitoryDao dormitoryDao = new DormitoryDao();
+
+        dormitoryDao.deleteDorms(runId);
+
     }
 
 //    public ArrayList checkAvailableDorms(String runId){

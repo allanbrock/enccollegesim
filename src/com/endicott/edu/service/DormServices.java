@@ -57,27 +57,20 @@ public class DormServices {
 
     /**
      * Delete a selected dorm
-     *
+     *look at college and sports versions
      */
-//    @POST
-//    @Path("/delete")
-//    @Consumes(MediaType.TEXT_PLAIN)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public void deleteDorm(String runId, String dormName) {
-//
-//        DormManager dormManager = new DormManager();
-//        if (!CollegeManager.doesCollegeExist(runId)) {
-//            throw new WebApplicationException(Response.Status.NOT_FOUND);
-//        }
-//
-//        dormManager.sellDorm(runId, dormName);
-//    }
-
+    @DELETE
+    @Path("/{runId}/{dormName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteCollege(@PathParam("runId") String runId, @PathParam("dormName") String dormName) {
+            DormManager.sellDorm(runId);
+            return "Dorm might have been deleted.\n";
+    }
 
 //    @GET
-//    @Path("/{runId}/{command}")
+//    @Path("/{runId}/")
 //    @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
+//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId"){
 //        System.out.println("College command: " + command);
 //        DormManager dormManager = new DormManager();
 //

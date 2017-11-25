@@ -9,6 +9,8 @@ import com.endicott.edu.models.NewsType;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static com.endicott.edu.models.NewsType.RES_LIFE_NEWS;
+
 public class DormManager {
     DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
@@ -70,6 +72,8 @@ public class DormManager {
 
         dormDao.saveNewDorm(runId, temp);
         return temp;
+
+
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
@@ -175,7 +179,7 @@ public class DormManager {
         dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", RES_LIFE_NEWS);
     }
 }
 

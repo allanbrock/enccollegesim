@@ -45,7 +45,7 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
 
-        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS);
 
         DormManager.establishCollege(runId, college);
 

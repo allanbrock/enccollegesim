@@ -16,7 +16,7 @@ public class NewsManager {
             return;
         }
 
-        createNews(collegeId, college.getCurrentDay(), message, NewsType.GENERAL_NOTE);
+        createNews(collegeId, college.getCurrentDay(), message, NewsType.COLLEGE_NEWS);
     }
 
     public static void createNews(String collegeId, int newsHour, String message, NewsType newsType) {

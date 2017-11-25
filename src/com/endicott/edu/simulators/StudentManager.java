@@ -67,7 +67,7 @@ public class  StudentManager {
             dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
         }
 
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS);
 
     }
 
@@ -88,7 +88,7 @@ public class  StudentManager {
         }
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.GENERAL_NOTE);
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS);
         }
 
     }

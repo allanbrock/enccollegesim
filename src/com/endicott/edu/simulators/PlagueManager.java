@@ -66,7 +66,7 @@ public class PlagueManager {
 
         if(rand.nextInt(10) + 1 > 9){
             student.setNumberHoursLeftBeingSick(72);
-            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.GENERAL_NOTE);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS);
         } else {
             student.setNumberHoursLeftBeingSick(0);
         }

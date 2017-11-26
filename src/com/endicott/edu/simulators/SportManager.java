@@ -33,7 +33,7 @@ public class SportManager {
         int newCharge = ((hoursAlive - sport.getHourLastUpdated()) * sport.getCostPerHour()) / 24;
         if(newCharge > 0)
         {
-            Accountant.payBill(runId,"Charge for " + sport.getName() + " $ " + newCharge, newCharge);
+            Accountant.payBill(runId,"Charge for " + sport.getName(), newCharge);
         }
     }
 

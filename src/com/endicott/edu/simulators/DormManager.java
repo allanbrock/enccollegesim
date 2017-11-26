@@ -78,7 +78,7 @@ public class DormManager {
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName() + " $ " + newCharge, (int) (newCharge));
+        Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName(), (int) (newCharge));
     }
 
     /*Takes in the length of the flood, the dorm dormName affected by the flood, and the runId of the college. */

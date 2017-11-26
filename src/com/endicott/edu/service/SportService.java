@@ -2,7 +2,6 @@ package com.endicott.edu.service;
 
 import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.SportModel;
-import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.SportManager;
 import com.google.gson.Gson;
@@ -13,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-// The Java class will be hosted at the URI path "/finances"
+
 @Path("/sports")
 public class SportService {
     private SportsDao dao = new SportsDao();
@@ -52,7 +51,12 @@ public class SportService {
         return dao.getSports(runId);
     }
 
-
+    /**
+     *  Delete a sports team.
+     * @param runId
+     * @param sportJson
+     * @return
+     */
     @DELETE
     @Path("/{runId}")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -69,7 +73,7 @@ public class SportService {
     }
 
     /**
-     * Update an existing simulation run.
+     * Get a list of sports that can be added to the college.
      *
      * @param runId the unique id for the simulation run
      * @return a sport list of type string
@@ -86,34 +90,7 @@ public class SportService {
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+
     }
 
 }
-
-//    @GET
-//    @Produces("text/plain")
-//    //@Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getById() {
-//        DormitoryModel acct = dao.getFinances("8");
-//        return acct;
-//    }
-//    @GET
-//    @Path("/{id}")
-//    @Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getById(final @PathParam("id") String id) {
-//        DormitoryModel acct = dao.getFinances(id);
-//        return acct;
-//    }
-//    @GET
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String getFinances() {
-//        DormitoryModel bankAccount = dao.getFinances("8");
-//        return bankAccount.toJson();
-//    }
-//- works 7/19 returns xml displayable in the browser
-//    @GET
-//    @Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getFinances() {
-//        DormitoryModel bankAccount = dao.getFinances("8");
-//        return bankAccount;
-//    }

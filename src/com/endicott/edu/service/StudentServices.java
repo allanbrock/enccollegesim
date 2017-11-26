@@ -74,35 +74,9 @@ public class StudentServices {
     @GET
     @Path("/{runId}/{command}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<StudentModel> getStudentOnSport(@PathParam("runId") String runId, @PathParam("command") String teamName) { return dao.getStudentsOnSport(runId,teamName); }
+    public List<StudentModel> getStudentOnSport(@PathParam("runId") String runId, @PathParam("command") String teamName) {
+        return dao.getStudentsOnSport(runId, teamName);
+    }
 
 }
 
-
-//    @GET
-//    @Produces("text/plain")
-//    //@Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getById() {
-//        DormitoryModel acct = dao.getFinances("8");
-//        return acct;
-//    }
-//    @GET
-//    @Path("/{id}")
-//    @Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getById(final @PathParam("id") String id) {
-//        DormitoryModel acct = dao.getFinances(id);
-//        return acct;
-//    }
-//    @GET
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String getFinances() {
-//        DormitoryModel bankAccount = dao.getFinances("8");
-//        return bankAccount.toJson();
-//    }
-//- works 7/19 returns xml displayable in the browser
-//    @GET
-//    @Produces(MediaType.APPLICATION_XML)
-//    public DormitoryModel getFinances() {
-//        DormitoryModel bankAccount = dao.getFinances("8");
-//        return bankAccount;
-//    }

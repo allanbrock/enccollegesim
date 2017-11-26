@@ -89,6 +89,7 @@ public class SportManager {
             }
         }
 
+        dao.saveAllStudents(runId, students);
         return sport;
     }
 

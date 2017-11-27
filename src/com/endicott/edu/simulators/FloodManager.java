@@ -64,8 +64,8 @@ public class FloodManager {
             NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n", NewsType.COLLEGE_NEWS);
 
             FloodModel flood = new FloodModel(1000,72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
-            NewsManager.createNews(runId, hoursAlive, "Dorm " + flood.getDormName() + " has flooded.\n", NewsType.COLLEGE_NEWS);
-            Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName() + " is $" + flood.getCostOfFlood(), flood.getCostOfFlood());
+            NewsManager.createNews(runId, hoursAlive, "Flooding detected at " + flood.getDormName(), NewsType.COLLEGE_NEWS);
+            Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName(), flood.getCostOfFlood());
             dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
 
         }

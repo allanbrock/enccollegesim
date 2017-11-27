@@ -32,17 +32,20 @@ public class  StudentManager {
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
-        Accountant.studentIncome(runId,"Student tuition received $ " + dailyTuitionSum ,dailyTuitionSum);
+        Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
     public void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents = 0;
-        if(initial == true){
-            numNewStudents = 100;
-        } else {
-            numNewStudents = rand.nextInt(openBeds);
+
+        // Are we fully booked?
+        if (openBeds <= 0) {
+            return;
         }
+
+        numNewStudents = rand.nextInt(openBeds);
+
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             if(rand.nextInt(10) + 1 > 5){

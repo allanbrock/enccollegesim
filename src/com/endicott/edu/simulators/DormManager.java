@@ -97,17 +97,19 @@ public class DormManager {
     /*Handles one student being admitted to the college at a time:
     Takes in the runId of the college (String)
     returns the name of the dorm (String) that student was placed in.*/
-    //fix this
     public String assignDorm(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
+        Boolean added = false;
         for (DormitoryModel d : dorms) {
-            int s = d.getNumStudents();
-            int c = d.getCapacity();
-            dormName = d.getName();
-            if (s < c) {
-                d.setNumStudents(s + 1);
-                break;
+            while(!added) {
+                int s = d.getNumStudents();
+                int c = d.getCapacity();
+                dormName = d.getName();
+                if (s < c) {
+                    d.setNumStudents(s + 1);
+                    added = true;
+                }
             }
         }
         dao.saveAllDorms(collegeId, dorms);

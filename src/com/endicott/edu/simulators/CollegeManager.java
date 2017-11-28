@@ -49,8 +49,7 @@ public class CollegeManager {
 
         DormManager.establishCollege(runId, college);
 
-        StudentManager studentManager = new StudentManager();
-        studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
+        StudentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
@@ -96,8 +95,7 @@ public class CollegeManager {
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
 
-        StudentManager studentManager = new StudentManager();
-        studentManager.handleTimeChange(runId, hoursAlive);
+        StudentManager.handleTimeChange(runId, hoursAlive);
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 

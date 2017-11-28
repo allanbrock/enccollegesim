@@ -32,17 +32,20 @@ public class  StudentManager {
     private void runningTuitionOfStudent(String runId, int hoursAlive) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
-        Accountant.studentIncome(runId,"Student tuition received $ " + dailyTuitionSum ,dailyTuitionSum);
+        Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
     public void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents = 0;
-        if(initial == true){
-            numNewStudents = 100;
-        } else {
-            numNewStudents = rand.nextInt(openBeds);
+
+        // Are we fully booked?
+        if (openBeds <= 0) {
+            return;
         }
+
+        numNewStudents = rand.nextInt(openBeds);
+
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             if(rand.nextInt(10) + 1 > 5){
@@ -67,7 +70,7 @@ public class  StudentManager {
             dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
         }
 
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS);
 
     }
 
@@ -88,7 +91,7 @@ public class  StudentManager {
         }
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.GENERAL_NOTE);
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS);
         }
 
     }

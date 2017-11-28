@@ -9,6 +9,8 @@ import com.endicott.edu.models.NewsType;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static com.endicott.edu.models.NewsType.RES_LIFE_NEWS;
+
 public class DormManager {
     DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
@@ -70,11 +72,13 @@ public class DormManager {
 
         dormDao.saveNewDorm(runId, temp);
         return temp;
+
+
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName() + " $ " + newCharge, (int) (newCharge));
+        Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName(), (int) (newCharge));
     }
 
     /*Takes in the length of the flood, the dorm dormName affected by the flood, and the runId of the college. */
@@ -93,17 +97,19 @@ public class DormManager {
     /*Handles one student being admitted to the college at a time:
     Takes in the runId of the college (String)
     returns the name of the dorm (String) that student was placed in.*/
-    //fix this
     public String assignDorm(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
+        Boolean added = false;
         for (DormitoryModel d : dorms) {
-            int s = d.getNumStudents();
-            int c = d.getCapacity();
-            dormName = d.getName();
-            if (s < c) {
-                d.setNumStudents(s + 1);
-                break;
+            while(!added) {
+                int s = d.getNumStudents();
+                int c = d.getCapacity();
+                dormName = d.getName();
+                if (s < c) {
+                    d.setNumStudents(s + 1);
+                    added = true;
+                }
             }
         }
         dao.saveAllDorms(collegeId, dorms);
@@ -175,7 +181,7 @@ public class DormManager {
         dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.GENERAL_NOTE);
+        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", RES_LIFE_NEWS);
     }
 }
 

@@ -33,7 +33,7 @@ public class SportManager {
         int newCharge = ((hoursAlive - sport.getHourLastUpdated()) * sport.getCostPerHour()) / 24;
         if(newCharge > 0)
         {
-            Accountant.payBill(runId,"Charge for " + sport.getName() + " $ " + newCharge, newCharge);
+            Accountant.payBill(runId,"Charge for " + sport.getName(), newCharge);
         }
     }
 
@@ -41,9 +41,6 @@ public class SportManager {
         SportsDao newSportDao = new SportsDao();
         logger.info("Attempt to add sport: '" + sportName + "' to '" + runId + "'");
         SportModel sport = new SportModel();
-
-
-
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
@@ -92,8 +89,8 @@ public class SportManager {
             }
         }
 
+        dao.saveAllStudents(runId, students);
         return sport;
-
     }
 
     static public void sellSport(String runId) {
@@ -110,13 +107,13 @@ public class SportManager {
         CollegeModel college = cao.getCollege(runId);
         int collegeFunds = college.getAvailableCash();
 
-        //creates a list called availbleSportNames of all sports names a college can make
+        // Creates a list called availbleSportNames of all sports names a college can make
         ArrayList<String> avalibleSportsNames = new ArrayList<>();
         for (int i = 0; i < dao.seeAllSportNames().size(); i++ ){
             avalibleSportsNames.add(dao.seeAllSportNames().get(i));
         }
 
-        //compares the currents sports names w the names in the availbleSportsNames array and takes out any sports that are already created
+        // Compares the currents sports names w the names in the availbleSportsNames array and takes out any sports that are already created
         for(int x = 0; x < dao.getSports(runId).size(); x++){
             for(int y = 0; y < avalibleSportsNames.size(); y++){
                 if( avalibleSportsNames.get(y).equals(dao.getSports(runId).get(x).getName())){
@@ -124,30 +121,32 @@ public class SportManager {
                 }
             }
         }
-        //takes the modified availbleSportsNames array and converts/creates objects of sport model with the left...
+
+        // Takes the modified availbleSportsNames array and converts/creates objects of sport model with the left...
         // over names in availblesportsnames and stores them in abvaibleSports
-
-
-        ArrayList<SportModel> avalibleSports = new ArrayList<>();
+        ArrayList<SportModel> availableSports = new ArrayList<>();
         for(int yz = 0; yz < avalibleSportsNames.size(); yz++){
+
+            // TODO: we should check if the college has enough money to startup the sport.
+
             System.out.println(avalibleSportsNames.get(yz) + "This is a check");
             logger.info("list of the names after the check " + avalibleSportsNames.get(yz));
             SportModel tempSport = new SportModel();
             tempSport.setName(avalibleSportsNames.get(yz));
-            avalibleSports.add(tempSport);
-
+            availableSports.add(tempSport);
         }
-        return avalibleSports;
+        return availableSports;
     }
 
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.GENERAL_NOTE);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.SPORTS_NEWS);
             sport.setHoursUntilNextGame(48);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
     }
+
     public static void deleteSelectedSport(String runId, SportModel sport){
         SportsDao dao = new SportsDao();
         List<SportModel> sports = dao.getSports(runId);
@@ -157,6 +156,5 @@ public class SportManager {
             }
         }
         dao.saveAllSports(runId,sports);
-
     }
 }

@@ -60,7 +60,7 @@ public class CollegeManager {
 
     static public void sellCollege(String runId) {
         CollegeDao.deleteCollege(runId);
-        DormitoryDao.deleteDorms(runId);
+        DormitoryDao.deleteDorm(runId);
         FacultyDao.removeAllFaculty(runId);
         FloodDao.deleteFloods(runId);
         NewsFeedDao.deleteNotes(runId);

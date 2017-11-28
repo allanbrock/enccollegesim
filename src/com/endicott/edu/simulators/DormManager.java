@@ -121,11 +121,14 @@ public class DormManager {
     returns nothing.*/
     public void removeStudent(String collegeId, String dormName) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        Boolean removed = false;
         for (DormitoryModel d : dorms) {
-            int s = d.getNumStudents();
-            if (d.getName() == dormName) {
-                d.setNumStudents(s - 1);
-                break;
+            while(!removed) {
+                int s = d.getNumStudents();
+                if (d.getName() == dormName) {
+                    d.setNumStudents(s - 1);
+                    removed = true;
+                }
             }
         }
         dao.saveAllDorms(collegeId, dorms);
@@ -143,10 +146,11 @@ public class DormManager {
         return openBeds;
     }
 
+    //takes the runId of the dorm.
     public static void sellDorm(String runId) {
         DormitoryDao dormitoryDao = new DormitoryDao();
 
-        dormitoryDao.deleteDorms(runId);
+        dormitoryDao.deleteDorm(runId);
 
     }
 

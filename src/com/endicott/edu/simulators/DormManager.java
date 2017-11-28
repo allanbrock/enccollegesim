@@ -146,11 +146,20 @@ public class DormManager {
         return openBeds;
     }
 
-    //takes the runId of the dorm.
-    public static void sellDorm(String runId) {
-        DormitoryDao dormitoryDao = new DormitoryDao();
 
-        dormitoryDao.deleteDorm(runId);
+
+    //takes the runId of the dorm and the dorm name to be removed
+    public static void sellDorm(String runId, String dormName) {
+        DormitoryDao dormitoryDao = new DormitoryDao();
+        List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
+        String name = "";
+        for(DormitoryModel d : dorms){
+            name = d.getName();
+            if(name == dormName){
+                dorms.remove(d);
+            }
+        }
+        dormitoryDao.saveAllDorms(runId, dorms);
 
     }
 

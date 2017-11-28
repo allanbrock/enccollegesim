@@ -3,12 +3,13 @@ package com.endicott.edu.models;
 import java.io.Serializable;
 
 public class EventsModel  implements Serializable {
-    String runId;
-    String eventName;
-    String description; //a brief overview of what the event is
-    int numAttending = 0;
-    int cost;
-    int income; //how much money will this event generate
+    private String runId;
+    private int eventId = -1;
+    private String eventName;
+    private String description; //a brief overview of what the event is
+    private int numAttending = 0;
+    private int cost;
+    private int income; //how much money will this event generate
 
     public EventsModel(String runId, String eventName, String description, int cost, int income) {
         this.runId = runId;
@@ -17,7 +18,13 @@ public class EventsModel  implements Serializable {
         this.cost = cost;
         this.income = income;
     }
+    public int getEventId() {
+        return eventId;
+    }
 
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
+    }
     public String getRunId() {
         return runId;
     }

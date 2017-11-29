@@ -4,6 +4,7 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
 import java.util.List;
@@ -181,7 +182,7 @@ public class DormManager {
         dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", RES_LIFE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
     }
 }
 

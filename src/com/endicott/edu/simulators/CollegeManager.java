@@ -21,7 +21,7 @@ public class CollegeManager {
         CollegeModel college = cao.getCollege(runId); //get the college for this runID
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
-        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS);
+        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS,NewsLevel.GOOD_NEWS);
         return college;
     }
 
@@ -45,7 +45,7 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
 
-        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
 
         DormManager.establishCollege(runId, college);
 

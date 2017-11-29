@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Random;
 
 public class  StudentManager {
-    StudentDao dao = new StudentDao();
-    CollegeDao collegeDao = new CollegeDao();
-    FacultyDao facultyDao = new FacultyDao();
-    DormManager dormManager = new DormManager();
-    CollegeModel college = new CollegeModel();
-    List<StudentModel> students;
-    List<FacultyModel> faculty;
-    Random rand = new Random();
+    static StudentDao dao = new StudentDao();
+    static CollegeDao collegeDao = new CollegeDao();
+    static FacultyDao facultyDao = new FacultyDao();
+    static DormManager dormManager = new DormManager();
+    static CollegeModel college = new CollegeModel();
+    static List<StudentModel> students;
+    static List<FacultyModel> faculty;
+    static Random rand = new Random();
 
 
-    public void handleTimeChange(String runId, int hoursAlive) {
+    public static void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive, false);
         runningTuitionOfStudent(runId, hoursAlive);
@@ -29,13 +29,13 @@ public class  StudentManager {
         collegeDao.saveCollege(college);
     }
 
-    private void runningTuitionOfStudent(String runId, int hoursAlive) {
+    private static void runningTuitionOfStudent(String runId, int hoursAlive) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
-    public void addNewStudents(String runId, int hoursAlive, boolean initial) {
+    public static void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents = 0;
 
@@ -74,7 +74,7 @@ public class  StudentManager {
 
     }
 
-    private void removeStudents(String runId, int hoursAlive) {
+    private static void removeStudents(String runId, int hoursAlive) {
         float scalingFactor = .001f;
         int currentSize = students.size();
 
@@ -96,11 +96,11 @@ public class  StudentManager {
 
     }
 
-    private boolean didItHappen(float oddsBetween0And1) {
+    private static boolean didItHappen(float oddsBetween0And1) {
         return (Math.random() < oddsBetween0And1);
     }
 
-    private int calculateStudentsHappiness(CollegeModel college, List <FacultyModel> faculty) {
+    private static int calculateStudentsHappiness(CollegeModel college, List <FacultyModel> faculty) {
         //calculate affects of college stats on individual student happiness
         calculateCollegeAffect(college.getReputation(), faculty.size(), college.getYearlyTuitionCost());
 
@@ -117,7 +117,7 @@ public class  StudentManager {
 
     }
 
-    private void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
+    private static void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
         int tuitionAffect = -(tuitionCost - 40000)/1000;
@@ -127,7 +127,7 @@ public class  StudentManager {
         }
     }
 
-    private void updateStudentsTime(int hoursAlive){
+    private static void updateStudentsTime(int hoursAlive){
         for(int i = 0; i < students.size(); i++){
             students.get(i).setHourLastUpdated(hoursAlive);
         }

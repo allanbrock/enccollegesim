@@ -27,7 +27,7 @@ public class FacultyManager {
             tmp = tmp/260;
             total += tmp;
         }
-        Accountant.payBill(runId,"Faculty has been paid  $ " + total,total);
+        Accountant.payBill(runId,"Faculty has been paid",total);
    }
 
     /**

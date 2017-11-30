@@ -21,7 +21,7 @@ public class CollegeManager {
         CollegeModel college = cao.getCollege(runId); //get the college for this runID
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
-        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS);
+        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS,NewsLevel.GOOD_NEWS);
         return college;
     }
 
@@ -45,12 +45,11 @@ public class CollegeManager {
         college.setAvailableCash(STARTUP_FUNDING);
         collegeDao.saveCollege(college);
 
-        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
 
         DormManager.establishCollege(runId, college);
 
-        StudentManager studentManager = new StudentManager();
-        studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
+        StudentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
@@ -61,7 +60,7 @@ public class CollegeManager {
 
     static public void sellCollege(String runId) {
         CollegeDao.deleteCollege(runId);
-        DormitoryDao.deleteDorms(runId);
+        DormitoryDao.deleteDorm(runId);
         FacultyDao.removeAllFaculty(runId);
         FloodDao.deleteFloods(runId);
         NewsFeedDao.deleteNotes(runId);
@@ -96,8 +95,7 @@ public class CollegeManager {
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
 
-        StudentManager studentManager = new StudentManager();
-        studentManager.handleTimeChange(runId, hoursAlive);
+        StudentManager.handleTimeChange(runId, hoursAlive);
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 

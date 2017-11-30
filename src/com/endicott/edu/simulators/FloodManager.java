@@ -58,11 +58,18 @@ public class FloodManager {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
             DormManager dormMan = new DormManager();
-            NewsManager.createNews(runId, hoursAlive, "Dorm " + dorm.getName() + " has flooded.\n", NewsType.COLLEGE_NEWS, NewsLevel.EMERGENCY_NEWS);
 
-            FloodModel flood = new FloodModel(1000,72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
-            NewsManager.createNews(runId, hoursAlive, "Dorm " + flood.getDormName() + " has flooded.\n", NewsType.COLLEGE_NEWS,NewsLevel.EMERGENCY_NEWS);
-            Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName() + " is $" + flood.getCostOfFlood(), flood.getCostOfFlood());
+            int randomCost = (int)(Math.random()*2500);
+            if(randomCost < 1000){
+                randomCost = randomCost + 1000;
+            }
+            
+
+            FloodModel flood = new FloodModel(randomCost,72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
+            NewsManager.createNews(runId, hoursAlive, "Flooding detected at " + flood.getDormName(), NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+
+            Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName(), flood.getCostOfFlood());
+
             dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
 
         }

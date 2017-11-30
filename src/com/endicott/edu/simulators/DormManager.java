@@ -24,6 +24,9 @@ public class DormManager {
         for (DormitoryModel dorm : dorms) {
             billRunningCostOfDorm(runId, hoursAlive, dorm);
             dorm.setHourLastUpdated(hoursAlive);
+            if(dorm.getHoursToComplete() > 0){
+                dorm.setHoursToComplete(24);
+            }
         }
 
         dao.saveAllDorms(runId, dorms);

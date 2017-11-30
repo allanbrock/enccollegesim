@@ -26,7 +26,7 @@ public class  StudentManager {
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
-        college.setStudentFacultyRatio(updateStudentFacultyRatio(college));
+        college.setStudentFacultyRatio(updateStudentFacultyRatio());
         college.setCollegeScore(calculateCollegeScore());
         collegeDao.saveCollege(college);
     }
@@ -138,7 +138,7 @@ public class  StudentManager {
 
     }
 
-    private static int updateStudentFacultyRatio(CollegeModel college){
+    private static int updateStudentFacultyRatio(){
         return students.size()/faculty.size();
     }
 

@@ -6,30 +6,31 @@ import java.util.List;
 import java.util.Random;
 
 public class  StudentManager {
-    static StudentDao dao = new StudentDao();
-    static CollegeDao collegeDao = new CollegeDao();
-    static FacultyDao facultyDao = new FacultyDao();
-    static DormManager dormManager = new DormManager();
-    static CollegeModel college = new CollegeModel();
-    static List<StudentModel> students;
-    static List<FacultyModel> faculty;
-    static Random rand = new Random();
+    private static StudentDao dao = new StudentDao();
+    private static CollegeDao collegeDao = new CollegeDao();
+    private static FacultyDao facultyDao = new FacultyDao();
+    private static DormManager dormManager = new DormManager();
+    private static CollegeModel college = new CollegeModel();
+    private static List<StudentModel> students;
+    private static List<FacultyModel> faculty;
+    private static Random rand = new Random();
 
 
     public static void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive, false);
-        runningTuitionOfStudent(runId, hoursAlive);
+        runningTuitionOfStudent(runId);
         removeStudents(runId, hoursAlive);
         updateStudentsTime(hoursAlive);
         dao.saveAllStudents(runId, students);
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
+        college.setCollegeScore(calculateCollegeScore());
         collegeDao.saveCollege(college);
     }
 
-    private static void runningTuitionOfStudent(String runId, int hoursAlive) {
+    private static void runningTuitionOfStudent(String runId) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
@@ -37,7 +38,7 @@ public class  StudentManager {
 
     public static void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
-        int numNewStudents = 0;
+        int numNewStudents;
 
         // Are we fully booked?
         if (openBeds <= 0) {
@@ -134,4 +135,30 @@ public class  StudentManager {
 
     }
 
+    private static float calculateCollegeScore(){
+            float collegeScore = college.getStudentBodyHappiness(); // temporary college score rating
+            return collegeScore;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

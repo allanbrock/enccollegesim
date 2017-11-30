@@ -13,6 +13,7 @@ public class CollegeModel implements Serializable {
     private int reputation = 50; //reputation of college based on 1-100
     private String runId = "unknown";
     private String note = "empty";
+    private float collegeScore = 0f;
     private int studentBodyHappiness;
     private int numberStudentsAdmitted = 0;
     private int numberStudentsWithdrew = 0;
@@ -91,4 +92,8 @@ public class CollegeModel implements Serializable {
     public float getRetentionRate() { return retentionRate; }
 
     public void setRetentionRate(float retentionRate) { this.retentionRate = retentionRate; }
+
+    public float getCollegeScore() { return collegeScore; }
+
+    public void setCollegeScore(float collegeScore) { this.collegeScore = collegeScore; }
 }

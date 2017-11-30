@@ -72,7 +72,7 @@ public class DormitoryDao {
 
     }
 
-    public static void deleteDorms(String runId) {
+    public static void deleteDorm(String runId) {
         File file = new File(getFilePath(runId));
         file.delete();
     }

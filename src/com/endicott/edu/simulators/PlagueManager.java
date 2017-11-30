@@ -3,6 +3,7 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.PlagueDao;
 import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.PlagueModel;
 import com.endicott.edu.models.NewsType;
 import com.endicott.edu.models.StudentModel;
@@ -66,7 +67,7 @@ public class PlagueManager {
 
         if(rand.nextInt(10) + 1 > 9){
             student.setNumberHoursLeftBeingSick(72);
-            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS);
+            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
         } else {
             student.setNumberHoursLeftBeingSick(0);
         }

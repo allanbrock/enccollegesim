@@ -4,6 +4,7 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public class DormManager {
         for (DormitoryModel dorm : dorms) {
             billRunningCostOfDorm(runId, hoursAlive, dorm);
             dorm.setHourLastUpdated(hoursAlive);
+            if(dorm.getHoursToComplete() > 0){
+                dorm.setHoursToComplete(24);
+            }
         }
 
         dao.saveAllDorms(runId, dorms);
@@ -32,18 +36,21 @@ public class DormManager {
     private static void setDormAttributesByDormType(DormitoryModel temp) {
         //small size
         if (temp.getDormType() == 1) {
-            temp.setCapacity(700);
-            temp.setNumRooms(350);
+            temp.setCapacity(200);
+            temp.setNumRooms(100);
+            temp.setTotalBuildCost(100);
         }
         //normal size
         else if (temp.getDormType() == 2) {
-            temp.setCapacity(1000);
-            temp.setNumRooms(500);
+            temp.setCapacity(350);
+            temp.setNumRooms(175);
+            temp.setTotalBuildCost(175);
         }
         //large size
         else if (temp.getDormType() == 3) {
-            temp.setCapacity(1500);
-            temp.setNumRooms(750);
+            temp.setCapacity(500);
+            temp.setNumRooms(250);
+            temp.setTotalBuildCost(250);
 
         } else {
             //not a type only 3 types of dorms
@@ -67,6 +74,7 @@ public class DormManager {
         temp.setReputation(5);
         temp.setCurDisaster("none");
         temp.setMaintenanceCostPerHour(temp.getNumRooms());
+        Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
         DormitoryDao dormDao = new DormitoryDao();
         temp.setNote("A new dorm has been created.");
 
@@ -121,11 +129,14 @@ public class DormManager {
     returns nothing.*/
     public void removeStudent(String collegeId, String dormName) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        Boolean removed = false;
         for (DormitoryModel d : dorms) {
-            int s = d.getNumStudents();
-            if (d.getName() == dormName) {
-                d.setNumStudents(s - 1);
-                break;
+            while(!removed) {
+                int s = d.getNumStudents();
+                if (d.getName() == dormName) {
+                    d.setNumStudents(s - 1);
+                    removed = true;
+                }
             }
         }
         dao.saveAllDorms(collegeId, dorms);
@@ -143,10 +154,20 @@ public class DormManager {
         return openBeds;
     }
 
-    public static void sellDorm(String runId) {
-        DormitoryDao dormitoryDao = new DormitoryDao();
 
-        dormitoryDao.deleteDorms(runId);
+
+    //takes the runId of the dorm and the dorm name to be removed
+    public static void sellDorm(String runId, String dormName) {
+        DormitoryDao dormitoryDao = new DormitoryDao();
+        List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
+        String name = "";
+        for(DormitoryModel d : dorms){
+            name = d.getName();
+            if(name == dormName){
+                dorms.remove(d);
+            }
+        }
+        dormitoryDao.saveAllDorms(runId, dorms);
 
     }
 
@@ -178,10 +199,12 @@ public class DormManager {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
                 0, "none", 5, "none", 60);
+        dorm.setHoursToComplete(300);
         dorm.setMaintenanceCostPerHour(60);
+        dorm.setTotalBuildCost(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", RES_LIFE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
     }
 }
 

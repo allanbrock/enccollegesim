@@ -17,6 +17,7 @@ public class DormitoryModel implements Serializable {
     private int numRooms = 0;
     private int lengthOfDisaster = 0;
     private int hoursToComplete = 300;
+    private int totalBuildCost = 0;
 
 
     private int dormType = 1;
@@ -117,6 +118,12 @@ public class DormitoryModel implements Serializable {
 
     public int getHoursToComplete() {
         return this.hoursToComplete;
+    }
+    public void setTotalBuildCost(int numRooms){
+        this.totalBuildCost = numRooms * 200;
+    }
+    public int getTotalBuildCost(){
+        return this.totalBuildCost;
     }
 
     public int getNumStudents() {

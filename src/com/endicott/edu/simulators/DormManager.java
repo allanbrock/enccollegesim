@@ -36,18 +36,21 @@ public class DormManager {
     private static void setDormAttributesByDormType(DormitoryModel temp) {
         //small size
         if (temp.getDormType() == 1) {
-            temp.setCapacity(700);
-            temp.setNumRooms(350);
+            temp.setCapacity(200);
+            temp.setNumRooms(100);
+            temp.setTotalBuildCost(100);
         }
         //normal size
         else if (temp.getDormType() == 2) {
-            temp.setCapacity(1000);
-            temp.setNumRooms(500);
+            temp.setCapacity(350);
+            temp.setNumRooms(175);
+            temp.setTotalBuildCost(175);
         }
         //large size
         else if (temp.getDormType() == 3) {
-            temp.setCapacity(1500);
-            temp.setNumRooms(750);
+            temp.setCapacity(500);
+            temp.setNumRooms(250);
+            temp.setTotalBuildCost(250);
 
         } else {
             //not a type only 3 types of dorms
@@ -71,6 +74,7 @@ public class DormManager {
         temp.setReputation(5);
         temp.setCurDisaster("none");
         temp.setMaintenanceCostPerHour(temp.getNumRooms());
+        Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
         DormitoryDao dormDao = new DormitoryDao();
         temp.setNote("A new dorm has been created.");
 
@@ -195,7 +199,9 @@ public class DormManager {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
                 0, "none", 5, "none", 60);
+        dorm.setHoursToComplete(300);
         dorm.setMaintenanceCostPerHour(60);
+        dorm.setTotalBuildCost(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);

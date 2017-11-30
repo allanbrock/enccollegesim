@@ -14,6 +14,7 @@ public class CollegeModel implements Serializable {
     private String runId = "unknown";
     private String note = "empty";
     private int studentBodyHappiness;
+    private int studentFacultyRatio = 1;
     private int collegeScore; //where this college ranks against the other instances.
 
     public int getReputation() { return reputation; }
@@ -36,10 +37,9 @@ public class CollegeModel implements Serializable {
         this.availableCash = availableCash;
     }
 
-    public String getRunId() {
-        return runId;
+    public String getRunId() { return runId; }
 
-    }
+    public int getStudentFacultyRatio() { return studentFacultyRatio; }
 
     public void setRunId(String runId) {
         this.runId = runId;
@@ -72,4 +72,6 @@ public class CollegeModel implements Serializable {
     public int getStudentBodyHappiness() { return studentBodyHappiness; }
 
     public void setStudentBodyHappiness(int studentBodyHappiness) { this.studentBodyHappiness = studentBodyHappiness; }
+
+    public void setStudentFacultyRatio(int studentFacultyRatio) { this.studentFacultyRatio = studentFacultyRatio; }
 }

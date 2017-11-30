@@ -26,6 +26,7 @@ public class  StudentManager {
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
+        college.setStudentFacultyRatio(updateStudentFacultyRatio(college));
         collegeDao.saveCollege(college);
     }
 
@@ -67,7 +68,8 @@ public class  StudentManager {
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
-            dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
+            students.add(student);
+            dao.saveAllStudents(runId, students);
         }
 
         NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS);
@@ -118,6 +120,7 @@ public class  StudentManager {
     }
 
     private static void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
+        //dividing values below are for scaling
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
         int tuitionAffect = -(tuitionCost - 40000)/1000;
@@ -132,6 +135,10 @@ public class  StudentManager {
             students.get(i).setHourLastUpdated(hoursAlive);
         }
 
+    }
+
+    private static int updateStudentFacultyRatio(CollegeModel college){
+        return students.size()/faculty.size();
     }
 
 }

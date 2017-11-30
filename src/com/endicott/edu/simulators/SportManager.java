@@ -140,7 +140,7 @@ public class SportManager {
 
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.SPORTS_NEWS);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);// Depends on if the sport team won or not
             sport.setHoursUntilNextGame(48);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());

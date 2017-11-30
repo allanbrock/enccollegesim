@@ -4,6 +4,7 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
 import java.util.List;
@@ -121,11 +122,14 @@ public class DormManager {
     returns nothing.*/
     public void removeStudent(String collegeId, String dormName) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        Boolean removed = false;
         for (DormitoryModel d : dorms) {
-            int s = d.getNumStudents();
-            if (d.getName() == dormName) {
-                d.setNumStudents(s - 1);
-                break;
+            while(!removed) {
+                int s = d.getNumStudents();
+                if (d.getName() == dormName) {
+                    d.setNumStudents(s - 1);
+                    removed = true;
+                }
             }
         }
         dao.saveAllDorms(collegeId, dorms);
@@ -143,10 +147,20 @@ public class DormManager {
         return openBeds;
     }
 
-    public static void sellDorm(String runId) {
-        DormitoryDao dormitoryDao = new DormitoryDao();
 
-        dormitoryDao.deleteDorms(runId);
+
+    //takes the runId of the dorm and the dorm name to be removed
+    public static void sellDorm(String runId, String dormName) {
+        DormitoryDao dormitoryDao = new DormitoryDao();
+        List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
+        String name = "";
+        for(DormitoryModel d : dorms){
+            name = d.getName();
+            if(name == dormName){
+                dorms.remove(d);
+            }
+        }
+        dormitoryDao.saveAllDorms(runId, dorms);
 
     }
 
@@ -181,7 +195,7 @@ public class DormManager {
         dorm.setMaintenanceCostPerHour(60);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
-        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", RES_LIFE_NEWS);
+        NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
     }
 }
 

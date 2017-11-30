@@ -41,7 +41,7 @@ public class CollegeDao {
         File file = new File(getFilePath(runId));
         boolean result = file.delete();
 
-        DormitoryDao.deleteDorms(runId);
+        DormitoryDao.deleteDorm(runId);
         FacultyDao.removeAllFaculty(runId);
         FloodDao.deleteFloods(runId);
         NewsFeedDao.deleteNotes(runId);

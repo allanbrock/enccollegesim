@@ -40,6 +40,7 @@ public class  StudentManager {
     public static void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents;
+        students = dao.getStudents(runId);
 
         // Are we fully booked?
         if (openBeds <= 0) {

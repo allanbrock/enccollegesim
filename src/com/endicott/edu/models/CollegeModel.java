@@ -16,7 +16,6 @@ public class CollegeModel implements Serializable {
     private float collegeScore = 0f;
     private int studentBodyHappiness;
     private int studentFacultyRatio = 1;
-    private int collegeScore; //where this college ranks against the other instances.
     private int numberStudentsAdmitted = 0;
     private int numberStudentsWithdrew = 0;
     private int numberStudentsGraduated = 0;

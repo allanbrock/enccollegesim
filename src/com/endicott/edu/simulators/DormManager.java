@@ -108,20 +108,20 @@ public class DormManager {
     public String assignDorm(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
-        Boolean added = false;
         for (DormitoryModel d : dorms) {
-            while(!added) {
-                int s = d.getNumStudents();
-                int c = d.getCapacity();
-                dormName = d.getName();
-                if (s < c) {
-                    d.setNumStudents(s + 1);
-                    added = true;
-                }
+            int s = d.getNumStudents();
+            int c = d.getCapacity();
+            dormName = d.getName();
+            if (s < c) {
+                d.setNumStudents(s + 1);
+                dao.saveAllDorms(collegeId, dorms);
+                return dormName;
             }
         }
-        dao.saveAllDorms(collegeId, dorms);
-        return dormName;
+
+        // We don't expect to get here.
+        // This means we didn't find room for the student!
+        return "Commuter";
     }
 
     /*Handles one student leaving the college at a time:
@@ -131,16 +131,12 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         Boolean removed = false;
         for (DormitoryModel d : dorms) {
-            while(!removed) {
-                int s = d.getNumStudents();
-                if (d.getName() == dormName) {
-                    d.setNumStudents(s - 1);
-                    removed = true;
-                }
+            int s = d.getNumStudents();
+            if (d.getName() == dormName) {
+                d.setNumStudents(s - 1);
             }
         }
         dao.saveAllDorms(collegeId, dorms);
-
     }
 
     public int getOpenBeds(String collegeId) {

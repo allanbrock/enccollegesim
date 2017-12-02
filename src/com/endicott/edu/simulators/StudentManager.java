@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Random;
 
 public class  StudentManager {
-    private static StudentDao dao = new StudentDao();
-    private static CollegeDao collegeDao = new CollegeDao();
-    private static FacultyDao facultyDao = new FacultyDao();
-    private static DormManager dormManager = new DormManager();
-    private static CollegeModel college = new CollegeModel();
-    private static List<StudentModel> students;
-    private static List<FacultyModel> faculty;
-    private static Random rand = new Random();
+    private StudentDao dao = new StudentDao();
+    private CollegeDao collegeDao = new CollegeDao();
+    private FacultyDao facultyDao = new FacultyDao();
+    private DormManager dormManager = new DormManager();
+    private CollegeModel college = new CollegeModel();
+    private List<StudentModel> students;
+    private List<FacultyModel> faculty;
+    private Random rand = new Random();
 
 
-    public static void handleTimeChange(String runId, int hoursAlive) {
+    public  void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive, false);
         runningTuitionOfStudent(runId);
@@ -31,13 +31,13 @@ public class  StudentManager {
         collegeDao.saveCollege(college);
     }
 
-    private static void runningTuitionOfStudent(String runId) {
+    private void runningTuitionOfStudent(String runId) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
-    public static void addNewStudents(String runId, int hoursAlive, boolean initial) {
+    public void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents;
         students = dao.getStudents(runId);
@@ -78,7 +78,7 @@ public class  StudentManager {
 
     }
 
-    private static void removeStudents(String runId, int hoursAlive) {
+    private void removeStudents(String runId, int hoursAlive) {
         float scalingFactor = .001f;
         int currentSize = students.size();
 
@@ -100,11 +100,11 @@ public class  StudentManager {
 
     }
 
-    private static boolean didItHappen(float oddsBetween0And1) {
+    private boolean didItHappen(float oddsBetween0And1) {
         return (Math.random() < oddsBetween0And1);
     }
 
-    private static int calculateStudentsHappiness(CollegeModel college, List <FacultyModel> faculty) {
+    private int calculateStudentsHappiness(CollegeModel college, List <FacultyModel> faculty) {
         //calculate affects of college stats on individual student happiness
         calculateCollegeAffect(college.getReputation(), faculty.size(), college.getYearlyTuitionCost());
 
@@ -121,7 +121,7 @@ public class  StudentManager {
 
     }
 
-    private static void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
+    private void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
         //dividing values below are for scaling
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
@@ -132,33 +132,22 @@ public class  StudentManager {
         }
     }
 
-    private static void updateStudentsTime(int hoursAlive){
+    private void updateStudentsTime(int hoursAlive){
         for(int i = 0; i < students.size(); i++){
             students.get(i).setHourLastUpdated(hoursAlive);
         }
 
     }
 
-    private static int updateStudentFacultyRatio(){
+    private int updateStudentFacultyRatio(){
         return students.size()/faculty.size();
     }
 
-    private static float calculateCollegeScore(){
-            float collegeScore = college.getStudentBodyHappiness(); // temporary college score rating
-            return collegeScore;
+    private float calculateCollegeScore(){
+        float collegeScore = college.getStudentBodyHappiness(); // temporary college score rating
+        return collegeScore;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

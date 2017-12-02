@@ -7,6 +7,7 @@ import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -157,25 +158,50 @@ public class DormManager {
         DormitoryDao dormitoryDao = new DormitoryDao();
         List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
         String name = "";
+        int totalBuildCost = 0;
+        int refund = 0;
         for(DormitoryModel d : dorms){
             name = d.getName();
+            totalBuildCost = d.getTotalBuildCost();
+            //takes 20% of the build cost to refund back to the college.
+            refund = totalBuildCost/20;
             if(name == dormName){
                 dorms.remove(d);
+                Accountant.studentIncome(runId, dormName + "has been sold.", refund);
             }
         }
         dormitoryDao.saveAllDorms(runId, dorms);
 
     }
 
-//    public ArrayList checkAvailableDorms(String runId){
-//        CollegeDao collegeDao = new CollegeDao();
-//        CollegeModel college = collegeDao.getCollege(runId);
-//        int availableCash = college.getAvailableCash();
-//        List<String> availableDormTypes;
-//
-//
-//        return availableDormTypes;
-//    }
+    public ArrayList checkAvailableDorms(String runId){
+        CollegeDao collegeDao = new CollegeDao();
+        CollegeModel college = collegeDao.getCollege(runId);
+        int availableCash = college.getAvailableCash();
+        ArrayList<String> availableDormTypes = new ArrayList<>();
+        if(availableCash >= 100 ){
+            //can build dorm type 1 (small)
+            availableDormTypes.add("Small");
+            return availableDormTypes;
+        }
+        else if(availableCash >= 175){
+            //can build small and medium sized dorms
+            availableDormTypes.add("Small");
+            availableDormTypes.add("Medium");
+            return availableDormTypes;
+        }
+        else if(availableCash >= 250){
+            //can build small, medium, and large sized dorms
+            availableDormTypes.add("Small");
+            availableDormTypes.add("Medium");
+            availableDormTypes.add("Large");
+            return availableDormTypes;
+        }
+        else{
+            //you do not have enough money to build a dorm
+            return availableDormTypes;
+        }
+    }
 
     public void chanceOfEventDuringConstruction(String runId) {
         String dormName = "";

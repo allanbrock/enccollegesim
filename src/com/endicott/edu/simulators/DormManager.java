@@ -165,7 +165,7 @@ public class DormManager {
             totalBuildCost = d.getTotalBuildCost();
             //takes 20% of the build cost to refund back to the college.
             refund = totalBuildCost/20;
-            if(name == dormName){
+            if(name.equals(dormName)){
                 dorms.remove(d);
                 Accountant.studentIncome(runId, dormName + "has been sold.", refund);
             }

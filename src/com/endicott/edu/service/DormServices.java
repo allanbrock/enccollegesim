@@ -1,6 +1,8 @@
 package com.endicott.edu.service;
 
+import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
+import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
@@ -38,7 +40,9 @@ public class DormServices {
         }
         // Override some fields
         DormitoryDao dormitoryDao = new DormitoryDao();
-        return (DormManager.createDorm(runId, dormName, dormType));
+        CollegeDao dao = new CollegeDao();
+        CollegeModel college = dao.getCollege(runId);
+        return (DormManager.createDorm(runId, dormName, dormType,college.getHoursAlive()));
     }
 
     /**

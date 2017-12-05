@@ -59,7 +59,7 @@ public class DormManager {
         }
     }
 
-    public static DormitoryModel createDorm(String runId, String dormName, String dormType) {
+    public static DormitoryModel createDorm(String runId, String dormName, String dormType, int hoursAlive) {
         DormitoryModel temp = new DormitoryModel();
         temp.setName(dormName);
         if (dormType == "Small") {
@@ -76,6 +76,7 @@ public class DormManager {
         temp.setCurDisaster("none");
         temp.setMaintenanceCostPerHour(temp.getNumRooms());
         Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
+        NewsManager.createNews(runId, hoursAlive, dormName +" dorm has been created! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
         DormitoryDao dormDao = new DormitoryDao();
         temp.setNote("A new dorm has been created.");
 

@@ -43,14 +43,12 @@ public class PlagueManager {
                 studentGoodCount++;
             }
         }
-        if(checkSick > 0){
+        if(checkSick == 0){
             int numOfStudents = students.size();
             if(studentGoodCount == numOfStudents){
                 //students are not sick
                 checkSick = 1;
                 NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-            } else {
-                //do nothing
             }
         } else {
             checkSick = 0;

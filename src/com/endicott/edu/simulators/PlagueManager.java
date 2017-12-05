@@ -38,14 +38,15 @@ public class PlagueManager {
         List<StudentModel> students = dao.getStudents(runId);
         for(int i = 0; i < students.size(); i++){
             StudentModel student = students.get(i);
-
+            int happiness = student.getHappinessLevel();
             if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                student.setHappinessLevel(happiness - 10);
                 int studentLastUpdated = students.get(i).getHourLastUpdated();
                 int timeChange = hoursAlive - studentLastUpdated;
                 int sickTime = students.get(i).getNumberHoursLeftBeingSick() - timeChange;
                 sickTime = Math.max(0,sickTime);
                 students.get(i).setNumberHoursLeftBeingSick(sickTime);
-            };
+            }
         }
 
         dao.saveAllStudents(runId, students);

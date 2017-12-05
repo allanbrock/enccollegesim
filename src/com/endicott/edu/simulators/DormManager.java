@@ -145,9 +145,11 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
         for (DormitoryModel d : dorms) {
-            int numStudents = d.getNumStudents();
-            int capacity = d.getCapacity();
-            openBeds += capacity - numStudents;
+            if(d.getHoursToComplete() == 0) {
+                int numStudents = d.getNumStudents();
+                int capacity = d.getCapacity();
+                openBeds += capacity - numStudents;
+            }
         }
         return openBeds;
     }
@@ -165,7 +167,7 @@ public class DormManager {
             name = d.getName();
             totalBuildCost = d.getTotalBuildCost();
             //takes 20% of the build cost to refund back to the college.
-            refund = totalBuildCost/20;
+            refund = (int)(totalBuildCost/20);
             if(name.equals(dormName)){
                 dorms.remove(d);
                 Accountant.studentIncome(runId, dormName + "has been sold.", refund);

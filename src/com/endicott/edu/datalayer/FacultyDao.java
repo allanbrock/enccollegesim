@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class FacultyDao {
     private static String getFilePath(String runId) {
-        return DaoUtils.getFilePathPrefix(runId) +  "faculty.dat";
+        return DaoUtils.getFilePathPrefix(runId) +  "faculty.json";
     }
 
     private static Logger logger = Logger.getLogger("FacultyDao");
@@ -79,7 +79,6 @@ public class FacultyDao {
      * @param faculty
      */
     private void saveAllFaculty(String runId, List<FacultyModel> faculty) {
-        logger.info("Saving all faculty...");
         try {
             File file = new File(getFilePath(runId));
             file.createNewFile();
@@ -166,9 +165,7 @@ public class FacultyDao {
         System.out.println( "ID of member 2: " + String.valueOf(f2.getFacultyID()));
         fao.saveNewFaculty(runId,f1);
         System.out.println( "ID of member 1: " + String.valueOf(f1.getFacultyID()));
-
-
-               faculty.add(f1);
+        faculty.add(f1);
         faculty.add(f2);
         fao.removeSingleFaculty(runId,f3);
         fao.saveAllFaculty(runId,faculty);

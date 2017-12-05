@@ -140,10 +140,9 @@ public class EventsDao {
 
 
     public static void main(String[] args) {
-        final String runId = "testEventsDao";
+        final String runId = "eventtesting1";
         EventsDao dao = new EventsDao();
         List<EventsModel> events = new ArrayList<>();
-
         EventsModel event1 = new EventsModel(runId,"test1","desc1",100,200);
         dao.saveNewEvent(runId,event1);
         assert (dao.numberOfEvents(runId) == 1);
@@ -157,7 +156,6 @@ public class EventsDao {
         assert(dao.numberOfEvents(runId) == 1);
         EventsDao.removeAllEvents(runId);
         assert(dao.numberOfEvents(runId) == 0);
-        
     }
 
 }

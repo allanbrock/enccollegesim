@@ -56,6 +56,8 @@ public class CollegeManager {
         FloodManager.establishCollege(runId);
         FacultyManager.establishCollege(runId);
 
+        EventManager.establishCollege(runId);
+
         return college;
     }
 

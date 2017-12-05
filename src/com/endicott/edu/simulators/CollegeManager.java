@@ -92,7 +92,6 @@ public class CollegeManager {
         PlagueManager plagueManager = new PlagueManager();
         plagueManager.handleTimeChange(runId, hoursAlive);
 
-
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 

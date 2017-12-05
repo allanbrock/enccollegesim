@@ -30,6 +30,28 @@ public class PlagueManager {
 
         dao.saveAllPlagues(runId, plagues);
         makeStudentsBetter(runId, hoursAlive);
+        checkAndDisplayStudentsSicknessStatus(runId, hoursAlive);
+    }
+
+    private void checkAndDisplayStudentsSicknessStatus(String runId, int currentDay) {
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        int studentGoodCount = 0;
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+            if(students.get(i).getNumberHoursLeftBeingSick() == 0){
+                studentGoodCount++;
+            }
+        }
+        int numOfStudents = students.size();
+        if(studentGoodCount == numOfStudents){
+            //students are not sick
+            NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
+        } else {
+            //do nothing
+        }
+
+        dao.saveAllStudents(runId, students);
     }
 
     private void makeStudentsBetter(String runId, int hoursAlive) {

@@ -144,9 +144,11 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
         for (DormitoryModel d : dorms) {
-            int numStudents = d.getNumStudents();
-            int capacity = d.getCapacity();
-            openBeds += capacity - numStudents;
+            if(d.getHoursToComplete() == 0) {
+                int numStudents = d.getNumStudents();
+                int capacity = d.getCapacity();
+                openBeds += capacity - numStudents;
+            }
         }
         return openBeds;
     }

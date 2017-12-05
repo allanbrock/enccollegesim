@@ -9,14 +9,14 @@ public class PlagueModel implements Serializable {
 
 
     private int daysLasted = 0;
-    private int studentsSick = 0;
-    private int dayLastUpdated = 0;
-    private int studentsGone = 0;
+    private int studentsSick = 0;//?
+    private int dayLastUpdated = 0;//?
+    private int studentsGone = 0;//?
     private int costToCure = 1000;
-    private String name = "Sickness";
+    private String name = "Sickness";//?
     private String note = "no note";
     private String runId = "unknown";
-    private String dormName = "unknown";
+    private String dormName = "unknown";//?
     private int hourLastUpdated;  // the time we last updated this record
     private int numberOfHoursLeftInPlague;  // if 0, then plague is over.  No one new can get sick.
 

@@ -90,6 +90,7 @@ public class CollegeManager {
         PlagueManager plagueManager = new PlagueManager();
         plagueManager.handleTimeChange(runId, hoursAlive);
 
+
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);
 
@@ -98,6 +99,7 @@ public class CollegeManager {
 
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);
+
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 

@@ -29,6 +29,27 @@ public class PlagueManager {
         }
 
         dao.saveAllPlagues(runId, plagues);
+        makeStudentsBetter(runId, hoursAlive);
+    }
+
+    private void makeStudentsBetter(String runId, int hoursAlive) {
+
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                int studentLastUpdated = students.get(i).getHourLastUpdated();
+                int timeChange = hoursAlive - studentLastUpdated;
+                int sickTime = students.get(i).getNumberHoursLeftBeingSick() - timeChange;
+                sickTime = Math.max(0,sickTime);
+                students.get(i).setNumberHoursLeftBeingSick(sickTime);
+            };
+        }
+
+        dao.saveAllStudents(runId, students);
+
     }
 
 //    private void updateStudentsTime(int hoursAlive){
@@ -60,17 +81,27 @@ public class PlagueManager {
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 0, 0, 1000, 72, 0);
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
+        makeStudentSick(runId, 0);
+
     }
 
-    private static void makeStudentSick(StudentModel student, String runId, int currentDay) {
+    private static void makeStudentSick(String runId, int currentDay) {
         Random rand = new Random();
 
-        if(rand.nextInt(10) + 1 > 9){
-            student.setNumberHoursLeftBeingSick(72);
-            NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
-        } else {
-            student.setNumberHoursLeftBeingSick(0);
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+            if(rand.nextInt(10) + 1 > 9){
+                student.setNumberHoursLeftBeingSick(72);
+                NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+            } else {
+                student.setNumberHoursLeftBeingSick(0);
+            }
         }
+
+        dao.saveAllStudents(runId, students);
+
     }
 
     private boolean didItHappen(float oddsBetween0And1) {

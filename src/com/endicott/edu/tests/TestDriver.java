@@ -20,6 +20,7 @@ public class TestDriver {
         //FacultyTests.runTests(serviceUrl);
         StudentTests.runTests(serviceUrl);
         FloodTest.runTests(serviceUrl);
+        PlagueTest.runTests(serviceUrl);
     }
 
 }

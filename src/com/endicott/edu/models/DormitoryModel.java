@@ -169,11 +169,9 @@ public class DormitoryModel implements Serializable {
     public String checkIfBeingBuilt(){
         if(this.getHoursToComplete() > 0){
 
-            return "Under Construction";
+            return Integer.toString(this.getHoursToComplete())  + " hours remaining";
         }
         else
             return "Built";
     }
-
-
 }

@@ -12,7 +12,7 @@ public class SportModel implements Serializable {
     private int maxPlayers = 0;
     private int costPerDay = 0;
     private int hourLastUpdated = 0;
-    private int reputation = 0;
+    private int reputation = 50;
     private int gamesWon = 0;
     private int gamesLost = 0;
     private int gamesTied = 0;
@@ -124,9 +124,7 @@ public class SportModel implements Serializable {
         this.costPerDay = costPerDay;
     }
 
-    public int getReputation() {
-        return reputation;
-    }
+    public int getReputation() { return reputation; }
 
     public void setReputation(int reputation) {
         this.reputation = reputation;

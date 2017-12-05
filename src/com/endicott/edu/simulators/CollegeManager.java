@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class CollegeManager {
     static public final int STARTUP_FUNDING = 100000;
-    
+
     /**
      * This functions updates the amount that the college costs per year
      * @param runId id of college instance
@@ -49,7 +49,8 @@ public class CollegeManager {
 
         DormManager.establishCollege(runId, college);
 
-        StudentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
+        StudentManager studentManager = new StudentManager();
+        studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
@@ -95,7 +96,8 @@ public class CollegeManager {
         SportManager sportManager = new SportManager();
         sportManager.handleTimeChange(runId, hoursAlive);
 
-        StudentManager.handleTimeChange(runId, hoursAlive);
+        StudentManager studentManager = new StudentManager();
+        studentManager.handleTimeChange(runId, hoursAlive);
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 

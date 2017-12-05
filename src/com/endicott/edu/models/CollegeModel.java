@@ -15,6 +15,7 @@ public class CollegeModel implements Serializable {
     private String note = "empty";
     private float collegeScore = 0f;
     private int studentBodyHappiness;
+    private int studentFacultyRatio = 1;
     private int numberStudentsAdmitted = 0;
     private int numberStudentsWithdrew = 0;
     private int numberStudentsGraduated = 0;
@@ -40,10 +41,9 @@ public class CollegeModel implements Serializable {
         this.availableCash = availableCash;
     }
 
-    public String getRunId() {
-        return runId;
+    public String getRunId() { return runId; }
 
-    }
+    public int getStudentFacultyRatio() { return studentFacultyRatio; }
 
     public void setRunId(String runId) {
         this.runId = runId;
@@ -76,6 +76,8 @@ public class CollegeModel implements Serializable {
     public int getStudentBodyHappiness() { return studentBodyHappiness; }
 
     public void setStudentBodyHappiness(int studentBodyHappiness) { this.studentBodyHappiness = studentBodyHappiness; }
+
+    public void setStudentFacultyRatio(int studentFacultyRatio) { this.studentFacultyRatio = studentFacultyRatio; }
 
     public int getNumberStudentsAdmitted() { return numberStudentsAdmitted; }
 

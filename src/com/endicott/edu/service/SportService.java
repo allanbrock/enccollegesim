@@ -54,18 +54,15 @@ public class SportService {
 
 
     @DELETE
-    @Path("/{runId}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String deleteSport(@PathParam("runId") String runId, String sportJson) {
-        SportModel sport = gson.fromJson(sportJson,SportModel.class);
+    @Path("/{runId}/{sellSportName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteSport(@PathParam("runId") String runId, @PathParam("sellSportName") String sportName) {
 
         if (!CollegeManager.doesCollegeExist(runId)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-
-        sportManager.deleteSelectedSport(runId,sport);
-        return gson.toJson(sport);
+        sportManager.deleteSelectedSport(runId,sportName);
+        return "Sport should have been deleted";
     }
 
     /**

@@ -2,9 +2,9 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.datalayer.SportsDao;
+import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.NewsType;
 import com.endicott.edu.models.SportModel;
-import com.endicott.edu.models.SportsModel;
 import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.StudentModel;
 
@@ -131,16 +131,24 @@ public class SportManager {
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
             NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.GENERAL_NOTE);
+            //simulate a game being played
+            sport.setNumGames(sport.getNumGames() - 1 );
+            double x = Math.random();
+
+            if(x > .5){
+                sport.setGamesWon(sport.getGamesWon() + 1);
+            }
+            //Need to make cases for teams that can tie and teams that can not tie.
             sport.setHoursUntilNextGame(48);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
     }
-    public static void deleteSelectedSport(String runId, SportModel sport){
+    public static void deleteSelectedSport(String runId, String sportName){
         SportsDao dao = new SportsDao();
         List<SportModel> sports = dao.getSports(runId);
         for(int i =0; i < sports.size(); i++){
-            if(sport.getName().equals(sports.get(i).getName())){
+            if(sportName.equals(sports.get(i).getName())){
                 sports.remove(i);
             }
         }

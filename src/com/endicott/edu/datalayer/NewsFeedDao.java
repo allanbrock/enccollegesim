@@ -1,6 +1,7 @@
 package com.endicott.edu.datalayer;
 
 import com.endicott.edu.models.NewsFeedItemModel;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
 import javax.ws.rs.WebApplicationException;
@@ -90,8 +91,8 @@ public class NewsFeedDao {
 
     private static void testNotes() {
         NewsFeedDao dao = new NewsFeedDao();
-        NewsFeedItemModel m1 = new NewsFeedItemModel(1, "Day One - msg 1", NewsType.GENERAL_NOTE, "000");
-        NewsFeedItemModel m2 = new NewsFeedItemModel(1, "Day One - msg 2", NewsType.GENERAL_NOTE, "000");
+        NewsFeedItemModel m1 = new NewsFeedItemModel(1, "Day One - msg 1", NewsType.COLLEGE_NEWS, "000", NewsLevel.GOOD_NEWS);
+        NewsFeedItemModel m2 = new NewsFeedItemModel(1, "Day One - msg 2", NewsType.COLLEGE_NEWS, "000",NewsLevel.GOOD_NEWS);
         ArrayList<NewsFeedItemModel> notes = new ArrayList<>();
         notes.add(m1);
         notes.add(m2);
@@ -102,7 +103,7 @@ public class NewsFeedDao {
         assert(outMsgs.size() == 2);
         assert(outMsgs.get(1).getHour() == 1);
 
-        NewsFeedItemModel m3 = new NewsFeedItemModel(2, "Day Two", NewsType.GENERAL_NOTE, "000");
+        NewsFeedItemModel m3 = new NewsFeedItemModel(2, "Day Two", NewsType.COLLEGE_NEWS, "000",NewsLevel.GOOD_NEWS);
         dao.saveNote("000", m3);
         outMsgs = dao.getAllNotes("000");
         assert(outMsgs.size() == 3);

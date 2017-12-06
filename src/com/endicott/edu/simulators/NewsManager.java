@@ -5,6 +5,7 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.NewsFeedItemModel;
+import com.endicott.edu.models.NewsLevel;
 import com.endicott.edu.models.NewsType;
 
 public class NewsManager {
@@ -16,14 +17,15 @@ public class NewsManager {
             return;
         }
 
-        createNews(collegeId, college.getCurrentDay(), message, NewsType.GENERAL_NOTE);
+        createNews(collegeId, college.getCurrentDay(), message, NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
     }
 
-    public static void createNews(String collegeId, int newsHour, String message, NewsType newsType) {
+    public static void createNews(String collegeId, int newsHour, String message, NewsType newsType, NewsLevel newsLevel) {
         NewsFeedItemModel note = new NewsFeedItemModel();
         note.setHour(newsHour);
         note.setMessage(message);
         note.setNoteType(newsType);
+        note.setNoteLevel(newsLevel);
         NewsFeedDao noteDao = new NewsFeedDao();
         noteDao.saveNote(collegeId, note);
     }

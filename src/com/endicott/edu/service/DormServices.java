@@ -1,6 +1,8 @@
 package com.endicott.edu.service;
 
+import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
+import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
 import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
@@ -38,7 +40,9 @@ public class DormServices {
         }
         // Override some fields
         DormitoryDao dormitoryDao = new DormitoryDao();
-        return (DormManager.createDorm(runId, dormName, dormType));
+        CollegeDao dao = new CollegeDao();
+        CollegeModel college = dao.getCollege(runId);
+        return (DormManager.createDorm(runId, dormName, dormType,college.getHoursAlive()));
     }
 
     /**
@@ -57,36 +61,29 @@ public class DormServices {
 
     /**
      * Delete a selected dorm
-     *
+     *look at college and sports versions
      */
-//    @POST
-//    @Path("/delete")
-//    @Consumes(MediaType.TEXT_PLAIN)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public void deleteDorm(String runId, String dormName) {
-//
-//        DormManager dormManager = new DormManager();
-//        if (!CollegeManager.doesCollegeExist(runId)) {
-//            throw new WebApplicationException(Response.Status.NOT_FOUND);
-//        }
-//
-//        dormManager.sellDorm(runId, dormName);
-//    }
+    @DELETE
+    @Path("/{runId}/{dormName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteDorm(@PathParam("runId") String runId, @PathParam("dormName") String dormName) {
+            DormManager.sellDorm(runId, dormName);
+            return "Dorm might have been deleted.\n";
+    }
+
+    @GET
+    @Path("/{runId}/{command}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<String> getAvalibleDorms(@PathParam("runId") String runId, @PathParam("command") String command){
+        DormManager dormManager = new DormManager();
+        if (command.equalsIgnoreCase("available")) {
+            return dormManager.checkAvailableDorms(runId);
+        } else {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
 
 
-//    @GET
-//    @Path("/{runId}/{command}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId") String runId, @PathParam("command") String command) {
-//        System.out.println("College command: " + command);
-//        DormManager dormManager = new DormManager();
-//
-//        if (command.equalsIgnoreCase("available")) {
-//            return dormManager.checkAvailableDorms();
-//        } else {
-//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-//        }
-//    }
+    }
 
 //    @GET
 //    @Produces("text/plain")

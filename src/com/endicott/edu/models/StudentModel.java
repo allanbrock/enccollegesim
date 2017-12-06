@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by Connor Frazier on 7/10/2017.
  */
 public class StudentModel implements Serializable {
+
     private String name = "unknown";
     private int idNumber = 0;
     private int happinessLevel = 75; //0-100
@@ -19,12 +20,13 @@ public class StudentModel implements Serializable {
     private int numberHoursBeenSick = 0; // number of hours of current illness -- 0 if well
     private int numberHoursLeftBeingSick = 0;
     private int hourLastUpdated = 0;
+    private int hourStartedCollege = 0;
 
 
     public StudentModel() {
     }
 
-    public StudentModel(String name, int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String gender, String runId, int numberHoursBeenSick, int numberHoursLeftBeingSick, int hourLastUpdated) {
+    public StudentModel(String name, int idNumber, int happinessLevel, boolean athlete, int athleticAbility, String dorm, String gender, String runId, int numberHoursBeenSick, int numberHoursLeftBeingSick, int hourLastUpdated, int hourStartedCollege) {
         this.name = name;
         this.idNumber = idNumber;
         this.happinessLevel = happinessLevel;
@@ -36,9 +38,16 @@ public class StudentModel implements Serializable {
         this.numberHoursBeenSick = numberHoursBeenSick;
         this.numberHoursLeftBeingSick = numberHoursLeftBeingSick;
         this.hourLastUpdated = hourLastUpdated;
+        this.hourStartedCollege = hourStartedCollege;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getIdNumber() {
         return idNumber;
@@ -73,9 +82,6 @@ public class StudentModel implements Serializable {
     }
 
 //    public static int getTuitionCost(){ return dailyTuitionCost; }
-
-
-    public void setName(String name) { this.name = name; }
 
     public void setIdNumber(int idNumber) {
         this.idNumber = idNumber;
@@ -120,5 +126,9 @@ public class StudentModel implements Serializable {
     public int getHourLastUpdated() { return hourLastUpdated; }
 
     public void setHourLastUpdated(int hourLastUpdated) { this.hourLastUpdated = hourLastUpdated; }
+
+    public int getHourStartedCollege() { return hourStartedCollege; }
+
+    public void setHourStartedCollege(int hourStartedCollege) { this.hourStartedCollege = hourStartedCollege; }
 }
 

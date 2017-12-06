@@ -5,44 +5,50 @@ import com.endicott.edu.models.*;
 import java.util.List;
 import java.util.Random;
 
-public class StudentManager {
-    StudentDao dao = new StudentDao();
-    CollegeDao collegeDao = new CollegeDao();
-    FacultyDao facultyDao = new FacultyDao();
-    DormManager dormManager = new DormManager();
-    CollegeModel college = new CollegeModel();
-    List<StudentModel> students;
-    List<FacultyModel> faculty;
-    Random rand = new Random();
+public class  StudentManager {
+    private StudentDao dao = new StudentDao();
+    private CollegeDao collegeDao = new CollegeDao();
+    private FacultyDao facultyDao = new FacultyDao();
+    private DormManager dormManager = new DormManager();
+    private CollegeModel college = new CollegeModel();
+    private List<StudentModel> students;
+    private List<FacultyModel> faculty;
+    private Random rand = new Random();
 
 
-    public void handleTimeChange(String runId, int hoursAlive) {
+    public  void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive, false);
-        runningTuitionOfStudent(runId, hoursAlive);
+        runningTuitionOfStudent(runId);
         removeStudents(runId, hoursAlive);
         updateStudentsTime(hoursAlive);
         dao.saveAllStudents(runId, students);
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
+        college.setStudentFacultyRatio(updateStudentFacultyRatio());
+        college.setCollegeScore(calculateCollegeScore());
         collegeDao.saveCollege(college);
     }
 
-    private void runningTuitionOfStudent(String runId, int hoursAlive) {
+    private void runningTuitionOfStudent(String runId) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
-        Accountant.studentIncome(runId,"Student tuition received $ " + dailyTuitionSum ,dailyTuitionSum);
+        Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
     public void addNewStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
-        int numNewStudents = 0;
-        if(initial == true){
-            numNewStudents = 100;
-        } else {
-            numNewStudents = rand.nextInt(openBeds);
+        int numNewStudents;
+        students = dao.getStudents(runId);
+
+        // Are we fully booked?
+        if (openBeds <= 0) {
+            return;
         }
+
+        numNewStudents = rand.nextInt(openBeds);
+
         for (int i = 0; i < numNewStudents; i++) {
             StudentModel student = new StudentModel();
             if(rand.nextInt(10) + 1 > 5){
@@ -54,16 +60,22 @@ public class StudentManager {
             }
             student.setIdNumber(IdNumberGenDao.getID(runId));
             student.setHappinessLevel(70);
-            student.setAthlete(false);
             student.setAthleticAbility(rand.nextInt(10));
+            if(student.getAthleticAbility() > 6) {
+                student.setAthlete(true);
+            }
+            else {
+                student.setAthlete(false);
+            }
             student.setTeam("");
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
-            dao.saveNewStudent(runId, student); //students gets used many times in file, don't know state when called, must save each student as created
+            students.add(student);
+            dao.saveAllStudents(runId, students);
         }
 
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.GENERAL_NOTE);
-
+        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
+        
     }
 
     private void removeStudents(String runId, int hoursAlive) {
@@ -83,7 +95,7 @@ public class StudentManager {
         }
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
-            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.GENERAL_NOTE);
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
         }
 
     }
@@ -110,12 +122,19 @@ public class StudentManager {
     }
 
     private void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
+        //dividing values below are for scaling
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
         int tuitionAffect = -(tuitionCost - 40000)/1000;
+        int sicknessAffect = 0;
 
         for(int i = 0; i < students.size(); i++){
-            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect);
+
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                sicknessAffect = - students.get(i).getHappinessLevel()/10;
+            }
+
+            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect);
         }
     }
 
@@ -126,4 +145,23 @@ public class StudentManager {
 
     }
 
+    private int updateStudentFacultyRatio(){
+        return students.size()/faculty.size();
+    }
+
+    private float calculateCollegeScore(){
+        float collegeScore = college.getStudentBodyHappiness(); // temporary college score rating
+        return collegeScore;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

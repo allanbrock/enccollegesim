@@ -133,8 +133,9 @@ public class DormManager {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         Boolean removed = false;
         for (DormitoryModel d : dorms) {
+            String name = d.getName();
             int s = d.getNumStudents();
-            if (d.getName() == dormName) {
+            if (name.equals(dormName)) {
                 d.setNumStudents(s - 1);
             }
         }

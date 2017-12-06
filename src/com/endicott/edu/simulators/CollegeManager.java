@@ -49,12 +49,13 @@ public class CollegeManager {
 
         DormManager.establishCollege(runId, college);
 
+        FacultyManager.establishCollege(runId);
+
         StudentManager studentManager = new StudentManager();
         studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
-        FacultyManager.establishCollege(runId);
 
         EventManager.establishCollege(runId);
 
@@ -91,7 +92,6 @@ public class CollegeManager {
         //Plague time change
         PlagueManager plagueManager = new PlagueManager();
         plagueManager.handleTimeChange(runId, hoursAlive);
-
 
         DormManager dormManager = new DormManager();
         dormManager.handleTimeChange(runId, hoursAlive);

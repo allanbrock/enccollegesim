@@ -17,7 +17,7 @@ import java.util.Random;
 public class PlagueManager {
     PlagueDao dao = new PlagueDao();
 
-
+    public int checkSick = 0;
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
 
@@ -30,6 +30,31 @@ public class PlagueManager {
 
         dao.saveAllPlagues(runId, plagues);
         makeStudentsBetter(runId, hoursAlive);
+        checkAndDisplayStudentsSicknessStatus(runId, hoursAlive);
+    }
+
+    private void checkAndDisplayStudentsSicknessStatus(String runId, int currentDay) {
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        int studentGoodCount = 0;
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+            if(students.get(i).getNumberHoursLeftBeingSick() == 0){
+                studentGoodCount++;
+            }
+        }
+        if(checkSick == 0){
+            int numOfStudents = students.size();
+            if(studentGoodCount == numOfStudents){
+                //students are not sick
+                checkSick = 1;
+                NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
+            }
+        } else {
+            checkSick = 0;
+        }
+
+        dao.saveAllStudents(runId, students);
     }
 
     private void makeStudentsBetter(String runId, int hoursAlive) {

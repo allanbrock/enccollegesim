@@ -71,19 +71,19 @@ public class DormServices {
             return "Dorm might have been deleted.\n";
     }
 
-//    @GET
-//    @Path("/{runId}/")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<SportModel> getAvailableSports(@PathParam("runId"){
-//        System.out.println("College command: " + command);
-//        DormManager dormManager = new DormManager();
-//
-//        if (command.equalsIgnoreCase("available")) {
-//            return dormManager.checkAvailableDorms();
-//        } else {
-//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-//        }
-//    }
+    @GET
+    @Path("/{runId}/{command}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<String> getAvalibleDorms(@PathParam("runId") String runId, @PathParam("command") String command){
+        DormManager dormManager = new DormManager();
+        if (command.equalsIgnoreCase("available")) {
+            return dormManager.checkAvailableDorms(runId);
+        } else {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+
+
+    }
 
 //    @GET
 //    @Produces("text/plain")

@@ -76,7 +76,7 @@ public class DormManager {
         temp.setCurDisaster("none");
         temp.setMaintenanceCostPerHour(temp.getNumRooms());
         Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
-        NewsManager.createNews(runId, hoursAlive, dormName +" dorm has been created! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
+        NewsManager.createNews(runId, hoursAlive, "Construction of " + dormName +" dorm has started! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
         DormitoryDao dormDao = new DormitoryDao();
         temp.setNote("A new dorm has been created.");
 

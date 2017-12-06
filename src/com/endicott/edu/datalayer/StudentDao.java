@@ -6,6 +6,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,6 +38,14 @@ public class StudentDao {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        Collections.sort(students, new Comparator<StudentModel>() {
+            @Override
+            public int compare(StudentModel lhs, StudentModel rhs) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
 
         return students;
     }

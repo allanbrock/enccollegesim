@@ -9,6 +9,7 @@ import com.endicott.edu.datalayer.StudentDao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class SportManager {
@@ -163,16 +164,7 @@ public class SportManager {
 
     public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
         if(sport.getHoursUntilNextGame() <= 0){
-            //simulate a game being played
-            sport.setNumGames(sport.getNumGames() - 1 );
-            double x = Math.random();
-
-            if(x > .5){
-                sport.setGamesWon(sport.getGamesWon() + 1);
-            }
-            //Need to make cases for teams that can tie and teams that can not tie.
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " Just payed a game.", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);// Depends on if the sport team won or not
-            sport.setHoursUntilNextGame(48);
+            simulateGame(sport, hoursAlive, runId);
         }else{
             sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
         }
@@ -186,6 +178,30 @@ public class SportManager {
             }
         }
         dao.saveAllSports(runId,sports);
+
+    }
+    public static void simulateGame(SportModel sport, int hoursAlive,String runId){
+        StudentDao stuDao = new StudentDao();
+        List<StudentModel> students = stuDao.getStudentsOnSport(runId,sport.getName());
+        int numOfPlayers = sport.getCurrentPlayers();
+        int totalAthleticAbility = 0;
+
+        for(StudentModel student : students){
+            totalAthleticAbility = totalAthleticAbility + student.getAthleticAbility();
+        }
+
+        int teamAverage = totalAthleticAbility/numOfPlayers;
+        Random rand = new Random();
+        int random_integer = rand.nextInt(5) + 5;
+
+        if(random_integer > teamAverage){
+            sport.setGamesLost(sport.getGamesLost() +1);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just lost a game.", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);
+        }else{
+            sport.setGamesWon(sport.getGamesWon() +1);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just WON a game!", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);
+        }
+        sport.setHoursUntilNextGame(48);
 
     }
 }

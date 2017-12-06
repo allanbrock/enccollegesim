@@ -196,10 +196,10 @@ public class SportManager {
 
         if(random_integer > teamAverage){
             sport.setGamesLost(sport.getGamesLost() +1);
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just lost a game.", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just lost a game.", NewsType.SPORTS_NEWS, NewsLevel.BAD_NEWS);
         }else{
             sport.setGamesWon(sport.getGamesWon() +1);
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just WON a game!", NewsType.SPORTS_NEWS, NewsLevel.UNKNOWN_NEWS);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just WON a game!", NewsType.SPORTS_NEWS, NewsLevel.GOOD_NEWS);
         }
         sport.setHoursUntilNextGame(48);
 

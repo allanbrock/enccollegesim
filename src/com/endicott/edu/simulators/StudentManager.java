@@ -75,7 +75,7 @@ public class  StudentManager {
         }
 
         NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-
+        
     }
 
     private void removeStudents(String runId, int hoursAlive) {
@@ -126,9 +126,15 @@ public class  StudentManager {
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
         int tuitionAffect = -(tuitionCost - 40000)/1000;
+        int sicknessAffect = 0;
 
         for(int i = 0; i < students.size(); i++){
-            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect);
+
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                sicknessAffect = - students.get(i).getHappinessLevel()/10;
+            }
+
+            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect);
         }
     }
 

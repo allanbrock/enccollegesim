@@ -3,11 +3,8 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.datalayer.SportsDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.NewsType;
-import com.endicott.edu.models.SportModel;
+import com.endicott.edu.models.*;
 import com.endicott.edu.datalayer.StudentDao;
-import com.endicott.edu.models.StudentModel;
 
 
 import java.util.ArrayList;

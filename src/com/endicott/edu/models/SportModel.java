@@ -12,7 +12,7 @@ public class SportModel implements Serializable {
     private int maxPlayers = 0;
     private int costPerDay = 0;
     private int hourLastUpdated = 0;
-    private int reputation = 50;
+    private int reputation = 100;
     private int gamesWon = 0;
     private int gamesLost = 0;
     private int gamesTied = 0;
@@ -188,6 +188,11 @@ public class SportModel implements Serializable {
 
     public void setCurrentPlayers(int currentPlayers) { this.currentPlayers = currentPlayers; }
 
+
+    public boolean getActive() { return isActive;
+    }
+
+    public void setActive(boolean active) { isActive = active; }
 
     public String getGender() { return gender; }
 

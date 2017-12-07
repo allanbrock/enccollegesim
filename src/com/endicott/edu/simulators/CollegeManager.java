@@ -2,6 +2,7 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.*;
 import com.endicott.edu.models.*;
+import com.endicott.edu.simulators.StudentManager;
 
 import java.util.Random;
 import java.util.logging.Logger;
@@ -49,12 +50,13 @@ public class CollegeManager {
 
         DormManager.establishCollege(runId, college);
 
+        FacultyManager.establishCollege(runId);
+
         StudentManager studentManager = new StudentManager();
         studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
-        FacultyManager.establishCollege(runId);
 
         EventManager.establishCollege(runId);
 
@@ -71,6 +73,9 @@ public class CollegeManager {
         SportsDao.deleteSports(runId);
         StudentDao.deleteStudents(runId);
         IdNumberGenDao.deleteIDs(runId);
+        StudentManager.studentsAdmitted = 0;
+        StudentManager.studentsWithdrawn = 0;
+
     }
 
     static public CollegeModel nextDay(String runId) {

@@ -5,7 +5,7 @@ import com.endicott.edu.models.*;
 import java.util.List;
 import java.util.Random;
 
-public class  StudentManager {
+public class StudentManager {
     private StudentDao dao = new StudentDao();
     private CollegeDao collegeDao = new CollegeDao();
     private FacultyDao facultyDao = new FacultyDao();
@@ -14,6 +14,8 @@ public class  StudentManager {
     private List<StudentModel> students;
     private List<FacultyModel> faculty;
     private Random rand = new Random();
+    public static int studentsAdmitted = 0;
+    public static int studentsWithdrawn = 0;
 
 
     public  void handleTimeChange(String runId, int hoursAlive) {
@@ -28,6 +30,7 @@ public class  StudentManager {
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
         college.setStudentFacultyRatio(updateStudentFacultyRatio());
         college.setCollegeScore(calculateCollegeScore());
+        college.setStudentRetentionRate(((studentsAdmitted - studentsWithdrawn)*100)/studentsAdmitted);
         collegeDao.saveCollege(college);
     }
 
@@ -71,6 +74,7 @@ public class  StudentManager {
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
             students.add(student);
+            studentsAdmitted++;
             dao.saveAllStudents(runId, students);
         }
 
@@ -90,13 +94,19 @@ public class  StudentManager {
             if (didItHappen(odds)) {
                 dormManager.removeStudent(runId, students.get(i).getDorm());
                 students.remove(i);
+                studentsWithdrawn++;
 
             }
         }
+
+
+
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
             NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
         }
+
+
 
     }
 
@@ -126,9 +136,15 @@ public class  StudentManager {
         int reputationAffect = (reputation - 60)/10;
         int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
         int tuitionAffect = -(tuitionCost - 40000)/1000;
+        int sicknessAffect = 0;
 
         for(int i = 0; i < students.size(); i++){
-            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect);
+
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                sicknessAffect = - students.get(i).getHappinessLevel()/10;
+            }
+
+            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect);
         }
     }
 

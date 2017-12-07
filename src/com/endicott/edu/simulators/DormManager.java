@@ -2,23 +2,18 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.NewsLevel;
-import com.endicott.edu.models.NewsType;
+import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.endicott.edu.models.NewsType.RES_LIFE_NEWS;
-
 public class DormManager {
-    DormitoryDao dao = new DormitoryDao();
+    static private DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
-    CollegeDao collegeDao = new CollegeDao();
     CollegeModel college = new CollegeModel();
-    List<DormitoryModel> dorms = dao.getDorms(college.getRunId());
+    static private StudentDao studentDao = new StudentDao();
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<DormitoryModel> dorms = dao.getDorms(runId);
@@ -62,11 +57,11 @@ public class DormManager {
     public static DormitoryModel createDorm(String runId, String dormName, String dormType, int hoursAlive) {
         DormitoryModel temp = new DormitoryModel();
         temp.setName(dormName);
-        if (dormType == "Small") {
+        if (dormType.equals("Small")) {
             temp.setDormType(1);
-        } else if (dormType == "Medium") {
+        } else if (dormType.equals("Medium")) {
             temp.setDormType(2);
-        } else if (dormType == "Large") {
+        } else if (dormType.equals("Large")) {
             temp.setDormType(3);
         }
 
@@ -74,9 +69,9 @@ public class DormManager {
         temp.setHourLastUpdated(0);
         temp.setReputation(5);
         temp.setCurDisaster("none");
-        temp.setMaintenanceCostPerHour(temp.getNumRooms());
+        temp.setMaintenanceCostPerDay(temp.getNumRooms());
         Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
-        NewsManager.createNews(runId, hoursAlive, dormName +" dorm has been created! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
+        NewsManager.createNews(runId, hoursAlive, "Construction of " + dormName +" dorm has started! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
         DormitoryDao dormDao = new DormitoryDao();
         temp.setNote("A new dorm has been created.");
 
@@ -87,7 +82,8 @@ public class DormManager {
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
-        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
+        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerDay();
+//        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName(), (int) (newCharge));
     }
 
@@ -142,7 +138,7 @@ public class DormManager {
         dao.saveAllDorms(collegeId, dorms);
     }
 
-    public int getOpenBeds(String collegeId) {
+    public static int getOpenBeds(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
         for (DormitoryModel d : dorms) {
@@ -159,22 +155,32 @@ public class DormManager {
 
     //takes the runId of the dorm and the dorm name to be removed
     public static void sellDorm(String runId, String dormName) {
+
         DormitoryDao dormitoryDao = new DormitoryDao();
         List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
+        List<StudentModel> students = studentDao.getStudents(runId);
         String name = "";
         int totalBuildCost = 0;
         int refund = 0;
         for(DormitoryModel d : dorms){
             name = d.getName();
             totalBuildCost = d.getTotalBuildCost();
+
             //takes 20% of the build cost to refund back to the college.
             refund = (int)(totalBuildCost/20);
             if(name.equals(dormName)){
-                dorms.remove(d);
-                Accountant.studentIncome(runId, dormName + "has been sold.", refund);
+                if(students.size() < (getOpenBeds(runId) - d.getCapacity())){
+                    dorms.remove(d);
+                    dormitoryDao.saveAllDorms(runId, dorms);
+                    Accountant.studentIncome(runId, dormName + "has been sold.", refund);
+                    return;
+                }
+                else{
+                    logger.info("Not enough open beds...");
+                }
+
             }
         }
-        dormitoryDao.saveAllDorms(runId, dorms);
 
     }
 
@@ -183,18 +189,18 @@ public class DormManager {
         CollegeModel college = collegeDao.getCollege(runId);
         int availableCash = college.getAvailableCash();
         ArrayList<String> availableDormTypes = new ArrayList<>();
-        if(availableCash >= 100 ){
+        if(availableCash >= 100000){
             //can build dorm type 1 (small)
             availableDormTypes.add("Small");
             return availableDormTypes;
         }
-        else if(availableCash >= 175){
+        else if(availableCash >= 175000){
             //can build small and medium sized dorms
             availableDormTypes.add("Small");
             availableDormTypes.add("Medium");
             return availableDormTypes;
         }
-        else if(availableCash >= 250){
+        else if(availableCash >= 250000){
             //can build small, medium, and large sized dorms
             availableDormTypes.add("Small");
             availableDormTypes.add("Medium");
@@ -207,7 +213,7 @@ public class DormManager {
         }
     }
 
-    public void chanceOfEventDuringConstruction(String runId) {
+    private void chanceOfEventDuringConstruction(String runId) {
         String dormName = "";
         double chance = Math.random();
         if (chance < 0.25) {
@@ -223,14 +229,33 @@ public class DormManager {
 
     static public void establishCollege(String runId, CollegeModel college) {
         logger.info("Creating dorm");
-        DormitoryModel dorm = new DormitoryModel(100, 10, "Hampshire Hall",
-                0, "none", 5, "none", 60);
+        DormitoryModel dorm = new DormitoryModel(200, 10, "Hampshire Hall",
+                0, "none", 5, "none", 100);
         dorm.setHoursToComplete(300);
-        dorm.setMaintenanceCostPerHour(60);
-        dorm.setTotalBuildCost(60);
+        dorm.setMaintenanceCostPerDay(60);
+        dorm.setTotalBuildCost(100);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
+    }
+    static public List<DormitoryModel> getDorms(String runId){
+        String dormName = "";
+        List<DormitoryModel> dorms = dao.getDorms(runId);
+        for(DormitoryModel d : dorms){
+            d.setNumStudents(0);
+        }
+        List<StudentModel> students = studentDao.getStudents(runId);
+        for(StudentModel s : students){
+            dormName = s.getDorm();
+            for (DormitoryModel d : dorms) {
+                if (dormName.equals(d.getName())) {
+                    d.incrementNumStudents(1);
+                } else {
+                    logger.info("Dorm was not found.");
+                }
+            }
+        }
+        return dorms;
     }
 }
 

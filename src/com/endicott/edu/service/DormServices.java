@@ -4,11 +4,8 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.DormManager;
-import com.endicott.edu.simulators.SportManager;
-import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -55,7 +52,7 @@ public class DormServices {
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<DormitoryModel> getDorms(@PathParam("runId") String runId) {
-        return dao.getDorms(runId);
+        return DormManager.getDorms(runId);
     }
 
 
@@ -67,6 +64,7 @@ public class DormServices {
     @Path("/{runId}/{dormName}")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteDorm(@PathParam("runId") String runId, @PathParam("dormName") String dormName) {
+
             DormManager.sellDorm(runId, dormName);
             return "Dorm might have been deleted.\n";
     }
@@ -74,7 +72,7 @@ public class DormServices {
     @GET
     @Path("/{runId}/{command}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<String> getAvalibleDorms(@PathParam("runId") String runId, @PathParam("command") String command){
+    public ArrayList<String> getAvailableDorms(@PathParam("runId") String runId, @PathParam("command") String command){
         DormManager dormManager = new DormManager();
         if (command.equalsIgnoreCase("available")) {
             return dormManager.checkAvailableDorms(runId);

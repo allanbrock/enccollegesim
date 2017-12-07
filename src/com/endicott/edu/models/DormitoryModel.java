@@ -1,12 +1,10 @@
 package com.endicott.edu.models;
 
-import com.endicott.edu.simulators.Accountant;
-
 import java.io.Serializable;
 
 public class DormitoryModel implements Serializable {
     private int capacity = 0;
-    private int costPerHour = 0;
+    private int costPerDay = 0;
     private int hourLastUpdated = 0;
     private String name = "unknown";
     private String runId = "unknown";
@@ -20,14 +18,14 @@ public class DormitoryModel implements Serializable {
     private int totalBuildCost = 0;
 
 
-    private int dormType = 1;
+    private int dormType;
 
     public DormitoryModel() {
     }
 
     public DormitoryModel(int capacity, int costPerHour, int hourLastUpdated, String name, String runId) {
         this.capacity = capacity;
-        this.costPerHour = costPerHour;
+        this.costPerDay = costPerHour;
         this.hourLastUpdated = hourLastUpdated;
         this.name = name;
         this.runId = runId;
@@ -45,9 +43,7 @@ public class DormitoryModel implements Serializable {
         this.numRooms=numRooms;
     }
 
-    public int getDormType() {
-        return dormType;
-    }
+    public int getDormType() { return dormType; }
 
     public void setDormType(int dormType) {
         this.dormType = dormType;
@@ -61,12 +57,12 @@ public class DormitoryModel implements Serializable {
         this.capacity = capacity;
     }
 
-    public void setCostPerHour(int costPerHour) {
-        this.costPerHour = costPerHour;
+    public void setCostPerDay(int costPerDay) {
+        this.costPerDay = costPerDay;
     }
 
-    public int getCostPerHour() {
-        return costPerHour;
+    public int getCostPerDay() {
+        return costPerDay;
     }
 
     public int getHourLastUpdated() {
@@ -101,12 +97,12 @@ public class DormitoryModel implements Serializable {
         this.note = note;
     }
 
-    public int getMaintenanceCostPerHour() {
-        return  costPerHour;
+    public int getMaintenanceCostPerDay() {
+        return costPerDay;
     }
 
-    public void setMaintenanceCostPerHour(int numRooms){
-        this.costPerHour = (((numRooms * 100))/(365*24));
+    public void setMaintenanceCostPerDay(int numRooms){
+        this.costPerDay = (((numRooms * 150))/(365*24));
 
     }
     public void setHoursToComplete(int decrementHours){
@@ -120,7 +116,7 @@ public class DormitoryModel implements Serializable {
         return this.hoursToComplete;
     }
     public void setTotalBuildCost(int numRooms){
-        this.totalBuildCost = numRooms * 200;
+        this.totalBuildCost = numRooms * 1000;
     }
     public int getTotalBuildCost(){
         return this.totalBuildCost;
@@ -173,5 +169,8 @@ public class DormitoryModel implements Serializable {
         }
         else
             return "Built";
+    }
+    public void incrementNumStudents(int increment){
+        this.numStudents += increment;
     }
 }

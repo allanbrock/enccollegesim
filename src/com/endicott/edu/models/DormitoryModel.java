@@ -18,7 +18,7 @@ public class DormitoryModel implements Serializable {
     private int totalBuildCost = 0;
 
 
-    private int dormType = 1;
+    private int dormType;
 
     public DormitoryModel() {
     }
@@ -43,9 +43,7 @@ public class DormitoryModel implements Serializable {
         this.numRooms=numRooms;
     }
 
-    public int getDormType() {
-        return dormType;
-    }
+    public int getDormType() { return dormType; }
 
     public void setDormType(int dormType) {
         this.dormType = dormType;

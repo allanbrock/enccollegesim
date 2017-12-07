@@ -57,11 +57,11 @@ public class DormManager {
     public static DormitoryModel createDorm(String runId, String dormName, String dormType, int hoursAlive) {
         DormitoryModel temp = new DormitoryModel();
         temp.setName(dormName);
-        if (dormType == "Small") {
+        if (dormType.equals("Small")) {
             temp.setDormType(1);
-        } else if (dormType == "Medium") {
+        } else if (dormType.equals("Medium")) {
             temp.setDormType(2);
-        } else if (dormType == "Large") {
+        } else if (dormType.equals("Large")) {
             temp.setDormType(3);
         }
 
@@ -138,7 +138,7 @@ public class DormManager {
         dao.saveAllDorms(collegeId, dorms);
     }
 
-    public int getOpenBeds(String collegeId) {
+    public static int getOpenBeds(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
         for (DormitoryModel d : dorms) {
@@ -155,21 +155,30 @@ public class DormManager {
 
     //takes the runId of the dorm and the dorm name to be removed
     public static void sellDorm(String runId, String dormName) {
+
         DormitoryDao dormitoryDao = new DormitoryDao();
         List<DormitoryModel> dorms = dormitoryDao.getDorms(runId);
+        List<StudentModel> students = studentDao.getStudents(runId);
         String name = "";
         int totalBuildCost = 0;
         int refund = 0;
         for(DormitoryModel d : dorms){
             name = d.getName();
             totalBuildCost = d.getTotalBuildCost();
+
             //takes 20% of the build cost to refund back to the college.
             refund = (int)(totalBuildCost/20);
             if(name.equals(dormName)){
-                dorms.remove(d);
-                dormitoryDao.saveAllDorms(runId, dorms);
-                Accountant.studentIncome(runId, dormName + "has been sold.", refund);
-                return;
+                if(students.size() < (getOpenBeds(runId) - d.getCapacity())){
+                    dorms.remove(d);
+                    dormitoryDao.saveAllDorms(runId, dorms);
+                    Accountant.studentIncome(runId, dormName + "has been sold.", refund);
+                    return;
+                }
+                else{
+                    logger.info("Not enough open beds...");
+                }
+
             }
         }
 

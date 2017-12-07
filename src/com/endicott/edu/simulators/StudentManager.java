@@ -5,7 +5,7 @@ import com.endicott.edu.models.*;
 import java.util.List;
 import java.util.Random;
 
-public class  StudentManager {
+public class StudentManager {
     private StudentDao dao = new StudentDao();
     private CollegeDao collegeDao = new CollegeDao();
     private FacultyDao facultyDao = new FacultyDao();
@@ -14,6 +14,8 @@ public class  StudentManager {
     private List<StudentModel> students;
     private List<FacultyModel> faculty;
     private Random rand = new Random();
+    public static int studentsAdmitted = 0;
+    public static int studentsWithdrawn = 0;
 
 
     public  void handleTimeChange(String runId, int hoursAlive) {
@@ -28,6 +30,7 @@ public class  StudentManager {
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
         college.setStudentFacultyRatio(updateStudentFacultyRatio());
         college.setCollegeScore(calculateCollegeScore());
+        college.setStudentRetentionRate(((studentsAdmitted - studentsWithdrawn)*100)/studentsAdmitted);
         collegeDao.saveCollege(college);
     }
 
@@ -71,11 +74,12 @@ public class  StudentManager {
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
             students.add(student);
+            studentsAdmitted++;
             dao.saveAllStudents(runId, students);
         }
 
         NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-        
+
     }
 
     private void removeStudents(String runId, int hoursAlive) {
@@ -90,13 +94,19 @@ public class  StudentManager {
             if (didItHappen(odds)) {
                 dormManager.removeStudent(runId, students.get(i).getDorm());
                 students.remove(i);
+                studentsWithdrawn++;
 
             }
         }
+
+
+
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
             NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
         }
+
+
 
     }
 

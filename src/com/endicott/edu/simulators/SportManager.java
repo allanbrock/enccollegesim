@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class SportManager {
     SportsDao dao = new SportsDao();
     static private Logger logger = Logger.getLogger("SportManager");
+    private int overallRep = 0;
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<SportModel> sports = dao.getSports(runId);
@@ -47,27 +48,27 @@ public class SportManager {
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
-            result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 0, 0, "Men's Basketball", runId, false, 48, "Male");
+            result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 50, 0, "Men's Basketball", runId, false, 48, "Male");
             Accountant.payBill(runId, "Men's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Basketball")){
-            result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,0,0,"Women's Basketball", runId, false,48, "Female");
+            result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,50,0,"Women's Basketball", runId, false,48, "Female");
             Accountant.payBill(runId, "Women's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Baseball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Baseball", runId, false,48, "Male");
+            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,50,0,"Baseball", runId, false,48, "Male");
             Accountant.payBill(runId, "Baseball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Softball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,0,0,"Softball", runId, false, 48,"Female");
+            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,50,0,"Softball", runId, false, 48,"Female");
             Accountant.payBill(runId, "Softball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 0, 0, "Women's Soccer", runId, false,48, "Female" );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Women's Soccer", runId, false,48, "Female" );
             Accountant.payBill(runId, "Women's Soccer start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 0, 0, "Men's Soccer", runId, false, 48,"Male" );
+            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Men's Soccer", runId, false, 48,"Male" );
             Accountant.payBill(runId, "Men's Soccer start up fee", result.getStartupCost());
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
@@ -201,7 +202,36 @@ public class SportManager {
             sport.setGamesWon(sport.getGamesWon() +1);
             NewsManager.createNews(runId, hoursAlive, sport.getName() + " just WON a game!", NewsType.SPORTS_NEWS, NewsLevel.GOOD_NEWS);
         }
+        SportManager rep = new SportManager();
+        rep.sportRep(sport, runId);
         sport.setHoursUntilNextGame(48);
+
+    }
+    public int calcRep(String runId){
+        List<SportModel> sports = dao.getSports(runId);
+        int averageRep = 0;
+        for(SportModel sport: sports){
+            if (sport.getActive()) {
+                averageRep = sport.getReputation() + averageRep;
+            }
+        }
+        return (averageRep/sports.size());
+    }
+
+    public int sportRep(SportModel sport, String runId){
+        if(sport.getReputation() >= 100){
+            sport.setReputation(100);
+        }
+        else if (sport.getReputation() <= 0) {
+            sport.setReputation(0);
+        }
+        else if (sport.getGamesWon() > sport.getGamesLost()){
+            sport.setReputation(sport.getReputation() + 5);
+        }
+        else if (sport.getGamesWon() < sport.getGamesLost()) {
+            sport.setReputation(sport.getReputation() - 5);
+        }
+        return overallRep = calcRep(runId);
 
     }
 }

@@ -189,6 +189,11 @@ public class SportModel implements Serializable {
     public void setCurrentPlayers(int currentPlayers) { this.currentPlayers = currentPlayers; }
 
 
+    public boolean getActive() { return isActive;
+    }
+
+    public void setActive(boolean active) { isActive = active; }
+
     public String getGender() { return gender; }
 
     public void setGender(String gender) { this.gender = gender; }

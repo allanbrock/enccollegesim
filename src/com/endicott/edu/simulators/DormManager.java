@@ -189,18 +189,18 @@ public class DormManager {
         CollegeModel college = collegeDao.getCollege(runId);
         int availableCash = college.getAvailableCash();
         ArrayList<String> availableDormTypes = new ArrayList<>();
-        if(availableCash >= 100 ){
+        if(availableCash >= 100000){
             //can build dorm type 1 (small)
             availableDormTypes.add("Small");
             return availableDormTypes;
         }
-        else if(availableCash >= 175){
+        else if(availableCash >= 175000){
             //can build small and medium sized dorms
             availableDormTypes.add("Small");
             availableDormTypes.add("Medium");
             return availableDormTypes;
         }
-        else if(availableCash >= 250){
+        else if(availableCash >= 250000){
             //can build small, medium, and large sized dorms
             availableDormTypes.add("Small");
             availableDormTypes.add("Medium");

@@ -4,11 +4,8 @@ import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.models.CollegeModel;
 import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.SportModel;
 import com.endicott.edu.simulators.CollegeManager;
 import com.endicott.edu.simulators.DormManager;
-import com.endicott.edu.simulators.SportManager;
-import com.google.gson.Gson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -75,7 +72,7 @@ public class DormServices {
     @GET
     @Path("/{runId}/{command}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<String> getAvalibleDorms(@PathParam("runId") String runId, @PathParam("command") String command){
+    public ArrayList<String> getAvailableDorms(@PathParam("runId") String runId, @PathParam("command") String command){
         DormManager dormManager = new DormManager();
         if (command.equalsIgnoreCase("available")) {
             return dormManager.checkAvailableDorms(runId);

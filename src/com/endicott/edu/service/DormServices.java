@@ -55,7 +55,7 @@ public class DormServices {
     @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<DormitoryModel> getDorms(@PathParam("runId") String runId) {
-        return dao.getDorms(runId);
+        return DormManager.getDorms(runId);
     }
 
 
@@ -67,6 +67,7 @@ public class DormServices {
     @Path("/{runId}/{dormName}")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteDorm(@PathParam("runId") String runId, @PathParam("dormName") String dormName) {
+
             DormManager.sellDorm(runId, dormName);
             return "Dorm might have been deleted.\n";
     }

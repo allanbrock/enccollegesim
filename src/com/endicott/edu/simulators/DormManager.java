@@ -2,21 +2,18 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
-import com.endicott.edu.models.CollegeModel;
-import com.endicott.edu.models.DormitoryModel;
-import com.endicott.edu.models.NewsLevel;
-import com.endicott.edu.models.NewsType;
+import com.endicott.edu.datalayer.StudentDao;
+import com.endicott.edu.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class DormManager {
-    DormitoryDao dao = new DormitoryDao();
+    static private DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
-    CollegeDao collegeDao = new CollegeDao();
     CollegeModel college = new CollegeModel();
-    List<DormitoryModel> dorms = dao.getDorms(college.getRunId());
+    static private StudentDao studentDao = new StudentDao();
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<DormitoryModel> dorms = dao.getDorms(runId);
@@ -207,7 +204,7 @@ public class DormManager {
         }
     }
 
-    public void chanceOfEventDuringConstruction(String runId) {
+    private void chanceOfEventDuringConstruction(String runId) {
         String dormName = "";
         double chance = Math.random();
         if (chance < 0.25) {
@@ -231,6 +228,25 @@ public class DormManager {
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
+    }
+    static public List<DormitoryModel> getDorms(String runId){
+        String dormName = "";
+        List<DormitoryModel> dorms = dao.getDorms(runId);
+        for(DormitoryModel d : dorms){
+            d.setNumStudents(0);
+        }
+        List<StudentModel> students = studentDao.getStudents(runId);
+        for(StudentModel s : students){
+            dormName = s.getDorm();
+            for (DormitoryModel d : dorms) {
+                if (dormName.equals(d.getName())) {
+                    d.incrementNumStudents(1);
+                } else {
+                    logger.info("Dorm was not found.");
+                }
+            }
+        }
+        return dorms;
     }
 }
 

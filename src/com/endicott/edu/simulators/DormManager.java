@@ -22,7 +22,7 @@ public class DormManager {
             billRunningCostOfDorm(runId, hoursAlive, dorm);
             dorm.setHourLastUpdated(hoursAlive);
             if(dorm.getHoursToComplete() > 0){
-                dorm.setHoursToComplete(24);
+                dorm.setHoursToComplete(24, runId);
             }
         }
 
@@ -184,27 +184,35 @@ public class DormManager {
 
     }
 
-    public ArrayList checkAvailableDorms(String runId){
+    public List<DormitoryModel> checkAvailableDorms(String runId){
         CollegeDao collegeDao = new CollegeDao();
         CollegeModel college = collegeDao.getCollege(runId);
         int availableCash = college.getAvailableCash();
-        ArrayList<String> availableDormTypes = new ArrayList<>();
-        if(availableCash >= 100000){
-            //can build dorm type 1 (small)
-            availableDormTypes.add("Small");
+        List<DormitoryModel> availableDormTypes = null;
+        DormitoryModel smallDorm = new DormitoryModel();
+        smallDorm.setDormType(1);
+        DormitoryModel mediumDorm = new DormitoryModel();
+        mediumDorm.setDormType(2);
+        DormitoryModel largeDorm = new DormitoryModel();
+        largeDorm.setDormType(3);
+
+        if(availableCash >= 250000){
+            //can build dorm type all
+            availableDormTypes.add(smallDorm);
+            availableDormTypes.add(mediumDorm);
+            availableDormTypes.add(largeDorm);
             return availableDormTypes;
         }
         else if(availableCash >= 175000){
             //can build small and medium sized dorms
-            availableDormTypes.add("Small");
-            availableDormTypes.add("Medium");
+            availableDormTypes.add(smallDorm);
+            availableDormTypes.add(mediumDorm);
             return availableDormTypes;
         }
-        else if(availableCash >= 250000){
-            //can build small, medium, and large sized dorms
-            availableDormTypes.add("Small");
-            availableDormTypes.add("Medium");
-            availableDormTypes.add("Large");
+        else if(availableCash >=100000){
+            //can build small
+            availableDormTypes.add(smallDorm);
+
             return availableDormTypes;
         }
         else{
@@ -213,7 +221,7 @@ public class DormManager {
         }
     }
 
-    private void chanceOfEventDuringConstruction(String runId) {
+    public void chanceOfEventDuringConstruction(String runId) {
         String dormName = "";
         double chance = Math.random();
         if (chance < 0.25) {
@@ -231,7 +239,7 @@ public class DormManager {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(200, 10, "Hampshire Hall",
                 0, "none", 5, "none", 100);
-        dorm.setHoursToComplete(300);
+        dorm.setHoursToComplete(300, runId);
         dorm.setMaintenanceCostPerDay(60);
         dorm.setTotalBuildCost(100);
         DormitoryDao dormDao = new DormitoryDao();

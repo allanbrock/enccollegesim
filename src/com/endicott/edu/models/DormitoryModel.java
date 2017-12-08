@@ -1,5 +1,7 @@
 package com.endicott.edu.models;
 
+import com.endicott.edu.simulators.DormManager;
+
 import java.io.Serializable;
 
 public class DormitoryModel implements Serializable {
@@ -105,8 +107,10 @@ public class DormitoryModel implements Serializable {
         this.costPerDay = (((numRooms * 150))/(365*24));
 
     }
-    public void setHoursToComplete(int decrementHours){
+    public void setHoursToComplete(int decrementHours, String runId){
+        DormManager dormManager = new DormManager();
         this.hoursToComplete -= decrementHours;
+        dormManager.chanceOfEventDuringConstruction(runId);
         if(this.hoursToComplete < 0){
             hoursToComplete = 0;
         }

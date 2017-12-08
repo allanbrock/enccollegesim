@@ -54,7 +54,6 @@ public class SportService {
     /**
      *  Delete a sports team.
      * @param runId
-     * @param sportJson
      * @return
      */
     @DELETE
@@ -90,4 +89,11 @@ public class SportService {
 
     }
 
+    @GET
+    @Path("/rep/int/{runId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public void getOverallRep(@PathParam("runId") String runId) {
+        SportManager sportManager = new SportManager();
+        sportManager.calcRep(runId);
+    }
 }

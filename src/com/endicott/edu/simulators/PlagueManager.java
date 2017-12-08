@@ -51,18 +51,18 @@ public class PlagueManager {
         int numOfStudents = students.size();
         int probabilityOfStudentsGettingSick = (studentSickCount/numOfStudents)*100;
         //use probability to make more students sick
-//        Random rand = new Random();
-//        int x = rand.nextInt(6) + 5;
-//        if(x == 7){
-//            makeStudentSick(runId, currentDay);
-//        }
-        if(probabilityOfStudentsGettingSick >= 50){
+        Random rand = new Random();
+        int x = rand.nextInt(1) + 10;
+        if(x == 7){
             makeStudentSick(runId, currentDay);
-        } else if(probabilityOfStudentsGettingSick >= 30 && probabilityOfStudentsGettingSick < 50){
-            makeStudentSick(runId, currentDay);
-        } else if(probabilityOfStudentsGettingSick >= 0 && probabilityOfStudentsGettingSick <30){
-            makeStudentSick2(runId, currentDay);
         }
+//        if(probabilityOfStudentsGettingSick >= 50){
+//            makeStudentSick(runId, currentDay);
+//        } else if(probabilityOfStudentsGettingSick >= 30 && probabilityOfStudentsGettingSick < 50){
+//            makeStudentSick(runId, currentDay);
+//        } else if(probabilityOfStudentsGettingSick >= 0 && probabilityOfStudentsGettingSick <30){
+//            makeStudentSick2(runId, currentDay);
+//        }
 
         dao.saveAllStudents(runId, students);
     }

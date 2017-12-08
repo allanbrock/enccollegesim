@@ -48,27 +48,27 @@ public class SportManager {
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
-            result = new SportModel(12, 0, 20, 100, 0, 0, 0, 20, 50000, 50, 0, "Men's Basketball", runId, false, 48, "Male");
+            result = new SportModel(12, 0, 15, 100, 0, 0, 0, 20, 50000, 50, 0, "Men's Basketball", runId, false, 48, "Male");
             Accountant.payBill(runId, "Men's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Basketball")){
-            result  = new SportModel(12, 0, 20, 100, 0,0,0,20,50000,50,0,"Women's Basketball", runId, false,48, "Female");
+            result  = new SportModel(12, 0, 15, 100, 0,0,0,20,50000,50,0,"Women's Basketball", runId, false,48, "Female");
             Accountant.payBill(runId, "Women's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Baseball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,50,0,"Baseball", runId, false,48, "Male");
+            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Baseball", runId, false,48, "Male");
             Accountant.payBill(runId, "Baseball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Softball")){
-            result  = new SportModel(16, 0, 25, 100, 0,0,0,20,75000,50,0,"Softball", runId, false, 48,"Female");
+            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Softball", runId, false, 48,"Female");
             Accountant.payBill(runId, "Softball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Women's Soccer", runId, false,48, "Female" );
+            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Women's Soccer", runId, false,48, "Female" );
             Accountant.payBill(runId, "Women's Soccer start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 25, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Men's Soccer", runId, false, 48,"Male" );
+            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Men's Soccer", runId, false, 48,"Male" );
             Accountant.payBill(runId, "Men's Soccer start up fee", result.getStartupCost());
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
@@ -92,7 +92,13 @@ public class SportManager {
 
     public static void changeStatus(String runId, SportModel sport){
         if (sport.getCurrentPlayers() < sport.getMinPlayers()){
-            sport.setActive(false);
+            addPlayers(runId, sport);
+            if(sport.getCurrentPlayers() < sport.getMinPlayers()){
+                sport.setActive(false);
+            }
+            else{
+                sport.setActive(true);
+            }
         }
         else {
             sport.setActive(true);
@@ -207,31 +213,31 @@ public class SportManager {
         sport.setHoursUntilNextGame(48);
 
     }
-    public int calcRep(String runId){
+    public void calcRep(String runId){
         List<SportModel> sports = dao.getSports(runId);
         int averageRep = 0;
+        int activeSports = 0;
         for(SportModel sport: sports){
             if (sport.getActive()) {
+                activeSports++;
                 averageRep = sport.getReputation() + averageRep;
+                if (sports.size() >= 0) {
+                    sport.setOverallRep(averageRep / sports.size());
+                }
             }
         }
-        return (averageRep/sports.size());
     }
 
-    public int sportRep(SportModel sport, String runId){
-        if(sport.getReputation() >= 100){
+    public void sportRep(SportModel sport, String runId) {
+        if (sport.getReputation() >= 100) {
             sport.setReputation(100);
-        }
-        else if (sport.getReputation() <= 0) {
+        } else if (sport.getReputation() <= 0) {
             sport.setReputation(0);
-        }
-        else if (sport.getGamesWon() > sport.getGamesLost()){
+        } else if (sport.getGamesWon() > sport.getGamesLost()) {
             sport.setReputation(sport.getReputation() + 5);
-        }
-        else if (sport.getGamesWon() < sport.getGamesLost()) {
+        } else if (sport.getGamesWon() < sport.getGamesLost()) {
             sport.setReputation(sport.getReputation() - 5);
         }
-        return overallRep = calcRep(runId);
-
     }
 }
+

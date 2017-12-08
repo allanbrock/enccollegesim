@@ -12,7 +12,8 @@ public class SportModel implements Serializable {
     private int maxPlayers = 0;
     private int costPerDay = 0;
     private int hourLastUpdated = 0;
-    private int reputation = 100;
+    private int reputation = 50;
+    private int overallRep = 0;
     private int gamesWon = 0;
     private int gamesLost = 0;
     private int gamesTied = 0;
@@ -197,5 +198,9 @@ public class SportModel implements Serializable {
     public String getGender() { return gender; }
 
     public void setGender(String gender) { this.gender = gender; }
+
+    public int getOverallRep() { return overallRep; }
+
+    public void setOverallRep(int overallRep) { this.overallRep = overallRep; }
 
 }

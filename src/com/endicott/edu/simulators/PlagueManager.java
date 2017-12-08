@@ -16,6 +16,8 @@ import java.util.Random;
  */
 public class PlagueManager {
     PlagueDao dao = new PlagueDao();
+    private List<StudentModel> listOfStudentsSick;
+
 
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
@@ -43,15 +45,21 @@ public class PlagueManager {
                 studentGoodCount++;
             } else {
                 studentSickCount++;
+                listOfStudentsSick.add(students.get(i));
             }
         }
         int numOfStudents = students.size();
-        if(studentGoodCount == numOfStudents){
+        displayNoLongerSick(studentGoodCount, numOfStudents, runId, currentDay);
+
+
+        dao.saveAllStudents(runId, students);
+    }
+
+    private void displayNoLongerSick(int int1, int int2, String runId, int currentDay) {
+        if(int1 == int2){
             //students are not sick
             NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
         }
-
-        dao.saveAllStudents(runId, students);
     }
 
     private void makeStudentsBetter(String runId, int hoursAlive) {
@@ -60,14 +68,14 @@ public class PlagueManager {
         List<StudentModel> students = dao.getStudents(runId);
         for(int i = 0; i < students.size(); i++){
             StudentModel student = students.get(i);
-            int happiness = student.getHappinessLevel();
             if(students.get(i).getNumberHoursLeftBeingSick() > 0){
-                student.setHappinessLevel(happiness - 10);
                 int studentLastUpdated = students.get(i).getHourLastUpdated();
                 int timeChange = hoursAlive - studentLastUpdated;
                 int sickTime = students.get(i).getNumberHoursLeftBeingSick() - timeChange;
                 sickTime = Math.max(0,sickTime);
                 students.get(i).setNumberHoursLeftBeingSick(sickTime);
+                //if their sicktime <= 0 then increase athletic ability
+                //display students better here
             }
         }
 

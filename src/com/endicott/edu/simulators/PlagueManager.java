@@ -75,9 +75,7 @@ public class PlagueManager {
                 students.get(i).setNumberHoursLeftBeingSick(sickTime);
                 //if their sicktime <= 0 then increase athletic ability
                 //display students better here
-                if(sickTime <= 0){
-                    NewsManager.createNews(runId,hoursAlive, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-                }
+
             }
         }
 

@@ -46,16 +46,22 @@ public class PlagueManager {
                 studentGoodCount++;
             } else {
                 studentSickCount++;
-                listOfStudentsSick.add(students.get(i));
             }
         }
         int numOfStudents = students.size();
         int probabilityOfStudentsGettingSick = (studentSickCount/numOfStudents)*100;
         //use probability to make more students sick
-        Random rand = new Random();
-        int x = rand.nextInt(6) + 5;
-        if(x == 7){
+//        Random rand = new Random();
+//        int x = rand.nextInt(6) + 5;
+//        if(x == 7){
+//            makeStudentSick(runId, currentDay);
+//        }
+        if(probabilityOfStudentsGettingSick >= 50){
             makeStudentSick(runId, currentDay);
+        } else if(probabilityOfStudentsGettingSick >= 30 && probabilityOfStudentsGettingSick < 50){
+            makeStudentSick(runId, currentDay);
+        } else if(probabilityOfStudentsGettingSick >= 0 && probabilityOfStudentsGettingSick <30){
+            makeStudentSick2(runId, currentDay);
         }
 
         dao.saveAllStudents(runId, students);
@@ -141,6 +147,25 @@ public class PlagueManager {
         dao.saveAllStudents(runId, students);
 
     }
+    private static void makeStudentSick2(String runId, int currentDay) {
+        Random rand = new Random();
+
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+            if(rand.nextInt(13) + 1 > 9){
+                student.setNumberHoursLeftBeingSick(72);
+                NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+            } else {
+                student.setNumberHoursLeftBeingSick(0);
+            }
+        }
+
+        dao.saveAllStudents(runId, students);
+
+    }
+
 
     private boolean didItHappen(float oddsBetween0And1) {
         return (Math.random() < oddsBetween0And1);

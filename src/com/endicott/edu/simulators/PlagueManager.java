@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by abrocken on 7/29/2017.
+ * Created by dyannone on 7/29/2017.
  */
 public class PlagueManager {
     PlagueDao dao = new PlagueDao();
 
-    public int checkSick = 0;
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
 
@@ -37,21 +36,19 @@ public class PlagueManager {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
         int studentGoodCount = 0;
+        int studentSickCount = 0;
         for(int i = 0; i < students.size(); i++){
             StudentModel student = students.get(i);
             if(students.get(i).getNumberHoursLeftBeingSick() == 0){
                 studentGoodCount++;
+            } else {
+                studentSickCount++;
             }
         }
-        if(checkSick == 0){
-            int numOfStudents = students.size();
-            if(studentGoodCount == numOfStudents){
-                //students are not sick
-                checkSick = 1;
-                NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-            }
-        } else {
-            checkSick = 0;
+        int numOfStudents = students.size();
+        if(studentGoodCount == numOfStudents){
+            //students are not sick
+            NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
         }
 
         dao.saveAllStudents(runId, students);

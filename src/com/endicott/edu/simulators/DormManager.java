@@ -21,12 +21,20 @@ public class DormManager {
         for (DormitoryModel dorm : dorms) {
             billRunningCostOfDorm(runId, hoursAlive, dorm);
             dorm.setHourLastUpdated(hoursAlive);
-            if(dorm.getHoursToComplete() > 0){
-                dorm.setHoursToComplete(24, runId);
-            }
+            workOnDorm(dorm, 24, runId);
         }
 
         dao.saveAllDorms(runId, dorms);
+    }
+
+    public void workOnDorm(DormitoryModel dorm, int decrementHours, String runId){
+        if (dorm.getHourLastUpdated() > 0) {
+            int left = dorm.getHoursToComplete() - decrementHours;
+            left = Math.max(0, left);
+            dorm.setHoursToComplete(left);
+
+            chanceOfEventDuringConstruction(runId);
+        }
     }
 
     private static void setDormAttributesByDormType(DormitoryModel temp) {
@@ -70,6 +78,12 @@ public class DormManager {
         temp.setReputation(5);
         temp.setCurDisaster("none");
         temp.setMaintenanceCostPerDay(temp.getNumRooms());
+
+        if (temp.getTotalBuildCost() >= Accountant.getBalance(runId)) {
+            temp.setNote("Not enough money to build it.");
+            return temp;
+        }
+
         Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
         NewsManager.createNews(runId, hoursAlive, "Construction of " + dormName +" dorm has started! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
         DormitoryDao dormDao = new DormitoryDao();
@@ -77,8 +91,6 @@ public class DormManager {
 
         dormDao.saveNewDorm(runId, temp);
         return temp;
-
-
     }
 
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
@@ -239,13 +251,14 @@ public class DormManager {
         logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(200, 10, "Hampshire Hall",
                 0, "none", 5, "none", 100);
-        dorm.setHoursToComplete(300, runId);
+        dorm.setHoursToComplete(0);
         dorm.setMaintenanceCostPerDay(60);
         dorm.setTotalBuildCost(100);
         DormitoryDao dormDao = new DormitoryDao();
         dormDao.saveNewDorm(runId, dorm);
         NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
     }
+
     static public List<DormitoryModel> getDorms(String runId){
         String dormName = "";
         List<DormitoryModel> dorms = dao.getDorms(runId);

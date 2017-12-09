@@ -107,18 +107,11 @@ public class DormitoryModel implements Serializable {
         this.costPerDay = (((numRooms * 150))/(365*24));
 
     }
-    public void setHoursToComplete(int decrementHours, String runId){
-        DormManager dormManager = new DormManager();
-        this.hoursToComplete -= decrementHours;
-        dormManager.chanceOfEventDuringConstruction(runId);
-        if(this.hoursToComplete < 0){
-            hoursToComplete = 0;
-        }
-    }
 
     public int getHoursToComplete() {
         return this.hoursToComplete;
     }
+
     public void setTotalBuildCost(int numRooms){
         this.totalBuildCost = numRooms * 1000;
     }
@@ -176,5 +169,9 @@ public class DormitoryModel implements Serializable {
     }
     public void incrementNumStudents(int increment){
         this.numStudents += increment;
+    }
+
+    public void setHoursToComplete(int hoursToComplete) {
+        this.hoursToComplete = hoursToComplete;
     }
 }

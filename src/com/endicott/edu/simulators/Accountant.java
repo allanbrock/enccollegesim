@@ -24,5 +24,11 @@ public class Accountant {
         collegeDao.saveCollege(college);
         NewsManager.createFinancialNews(runId, college.getHoursAlive(),message, + amount);
     }
+
+    public static int getBalance(String runId) {
+        CollegeDao collegeDao = new CollegeDao();
+        CollegeModel college = collegeDao.getCollege(runId);
+        return college.getAvailableCash();
+    }
 }
 

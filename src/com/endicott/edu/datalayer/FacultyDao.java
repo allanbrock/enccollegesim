@@ -60,15 +60,8 @@ public class FacultyDao {
      * @param member faculty object
      */
     public void saveNewFaculty(String runId, FacultyModel member) {
-       // logger.info("Saving new faculty...");
         List<FacultyModel> faculty = getFaculty(runId);
         member.setRunId(runId);
-        if(member.getFacultyID() ==  -1){
-            member.setFacultyID(IdNumberGenDao.firstWrite(runId));
-        } else {
-            member.setFacultyID(IdNumberGenDao.getID(runId));
-        }
-        //logger.info("Creating faculty with ID: " + member.getFacultyID());
         faculty.add(member);
         saveAllFaculty(runId, faculty);
     }

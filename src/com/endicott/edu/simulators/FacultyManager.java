@@ -1,6 +1,8 @@
 package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.FacultyDao;
+import com.endicott.edu.datalayer.IdNumberGenDao;
+import com.endicott.edu.datalayer.NameGenDao;
 import com.endicott.edu.models.FacultyModel;
 import com.endicott.edu.models.NewsType;
 
@@ -36,9 +38,14 @@ public class FacultyManager {
      * @param runId instance of the simulation
      */
    public static void establishCollege(String runId){
-       FacultyModel member = new FacultyModel("Dr. Jake Test","Dean","Science","LSB",runId);
-       member.setFacultyID(-1); //set the id to -1 so we know this is the first id we set
+
+       FacultyModel member;
        FacultyDao fao = new FacultyDao();
-       fao.saveNewFaculty(runId,member);
+
+       for (int i=0; i<10; i++) {
+           member = new FacultyModel("Dr. " + NameGenDao.generateName(false), "Dean", "Science", "LSB", runId);
+           member.setFacultyID(IdNumberGenDao.getID(runId));
+           fao.saveNewFaculty(runId, member);
+       }
    }
 }

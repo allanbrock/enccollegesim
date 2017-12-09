@@ -48,27 +48,27 @@ public class SportManager {
         SportModel result = null;
 
         if (sportName.equals("Men's Basketball")){
-            result = new SportModel(12, 0, 15, 100, 0, 0, 0, 20, 50000, 50, 0, "Men's Basketball", runId, false, 48, "Male");
+            result = new SportModel(12, 0, 15, 100, 0, 0, 0, 20, 50000, 50, 0, "Men's Basketball", runId, 0, 48, "Male");
             Accountant.payBill(runId, "Men's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Basketball")){
-            result  = new SportModel(12, 0, 15, 100, 0,0,0,20,50000,50,0,"Women's Basketball", runId, false,48, "Female");
+            result  = new SportModel(12, 0, 15, 100, 0,0,0,20,50000,50,0,"Women's Basketball", runId, 0,48, "Female");
             Accountant.payBill(runId, "Women's Basketball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Baseball")){
-            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Baseball", runId, false,48, "Male");
+            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Baseball", runId, 0,48, "Male");
             Accountant.payBill(runId, "Baseball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Softball")){
-            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Softball", runId, false, 48,"Female");
+            result  = new SportModel(16, 0, 20, 100, 0,0,0,20,75000,50,0,"Softball", runId, 0, 48,"Female");
             Accountant.payBill(runId, "Softball start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Women's Soccer")){
-            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Women's Soccer", runId, false,48, "Female" );
+            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Women's Soccer", runId, 0,48, "Female" );
             Accountant.payBill(runId, "Women's Soccer start up fee", result.getStartupCost());
         }
         else if(sportName.equals("Men's Soccer")){
-            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Men's Soccer", runId, false, 48,"Male" );
+            result  = new SportModel(15,0, 20, 100, 0, 0, 0 , 20 , 50000, 50, 0, "Men's Soccer", runId, 0, 48,"Male" );
             Accountant.payBill(runId, "Men's Soccer start up fee", result.getStartupCost());
         } else {
             logger.severe("Could not add sport: '" + sportName + "'");
@@ -94,14 +94,14 @@ public class SportManager {
         if (sport.getCurrentPlayers() < sport.getMinPlayers()){
             addPlayers(runId, sport);
             if(sport.getCurrentPlayers() < sport.getMinPlayers()){
-                sport.setActive(false);
+                sport.setActive(0);
             }
             else{
-                sport.setActive(true);
+                sport.setActive(1);
             }
         }
         else {
-            sport.setActive(true);
+            sport.setActive(1);
         }
     }
 
@@ -218,7 +218,7 @@ public class SportManager {
         int averageRep = 0;
         int activeSports = 0;
         for(SportModel sport: sports){
-            if (sport.getActive()) {
+            if (sport.getIsActive() >= 1) {
                 activeSports++;
                 averageRep = sport.getReputation() + averageRep;
                 if (sports.size() >= 0) {

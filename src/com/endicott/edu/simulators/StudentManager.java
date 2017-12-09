@@ -17,6 +17,10 @@ public class StudentManager {
     public static int studentsAdmitted = 0;
     public static int studentsWithdrawn = 0;
 
+    public void establishCollege(String runId) {
+        addNewStudents(runId, college.getCurrentDay()/24, true);
+        recalculateStudentStatistics(runId);
+    }
 
     public  void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
@@ -25,6 +29,11 @@ public class StudentManager {
         removeStudents(runId, hoursAlive);
         updateStudentsTime(hoursAlive);
         dao.saveAllStudents(runId, students);
+
+        recalculateStudentStatistics(runId);
+    }
+
+    public void recalculateStudentStatistics(String runId) {
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
@@ -99,15 +108,10 @@ public class StudentManager {
             }
         }
 
-
-
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
             NewsManager.createNews(runId, hoursAlive, Integer.toString(currentSize - students.size()) + " students withdrew from college.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
         }
-
-
-
     }
 
     private boolean didItHappen(float oddsBetween0And1) {
@@ -128,7 +132,6 @@ public class StudentManager {
         happinessLevel = Math.max(0,happinessSum / students.size());
 
         return happinessLevel;
-
     }
 
     private void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
@@ -155,8 +158,8 @@ public class StudentManager {
 
     }
 
-    private int updateStudentFacultyRatio(){
-        return students.size()/faculty.size();
+    private int updateStudentFacultyRatio() {
+        return students.size() / faculty.size();
     }
 
     private float calculateCollegeScore(){

@@ -23,6 +23,10 @@ public class CollegeManager {
         college.setYearlyTuitionCost(amount); //set the amount via setter
         cao.saveCollege(college); //write to disk
         NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS,NewsLevel.GOOD_NEWS);
+
+        StudentManager studentManager = new StudentManager();
+        studentManager.recalculateStudentStatistics(runId);
+
         return college;
     }
 
@@ -49,11 +53,10 @@ public class CollegeManager {
         NewsManager.createNews(runId, college.getCurrentDay(),"The college was established today.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
 
         DormManager.establishCollege(runId, college);
-
         FacultyManager.establishCollege(runId);
 
         StudentManager studentManager = new StudentManager();
-        studentManager.addNewStudents(runId, college.getCurrentDay()/24, true);
+        studentManager.establishCollege(runId);
 
         PlagueManager.establishCollege(runId);
         FloodManager.establishCollege(runId);
@@ -75,7 +78,6 @@ public class CollegeManager {
         IdNumberGenDao.deleteIDs(runId);
         StudentManager.studentsAdmitted = 0;
         StudentManager.studentsWithdrawn = 0;
-
     }
 
     static public CollegeModel nextDay(String runId) {
@@ -105,7 +107,6 @@ public class CollegeManager {
 
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);
-
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 

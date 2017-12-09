@@ -72,7 +72,7 @@ public class DormServices {
     @GET
     @Path("/{runId}/{command}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<String> getAvailableDorms(@PathParam("runId") String runId, @PathParam("command") String command){
+    public List<DormitoryModel> getAvailableDorms(@PathParam("runId") String runId, @PathParam("command") String command){
         DormManager dormManager = new DormManager();
         if (command.equalsIgnoreCase("available")) {
             return dormManager.checkAvailableDorms(runId);

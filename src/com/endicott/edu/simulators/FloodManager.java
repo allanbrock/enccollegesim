@@ -48,7 +48,7 @@ public class FloodManager {
 
         // Comment out and using a fixed value for the time being (change later)
         // int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId,"Flood cost for dorm " + dorm.getName() + " Cost is $ " + 1000, 1000);
+        Accountant.payBill(runId,"Flood cleanup cost for dorm " + dorm.getName(), 1000);
 
     }
 

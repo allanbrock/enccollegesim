@@ -96,7 +96,6 @@ public class PlagueManager {
     }
 
     private void makeStudentsBetter(String runId, int hoursAlive) {
-
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
         for(int i = 0; i < students.size(); i++){
@@ -114,14 +113,11 @@ public class PlagueManager {
         }
 
         dao.saveAllStudents(runId, students);
-
     }
 
 
 
     static public void establishCollege(String runId){
-        // Create a plague
-        // Make students sick.
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 0, 0, 1000, 72, 0);
         PlagueDao plagueDao = new PlagueDao();
         plagueDao.saveNewPlague(runId, plague);
@@ -134,19 +130,29 @@ public class PlagueManager {
 
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
+        int nSick = 0;
+        String someoneSick = "";
+
         for(int i = 0; i < students.size(); i++){
             StudentModel student = students.get(i);
             if(rand.nextInt(10) + 1 > 9){
                 student.setNumberHoursLeftBeingSick(72);
-                NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+                nSick++;
+                someoneSick = student.getName();
             } else {
                 student.setNumberHoursLeftBeingSick(0);
             }
         }
 
-        dao.saveAllStudents(runId, students);
+        if (nSick == 1) {
+            NewsManager.createNews(runId,currentDay, "Student " + someoneSick + " has fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+        } else if (nSick > 1) {
+            NewsManager.createNews(runId,currentDay, "Student " + someoneSick + " and " + (nSick-1) + " others have fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+        }
 
+        dao.saveAllStudents(runId, students);
     }
+
     private static void makeStudentSick2(String runId, int currentDay) {
         Random rand = new Random();
 

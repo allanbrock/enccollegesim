@@ -76,8 +76,6 @@ public class CollegeManager {
         SportsDao.deleteSports(runId);
         StudentDao.deleteStudents(runId);
         IdNumberGenDao.deleteIDs(runId);
-        StudentManager.studentsAdmitted = 0;
-        StudentManager.studentsWithdrawn = 0;
     }
 
     static public CollegeModel nextDay(String runId) {

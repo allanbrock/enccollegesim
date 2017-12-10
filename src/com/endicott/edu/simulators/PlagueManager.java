@@ -22,47 +22,100 @@ public class PlagueManager {
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
 
+        int hoursLeftInPlague = 0;
+        // This is a loop, but we only have one plague at most.
         for (PlagueModel plague : plagues) {
             int timePassed = hoursAlive - plague.getHourLastUpdated();
             plague.setHourLastUpdated(hoursAlive);
-            int hoursLeftInPlague = plague.getNumberOfHoursLeftInPlague() - timePassed;
+            hoursLeftInPlague = Math.max(0,plague.getNumberOfHoursLeftInPlague() - timePassed);
             plague.setNumberOfHoursLeftInPlague(hoursLeftInPlague);
         }
 
-        dao.saveAllPlagues(runId, plagues);
         makeStudentsBetter(runId, hoursAlive);
-        makeMoreStudentsSick(runId, hoursAlive);
         extendStudentSickTime(runId, hoursAlive);
+
+        if (hoursLeftInPlague > 0) {
+            plagueSpreadsThroughStudents(runId, hoursAlive, hoursLeftInPlague, getNumberSick(runId));
+        } else {
+            // Decide if there should be a new plague.
+            Random rand = new Random();
+            if (rand.nextInt(10) >= 8) {
+                refreshPlague(plagues);
+            }
+        }
+
+        dao.saveAllPlagues(runId, plagues);
     }
 
-    private void makeMoreStudentsSick(String runId, int currentDay) {
+    private void refreshPlague(List<PlagueModel> plagues) {
+        Random rand = new Random();
+        int plagueLengthInHours = rand.nextInt(72) + 72;
+
+        for (PlagueModel plague : plagues) {
+            plague.setNumberOfHoursLeftInPlague(plagueLengthInHours);
+        }
+    }
+
+    private int getNumberSick(String runId) {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
-        int studentGoodCount = 0;
         int studentSickCount = 0;
         for(int i = 0; i < students.size(); i++){
             StudentModel student = students.get(i);
-            if(students.get(i).getNumberHoursLeftBeingSick() == 0){
-                studentGoodCount++;
-            } else {
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
                 studentSickCount++;
             }
         }
-        int numOfStudents = students.size();
-        int probabilityOfStudentsGettingSick = (studentSickCount/numOfStudents)*100;
-        //use probability to make more students sick
+
+        return studentSickCount;
+    }
+
+    static public void establishCollege(String runId){
+        int hoursInPlague = createPlaque(runId);
+        plagueSpreadsThroughStudents(runId, 0, hoursInPlague, 0);
+    }
+
+    static private int createPlaque(String runId) {
         Random rand = new Random();
-        int x = rand.nextInt(1) + 10;
-        if(x == 7){
-            makeStudentSick(runId, currentDay);
+        int plagueLengthInHours = rand.nextInt(48) + 36;
+        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall",
+                "none", 0, 0, 1000, plagueLengthInHours, 0);
+        PlagueDao plagueDao = new PlagueDao();
+        plagueDao.saveNewPlague(runId, plague);
+        return plagueLengthInHours;
+    }
+
+    private static void plagueSpreadsThroughStudents(String runId, int currentHour, int hoursLeftInPlague, int studentSickCount) {
+        StudentDao dao = new StudentDao();
+        List<StudentModel> students = dao.getStudents(runId);
+        int nSick = 0;
+        String someoneSick = "";
+
+        if (students.size() <= 0) {
+            return;
         }
-//        if(probabilityOfStudentsGettingSick >= 50){
-//            makeStudentSick(runId, currentDay);
-//        } else if(probabilityOfStudentsGettingSick >= 30 && probabilityOfStudentsGettingSick < 50){
-//            makeStudentSick(runId, currentDay);
-//        } else if(probabilityOfStudentsGettingSick >= 0 && probabilityOfStudentsGettingSick <30){
-//            makeStudentSick2(runId, currentDay);
-//        }
+
+        int probCatchesFromOthers = (studentSickCount * 100)/students.size();
+        int probCatchesFromOutside = 10; // out of 100
+        int totalProb = Math.min(100,probCatchesFromOthers + probCatchesFromOutside);
+        Random rand = new Random();
+
+        for(int i = 0; i < students.size(); i++){
+            StudentModel student = students.get(i);
+             if(rand.nextInt(100) <= totalProb){
+                student.setNumberHoursLeftBeingSick(hoursLeftInPlague);
+                nSick++;
+                someoneSick = student.getName();
+            } else {
+                student.setNumberHoursLeftBeingSick(0);
+            }
+        }
+
+        if (nSick == 1) {
+            NewsManager.createNews(runId,currentHour, "Student " + someoneSick + " has fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+        } else if (nSick > 1) {
+            NewsManager.createNews(runId,currentHour, "Student " + someoneSick + " and " + (nSick-1) + " others have fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
+        }
 
         dao.saveAllStudents(runId, students);
     }
@@ -88,13 +141,6 @@ public class PlagueManager {
         dao.saveAllStudents(runId, students);
     }
 
-    private void displayNoLongerSick(int int1, int int2, String runId, int currentDay) {
-        if(int1 == int2){
-            //students are not sick
-            NewsManager.createNews(runId,currentDay, "Students are no longer sick", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
-        }
-    }
-
     private void makeStudentsBetter(String runId, int hoursAlive) {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -113,67 +159,5 @@ public class PlagueManager {
         }
 
         dao.saveAllStudents(runId, students);
-    }
-
-
-
-    static public void establishCollege(String runId){
-        PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall","none", 0, 0, 1000, 72, 0);
-        PlagueDao plagueDao = new PlagueDao();
-        plagueDao.saveNewPlague(runId, plague);
-        makeStudentSick(runId, 0);
-
-    }
-
-    private static void makeStudentSick(String runId, int currentDay) {
-        Random rand = new Random();
-
-        StudentDao dao = new StudentDao();
-        List<StudentModel> students = dao.getStudents(runId);
-        int nSick = 0;
-        String someoneSick = "";
-
-        for(int i = 0; i < students.size(); i++){
-            StudentModel student = students.get(i);
-            if(rand.nextInt(10) + 1 > 9){
-                student.setNumberHoursLeftBeingSick(72);
-                nSick++;
-                someoneSick = student.getName();
-            } else {
-                student.setNumberHoursLeftBeingSick(0);
-            }
-        }
-
-        if (nSick == 1) {
-            NewsManager.createNews(runId,currentDay, "Student " + someoneSick + " has fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
-        } else if (nSick > 1) {
-            NewsManager.createNews(runId,currentDay, "Student " + someoneSick + " and " + (nSick-1) + " others have fallen ill.", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
-        }
-
-        dao.saveAllStudents(runId, students);
-    }
-
-    private static void makeStudentSick2(String runId, int currentDay) {
-        Random rand = new Random();
-
-        StudentDao dao = new StudentDao();
-        List<StudentModel> students = dao.getStudents(runId);
-        for(int i = 0; i < students.size(); i++){
-            StudentModel student = students.get(i);
-            if(rand.nextInt(13) + 1 > 9){
-                student.setNumberHoursLeftBeingSick(72);
-                NewsManager.createNews(runId,currentDay, student.getName() + " is sick", NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
-            } else {
-                student.setNumberHoursLeftBeingSick(0);
-            }
-        }
-
-        dao.saveAllStudents(runId, students);
-
-    }
-
-
-    private boolean didItHappen(float oddsBetween0And1) {
-        return (Math.random() < oddsBetween0And1);
     }
 }

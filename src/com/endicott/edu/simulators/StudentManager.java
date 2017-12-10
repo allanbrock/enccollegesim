@@ -14,8 +14,6 @@ public class StudentManager {
     private List<StudentModel> students;
     private List<FacultyModel> faculty;
     private Random rand = new Random();
-    public static int studentsAdmitted = 0;
-    public static int studentsWithdrawn = 0;
 
     public void establishCollege(String runId) {
         addNewStudents(runId, college.getCurrentDay()/24, true);
@@ -39,7 +37,14 @@ public class StudentManager {
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
         college.setStudentFacultyRatio(updateStudentFacultyRatio());
         college.setCollegeScore(calculateCollegeScore());
-        college.setStudentRetentionRate(((studentsAdmitted - studentsWithdrawn)*100)/studentsAdmitted);
+
+        int retentionRate = 100;
+        if (college.getNumberStudentsAdmitted() > 0) {
+            retentionRate =
+                    Math.max(((college.getNumberStudentsAdmitted() - college.getNumberStudentsWithdrew()) * 100)/
+                            college.getNumberStudentsAdmitted(), 0);
+        }
+        college.setRetentionRate(retentionRate);
         collegeDao.saveCollege(college);
     }
 
@@ -83,20 +88,26 @@ public class StudentManager {
             student.setDorm(dormManager.assignDorm(runId));
             student.setRunId(runId);
             students.add(student);
-            studentsAdmitted++;
             dao.saveAllStudents(runId, students);
         }
 
-        NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
+        college = collegeDao.getCollege(runId);
+        college.setNumberStudentsAdmitted(college.getNumberStudentsAdmitted() + numNewStudents);
+        collegeDao.saveCollege(college);
 
+        if (numNewStudents > 0) {
+            NewsManager.createNews(runId, hoursAlive, Integer.toString(numNewStudents) + " students joined the college.", NewsType.COLLEGE_NEWS, NewsLevel.GOOD_NEWS);
+        }
     }
 
     private void removeStudents(String runId, int hoursAlive) {
-        float scalingFactor = .001f;
+        float scalingFactor = .0001f;
         int currentSize = students.size();
 
         // scroll through students list and remove student based upon a probability determined by their happiness level
         // the lower the happiness the greater the chance they have of withdrawing
+        int studentsWithdrawn = 0;
+
         for (int i = 0; i < students.size(); i++){
             int h = students.get(i).getHappinessLevel();
             float odds = (100f - h) * scalingFactor;
@@ -104,9 +115,12 @@ public class StudentManager {
                 dormManager.removeStudent(runId, students.get(i).getDorm());
                 students.remove(i);
                 studentsWithdrawn++;
-
             }
         }
+
+        college = collegeDao.getCollege(runId);
+        college.setNumberStudentsWithdrew(college.getNumberStudentsWithdrew() + studentsWithdrawn);
+        collegeDao.saveCollege(college);
 
         // Don't create a news story if no students leave
         if ((currentSize - students.size()) > 0) {
@@ -144,10 +158,11 @@ public class StudentManager {
         for(int i = 0; i < students.size(); i++){
 
             if(students.get(i).getNumberHoursLeftBeingSick() > 0){
-                sicknessAffect = - students.get(i).getHappinessLevel()/10;
+                sicknessAffect = (int) -(0.5 * students.get(i).getHappinessLevel());
             }
 
-            students.get(i).setHappinessLevel(students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect);
+            students.get(i).setHappinessLevel(
+                    Math.min(100,students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect));
         }
     }
 

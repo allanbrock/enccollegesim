@@ -80,6 +80,7 @@ public class SportManager {
         changeStatus(runId, result);
         return result;
     }
+
     public static void countPlayers(String runId, SportModel sport){
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -229,15 +230,16 @@ public class SportManager {
     }
 
     public void sportRep(SportModel sport, String runId) {
-        if (sport.getReputation() >= 100) {
-            sport.setReputation(100);
-        } else if (sport.getReputation() <= 0) {
-            sport.setReputation(0);
-        } else if (sport.getGamesWon() > sport.getGamesLost()) {
+        if (sport.getGamesWon() > sport.getGamesLost()) {
             sport.setReputation(sport.getReputation() + 5);
         } else if (sport.getGamesWon() < sport.getGamesLost()) {
             sport.setReputation(sport.getReputation() - 5);
         }
+
+        int rep = sport.getReputation();
+        rep = Math.max(rep, 0);
+        rep = Math.min(rep, 100);
+        sport.setReputation(rep);
     }
 }
 

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by abrocken on 7/29/2017.
  */
 public class FloodManager {
-    private static final float PROBABILTY_OF_FLOOD = 0.003f;
+    private static final float PROBABILTY_OF_FLOOD = 0.003f / 12;
     FloodDao dao = new FloodDao();
     DormitoryDao dormDao = new DormitoryDao();
 
@@ -19,20 +19,24 @@ public class FloodManager {
         List<FloodModel> floods = dao.getFloods(runId);
         List<DormitoryModel> dorms = dormDao.getDorms(runId);
 
-        if(floods.size() <= 0) {
+        if (floods.size() <= 0) {
             for (DormitoryModel dorm : dorms) {
-                checkForFlood(runId, hoursAlive, dorm);
+                if (dorm.getHoursToComplete() > 0) {
+
+                } else {
+                    checkForFlood(runId, hoursAlive, dorm);
+                }
             }
-        }else{
+        } else {
             for (DormitoryModel dorm : dorms) {
                 billCostOfFlood(runId, hoursAlive, dorm);
             }
-            for (FloodModel flood : floods){
+            for (FloodModel flood : floods) {
                 int elapsedTime = hoursAlive - flood.getHourLastUpdated();
-                int timeLeft = Math.max(0,flood.getHoursLeftInFlood() - elapsedTime);
-                if(timeLeft <= 0){
+                int timeLeft = Math.max(0, flood.getHoursLeftInFlood() - elapsedTime);
+                if (timeLeft <= 0) {
                     dao.deleteFloods(runId);
-                }else{
+                } else {
                     flood.setHoursLeftInFlood(timeLeft);
                     dao.saveAllFloods(runId, floods);
                 }
@@ -58,16 +62,14 @@ public class FloodManager {
         float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
         if (didItHappen(oddsThatBurnedDown)) {
             DormManager dormMan = new DormManager();
+            int randomCost = (int)(Math.random()*1500) + 1000 ;
+            int randomLength = (int) (Math.random() * 72) + 24;
 
-            int randomCost = (int)(Math.random()*2500);
-            if(randomCost < 1000){
-                randomCost = randomCost + 1000;
-            }
-            
+            FloodModel flood = new FloodModel(randomCost, randomLength, randomLength, dorm.getHourLastUpdated(), dorm.getName(), runId);
+            FloodDao floodDao = new FloodDao();
+            floodDao.saveNewFlood(runId, flood);
 
-            FloodModel flood = new FloodModel(randomCost,72, 72, dorm.getHourLastUpdated(), dorm.getName(), runId);
             NewsManager.createNews(runId, hoursAlive, "Flooding detected at " + flood.getDormName(), NewsType.COLLEGE_NEWS, NewsLevel.BAD_NEWS);
-
             Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName(), flood.getCostOfFlood());
 
             dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
@@ -81,8 +83,8 @@ public class FloodManager {
     }
 
     public static void establishCollege(String runId){
-        FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
-        FloodDao floodDao = new FloodDao();
-        floodDao.saveNewFlood(runId, flood);
+       // FloodModel flood = new FloodModel(0 ,0,  0, 0, "none", runId);
+        //FloodDao floodDao = new FloodDao();
+        //floodDao.saveNewFlood(runId, flood);
     }
 }

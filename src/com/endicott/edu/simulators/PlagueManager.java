@@ -77,7 +77,7 @@ public class PlagueManager {
 
     static private int createPlaque(String runId) {
         Random rand = new Random();
-        int plagueLengthInHours = rand.nextInt(48) + 36;
+        int plagueLengthInHours = 0;  // We are just setting up the structure.  No length to this plague.
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall",
                 "none", 0, 0, 1000, plagueLengthInHours, 0);
         PlagueDao plagueDao = new PlagueDao();

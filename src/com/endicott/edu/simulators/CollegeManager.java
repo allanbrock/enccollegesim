@@ -106,6 +106,9 @@ public class CollegeManager {
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);
 
+        FloodManager floodManager1 = new FloodManager();
+        floodManager.handleTimeChange(runId, hoursAlive);
+
         FacultyManager.handleTimeChange(runId,hoursAlive);
 
         return college;

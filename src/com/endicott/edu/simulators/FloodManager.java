@@ -2,7 +2,6 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.FloodDao;
-import com.endicott.edu.datalayer.NewsFeedDao;
 import com.endicott.edu.models.*;
 
 import java.util.List;
@@ -11,39 +10,46 @@ import java.util.List;
  * Created by abrocken on 7/29/2017.
  */
 public class FloodManager {
-    private static final float PROBABILTY_OF_FLOOD = 0.003f / 12;
-    FloodDao dao = new FloodDao();
+    private static final float PROBABILTY_OF_FLOOD = 0.05f;
+    FloodDao floodDao = new FloodDao();
     DormitoryDao dormDao = new DormitoryDao();
 
     public void handleTimeChange(String runId, int hoursAlive) {
-        List<FloodModel> floods = dao.getFloods(runId);
+        List<FloodModel> floods = floodDao.getFloods(runId);
         List<DormitoryModel> dorms = dormDao.getDorms(runId);
 
         if (floods.size() <= 0) {
             for (DormitoryModel dorm : dorms) {
-                if (dorm.getHoursToComplete() > 0) {
-
-                } else {
-                    checkForFlood(runId, hoursAlive, dorm);
+                if (dorm.getHoursToComplete() <= 0) {
+                    boolean didFloodStart = possiblyStartFloodInDorm(runId, hoursAlive, dorm);
+                    if (didFloodStart) {
+                        return;  // only one flood at a time.
+                    }
                 }
             }
-        } else {
-            for (DormitoryModel dorm : dorms) {
-                billCostOfFlood(runId, hoursAlive, dorm);
-            }
-            for (FloodModel flood : floods) {
-                int elapsedTime = hoursAlive - flood.getHourLastUpdated();
-                int timeLeft = Math.max(0, flood.getHoursLeftInFlood() - elapsedTime);
-                if (timeLeft <= 0) {
-                    dao.deleteFloods(runId);
-                } else {
-                    flood.setHoursLeftInFlood(timeLeft);
-                    dao.saveAllFloods(runId, floods);
-                }
-
-            }
+            return;
         }
-        dao.saveAllFloods(runId, floods);
+
+
+        for (FloodModel flood : floods) {
+            String floodedDorm = flood.getDormName();
+            for (DormitoryModel dorm : dorms) {
+                if (dorm.getName().compareTo(floodedDorm) == 0)
+                    billCostOfFlood(runId, hoursAlive, dorm);
+            }
+
+            int elapsedTime = hoursAlive - flood.getHourLastUpdated();
+            int timeLeft = Math.max(0, flood.getHoursLeftInFlood() - elapsedTime);
+            if (timeLeft <= 0) {
+                floodDao.deleteFloods(runId);
+                return;
+            } else {
+                flood.setHoursLeftInFlood(timeLeft);
+            }
+
+        }
+        floodDao.saveAllFloods(runId, floods);
+
     }
 
 
@@ -58,9 +64,9 @@ public class FloodManager {
 
 
     // Checks to see if a flood happened
-    private void checkForFlood(String runId, int hoursAlive, DormitoryModel dorm) {
-        float oddsThatBurnedDown = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
-        if (didItHappen(oddsThatBurnedDown)) {
+    private boolean possiblyStartFloodInDorm(String runId, int hoursAlive, DormitoryModel dorm) {
+        float oddsOfFlood = (hoursAlive - dorm.getHourLastUpdated()) * PROBABILTY_OF_FLOOD;
+        if (didItHappen(oddsOfFlood)) {
             DormManager dormMan = new DormManager();
             int randomCost = (int)(Math.random()*1500) + 1000 ;
             int randomLength = (int) (Math.random() * 72) + 24;
@@ -73,8 +79,10 @@ public class FloodManager {
             Accountant.payBill(runId, "Flood cost for dorm " + dorm.getName(), flood.getCostOfFlood());
 
             dormMan.floodAlert(hoursAlive , dorm.getName(), runId);
-
+            return true;
         }
+
+        return false;
     }
 
     private boolean didItHappen(float oddsBetween0And1

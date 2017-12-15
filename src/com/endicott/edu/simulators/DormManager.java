@@ -200,7 +200,8 @@ public class DormManager {
         CollegeDao collegeDao = new CollegeDao();
         CollegeModel college = collegeDao.getCollege(runId);
         int availableCash = college.getAvailableCash();
-        List<DormitoryModel> availableDormTypes = null;
+        //List<DormitoryModel> availableDormTypes = null;
+        ArrayList<DormitoryModel> availableDormTypes = new ArrayList<>();
         DormitoryModel smallDorm = new DormitoryModel();
         smallDorm.setDormType(1);
         DormitoryModel mediumDorm = new DormitoryModel();

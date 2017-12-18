@@ -5,6 +5,7 @@ import com.endicott.edu.datalayer.FloodDao;
 import com.endicott.edu.models.*;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by abrocken on 7/29/2017.
@@ -55,10 +56,8 @@ public class FloodManager {
 
     // Charges the college for the dorm flooding
     private void billCostOfFlood(String runId, int hoursAlive, DormitoryModel dorm) {
-
-        // Comment out and using a fixed value for the time being (change later)
-        // int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
-        Accountant.payBill(runId,"Flood cleanup cost for dorm " + dorm.getName(), 1000);
+        Random rand = new Random();
+        Accountant.payBill(runId,"Flood cleanup cost for dorm " + dorm.getName(), rand.nextInt(500) + 500);
 
     }
 

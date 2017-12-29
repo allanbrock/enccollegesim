@@ -3,6 +3,10 @@ package com.endicott.edu.simulators;
 import com.endicott.edu.datalayer.EventsDao;
 import com.endicott.edu.models.EventsModel;
 
+/**
+ * Responsible for simulating social vents at the college, for example
+ * homecoming, holiday events, etc.
+ */
 public class EventManager {
     private static EventsDao dao = new EventsDao();
 

@@ -1,6 +1,5 @@
 package com.endicott.edu.simulators;
 
-
 import com.endicott.edu.datalayer.PlagueDao;
 import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.NewsLevel;
@@ -12,18 +11,24 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by dyannone on 7/29/2017.
+ * Responsible for simulating plagues at the college.
  */
 public class PlagueManager {
     PlagueDao dao = new PlagueDao();
-    private List<StudentModel> listOfStudentsSick;
 
-
+    /**
+     * Simulate changes in the plague due to passage of time.
+     * NOTE: THERE IS ONLY ONE PLAGUE AT A TIME.
+     *
+     * @param runId
+     * @param hoursAlive  number of hours since college was created
+     */
     public void handleTimeChange(String runId, int hoursAlive) {
         List<PlagueModel> plagues = dao.getPlagues(runId);
 
         int hoursLeftInPlague = 0;
-        // This is a loop, but we only have one plague at most.
+
+        // Reduce the time left in any active plague.
         for (PlagueModel plague : plagues) {
             int timePassed = hoursAlive - plague.getHourLastUpdated();
             plague.setHourLastUpdated(hoursAlive);
@@ -31,15 +36,19 @@ public class PlagueManager {
             plague.setNumberOfHoursLeftInPlague(hoursLeftInPlague);
         }
 
+        // Make any sick students improve.
         makeStudentsBetter(runId, hoursAlive);
-        extendStudentSickTime(runId, hoursAlive);
+        randomlyMakeSomeStudentsSicker(runId, hoursAlive);
 
+        // Spread the plague
         if (hoursLeftInPlague > 0) {
             plagueSpreadsThroughStudents(runId, hoursAlive, hoursLeftInPlague, getNumberSick(runId));
-        } else {
-            // Decide if there should be a new plague.
-            Random rand = new Random();
-            if (rand.nextInt(10) >= 8) {
+        }
+
+        // or possibly start a new plague
+        else
+        {
+            if (Math.random() <= 0.2) {
                 refreshPlague(plagues);
             }
         }
@@ -47,6 +56,11 @@ public class PlagueManager {
         dao.saveAllPlagues(runId, plagues);
     }
 
+    /**
+     * Start a plague
+     *
+     * @param plagues
+     */
     private void refreshPlague(List<PlagueModel> plagues) {
         Random rand = new Random();
         int plagueLengthInHours = rand.nextInt(72) + 72;
@@ -56,6 +70,12 @@ public class PlagueManager {
         }
     }
 
+    /**
+     * Return the number of students that are sick at the college.
+     *
+     * @param runId
+     * @return
+     */
     private int getNumberSick(String runId) {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -70,12 +90,23 @@ public class PlagueManager {
         return studentSickCount;
     }
 
+    /**
+     * Take care of any plague business when the college is first created.
+     * @param runId
+     */
     static public void establishCollege(String runId){
-        int hoursInPlague = createPlaque(runId);
+        int hoursInPlague = createInitialPlague(runId);
         plagueSpreadsThroughStudents(runId, 0, hoursInPlague, 0);
     }
 
-    static private int createPlaque(String runId) {
+    /**
+     * Create the initial plague.  This initial plague keeps track of time left in
+     * plague and is randomly refreshed to start new plagues.
+     *
+     * @param runId
+     * @return
+     */
+    static private int createInitialPlague(String runId) {
         Random rand = new Random();
         int plagueLengthInHours = 0;  // We are just setting up the structure.  No length to this plague.
         PlagueModel plague = new PlagueModel( 0, 0, "Hampshire Hall",
@@ -85,6 +116,14 @@ public class PlagueManager {
         return plagueLengthInHours;
     }
 
+    /**
+     * Make more students sick at the college.
+     *
+     * @param runId
+     * @param currentHour
+     * @param hoursLeftInPlague
+     * @param studentSickCount  number of students currently sick.
+     */
     private static void plagueSpreadsThroughStudents(String runId, int currentHour, int hoursLeftInPlague, int studentSickCount) {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -120,7 +159,13 @@ public class PlagueManager {
         dao.saveAllStudents(runId, students);
     }
 
-    private void extendStudentSickTime(String runId, int currentDay){
+    /**
+     * Randomly extend the sick time of some studetns.
+     *
+     * @param runId
+     * @param currentDay
+     */
+    private void randomlyMakeSomeStudentsSicker(String runId, int currentDay){
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
 
@@ -141,6 +186,12 @@ public class PlagueManager {
         dao.saveAllStudents(runId, students);
     }
 
+    /**
+     * For those students that are sick, reduce the time left in there illness.
+     *
+     * @param runId
+     * @param hoursAlive
+     */
     private void makeStudentsBetter(String runId, int hoursAlive) {
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -152,9 +203,6 @@ public class PlagueManager {
                 int sickTime = students.get(i).getNumberHoursLeftBeingSick() - timeChange;
                 sickTime = Math.max(0,sickTime);
                 students.get(i).setNumberHoursLeftBeingSick(sickTime);
-                //if their sicktime <= 0 then increase athletic ability
-                //display students better here
-
             }
         }
 

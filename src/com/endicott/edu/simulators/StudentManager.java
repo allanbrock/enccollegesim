@@ -5,6 +5,9 @@ import com.endicott.edu.models.*;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Responsible for simulating students at the college.
+ */
 public class StudentManager {
     private StudentDao dao = new StudentDao();
     private CollegeDao collegeDao = new CollegeDao();
@@ -15,15 +18,28 @@ public class StudentManager {
     private List<FacultyModel> faculty;
     private Random rand = new Random();
 
+    /**
+     * The college has just been created.  Add initial students and calculate
+     * student statistics.
+     *
+     * @param runId
+     */
     public void establishCollege(String runId) {
         addNewStudents(runId, college.getCurrentDay()/24, true);
         recalculateStudentStatistics(runId);
     }
 
+    /**
+     * Simulate the changes in students and stutdent finances
+     * due to passage of time at the college.
+     *
+     * @param runId
+     * @param hoursAlive
+     */
     public  void handleTimeChange(String runId, int hoursAlive) {
         students = dao.getStudents(runId);
         addNewStudents(runId, hoursAlive, false);
-        runningTuitionOfStudent(runId);
+        receiveStudentTuition(runId);
         removeStudents(runId, hoursAlive);
         updateStudentsTime(hoursAlive);
         dao.saveAllStudents(runId, students);
@@ -31,12 +47,15 @@ public class StudentManager {
         recalculateStudentStatistics(runId);
     }
 
+    /**
+     * Recalculate all the statistics that are being maintained involving students.
+     * @param runId
+     */
     public void recalculateStudentStatistics(String runId) {
         faculty = facultyDao.getFaculty(runId);
         college = collegeDao.getCollege(runId);
         college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
         college.setStudentFacultyRatio(updateStudentFacultyRatio());
-        college.setCollegeScore(calculateCollegeScore());
 
         int retentionRate = 100;
         if (college.getNumberStudentsAdmitted() > 0) {
@@ -48,10 +67,15 @@ public class StudentManager {
         collegeDao.saveCollege(college);
     }
 
-    private void runningTuitionOfStudent(String runId) {
+    /**
+     * Receive student tuition.
+     *
+     * @param runId
+     */
+    private void receiveStudentTuition(String runId) {
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
-        Accountant.studentIncome(runId,"Student tuition received.",dailyTuitionSum);
+        Accountant.receiveIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
     public void addNewStudents(String runId, int hoursAlive, boolean initial) {

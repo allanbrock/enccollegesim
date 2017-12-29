@@ -86,8 +86,8 @@ class FloodTest {
             return;
         }
 
-        if(flood.length != 1) {
-            System.out.println("    Thought there would be a flood.  Saw: " + flood.length);
+        if(flood.length >= 1) {
+            System.out.println("    Didn't think there would be a flood.  Saw: " + flood.length);
             System.out.println(" Result: FAIL");
             result = FAIL;
         }

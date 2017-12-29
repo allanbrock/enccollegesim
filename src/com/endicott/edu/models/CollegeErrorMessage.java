@@ -4,9 +4,6 @@ package com.endicott.edu.models;
 
 import java.io.Serializable;
 
-/**
- * Created by abrocken on 7/10/2017.
- */
 //@XmlRootElement
 public class CollegeErrorMessage implements Serializable {
     private String errorMessage;

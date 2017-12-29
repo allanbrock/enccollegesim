@@ -2,25 +2,19 @@ package com.endicott.edu.models;
 
 import java.io.Serializable;
 
-/**
- * Created by abrocken on 7/10/2017.
- */
-//@XmlRootElement
 public class CollegeModel implements Serializable {
-    private int hoursAlive = 0;
-    private int availableCash = 0;
-    private int yearlyTuitionCost = 40000; //the amount it costs to attend the school for a single year
-    private int reputation = 50; //reputation of college based on 1-100
-    private String runId = "unknown";
-    private String note = "empty";
-    private float collegeScore = 0f;
-    private int studentBodyHappiness;
-    private int studentFacultyRatio = 1;
-    private int numberStudentsAdmitted = 0;
-    private int numberStudentsWithdrew = 0;
-    private int numberStudentsGraduated = 0;
-    private float retentionRate = 0f;
-    private int studentRetentionRate = 0;
+    private int hoursAlive = 0;              // hours the college has been in existence
+    private int availableCash = 0;           // amount of money in college bank account
+    private int yearlyTuitionCost = 40000;   // the amount it costs to attend the school for a single year
+    private int reputation = 50;             // reputation of college based on 1-100
+    private String runId = "unknown";        // name of the college
+    private String note = "empty";           // note for debugging
+    private int studentBodyHappiness;        // out of 100, 0 is unhappy
+    private int studentFacultyRatio = 1;     // number of students per faculty member
+    private int numberStudentsAdmitted = 0;  // number of students admitted since college created.
+    private int numberStudentsWithdrew = 0;  // number of students withdrawn since college created.
+    private int numberStudentsGraduated = 0; // number of students graduate since college created
+    private float retentionRate = 0f;        // percentage of students retained (or graduated) since college created
 
     public int getReputation() { return reputation; }
 
@@ -96,15 +90,4 @@ public class CollegeModel implements Serializable {
 
     public void setRetentionRate(float retentionRate) { this.retentionRate = retentionRate; }
 
-    public float getCollegeScore() { return collegeScore; }
-
-    public void setCollegeScore(float collegeScore) { this.collegeScore = collegeScore; }
-
-    public int getStudentRetentionRate() {
-        return studentRetentionRate;
-    }
-
-    public void setStudentRetentionRate(int studentRetentionRate) {
-        this.studentRetentionRate = studentRetentionRate;
-    }
 }

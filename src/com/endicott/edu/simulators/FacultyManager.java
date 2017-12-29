@@ -4,37 +4,47 @@ import com.endicott.edu.datalayer.FacultyDao;
 import com.endicott.edu.datalayer.IdNumberGenDao;
 import com.endicott.edu.datalayer.NameGenDao;
 import com.endicott.edu.models.FacultyModel;
-import com.endicott.edu.models.NewsType;
-
 
 import java.util.List;
 
+/**
+ * Responsible for simulating faculty at the college.
+ */
 public class FacultyManager {
 
+    /**
+     * Simulate changes in faculty based on the passage of time at the college.
+     *
+     * @param runId
+     * @param hoursAlive number of hours college has existed.
+     */
     public static void handleTimeChange(String runId, int hoursAlive){
-            payFacultySingleDay(runId,hoursAlive);
+            payFaculty(runId,hoursAlive);
     }
 
-   private static void payFacultySingleDay(String runId,int hoursAlive){
-        //pay scale is based on this
-        //https://www.opm.gov/policy-data-oversight/pay-leave/pay-administration/fact-sheets/computing-hourly-rates-of-pay-using-the-2087-hour-divisor/
-        //average person works 260 days a year
-        //salary/260 = each day at the college
-        //this can be refined if we find that it is too costly
+    /**
+     * Pay the faculty based on the number of hours that have passed at the
+     * college since the faculty was last paid.
+     *
+     * @param runId
+     * @param hoursAlive  number of hours college has existed.
+     */
+   private static void payFaculty(String runId, int hoursAlive){
         FacultyDao fao = new FacultyDao();
         List<FacultyModel> facultyList = fao.getFaculty(runId);
         int total = 0;
         for(FacultyModel member : facultyList){
-            int tmp = member.getSalary();
-            tmp = tmp/260;
-            total += tmp;
+            int yearlySalary = member.getSalary();
+            int paycheck = (int) ((hoursAlive/24f)*(yearlySalary/365f)) ;
+            total += paycheck;
         }
+
         Accountant.payBill(runId,"Faculty has been paid",total);
    }
 
     /**
-     * This function creates the init faculty for the college
-     * This is the dean in this case
+     * Create the initial faculty at the new college.
+     *
      * @param runId instance of the simulation
      */
    public static void establishCollege(String runId){

@@ -6,41 +6,62 @@ import com.endicott.edu.datalayer.SportsDao;
 import com.endicott.edu.models.*;
 import com.endicott.edu.datalayer.StudentDao;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+/**
+ * Responsible for simulating everything sports related.
+ */
 public class SportManager {
     SportsDao dao = new SportsDao();
     static private Logger logger = Logger.getLogger("SportManager");
-    private int overallRep = 0;
 
+    /**
+     * Simulate the elaspe of time at the college.
+     *
+     * @param runId
+     * @param hoursAlive number of hours since the college started.
+     */
     public void handleTimeChange(String runId, int hoursAlive) {
         List<SportModel> sports = dao.getSports(runId);
 
         for (SportModel sport : sports) {
-            countPlayers(runId, sport);
-            changeStatus(runId, sport);
+            calculateNumberOfPlayersOnTeam(runId, sport);
+            fillUpTeamAndSetActiveStatus(runId, sport);
             billRunningCostofSport(runId, hoursAlive, sport);
             sport.setHourLastUpdated(hoursAlive);
-            checkIfGameDay(sport, hoursAlive, runId);
-            System.out.println(hoursAlive + "this is the hours alive");
-            System.out.println(sport.getHourLastUpdated() + "this is the hour last updated of " + sport.getName());
+            playGame(sport, hoursAlive, runId);
         }
 
         dao.saveAllSports(runId, sports);
     }
 
+    /**
+     * Charge the cost of running the sports since the last time
+     * the bill was paid (the sport was updated).
+     *
+     * @param runId
+     * @param hoursAlive
+     * @param sport
+     */
     private void billRunningCostofSport(String runId, int hoursAlive, SportModel sport) {
-        int newCharge = ((hoursAlive - sport.getHourLastUpdated()) * sport.getCostPerHour()) / 24;
+        int hoursSinceBillPaid = hoursAlive - sport.getHourLastUpdated();
+        int newCharge = (int) (hoursSinceBillPaid * ((float) sport.getCostPerDay() / 24f));
         if(newCharge > 0)
         {
             Accountant.payBill(runId,"Charge for " + sport.getName(), newCharge);
         }
     }
 
+    /**
+     * Add a new sports team to the college.
+     *
+     * @param sportName
+     * @param runId
+     * @return
+     */
     public static SportModel addNewTeam(String sportName, String runId){
         SportsDao newSportDao = new SportsDao();
         logger.info("Attempt to add sport: '" + sportName + "' to '" + runId + "'");
@@ -75,13 +96,21 @@ public class SportManager {
         }
 
         addPlayers(runId, result);
+        calculateNumberOfPlayersOnTeam(runId, result);
+        fillUpTeamAndSetActiveStatus(runId, result);
         newSportDao.saveNewSport(runId, result);
-        countPlayers(runId, result);
-        changeStatus(runId, result);
+
         return result;
     }
 
-    public static void countPlayers(String runId, SportModel sport){
+    /**
+     * Set the number of players that are on the sport by looking through
+     * all students to see who's on the team.
+     *
+     * @param runId
+     * @param sport
+     */
+    public static void calculateNumberOfPlayersOnTeam(String runId, SportModel sport){
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
         for(int i = 0; i < students.size(); i++) {
@@ -91,7 +120,14 @@ public class SportManager {
         }
     }
 
-    public static void changeStatus(String runId, SportModel sport){
+    /**
+     * Fill the roster for the sport and mark the sport as active
+     * if you have enough players.
+     *
+     * @param runId
+     * @param sport
+     */
+    public static void fillUpTeamAndSetActiveStatus(String runId, SportModel sport){
         if (sport.getCurrentPlayers() < sport.getMinPlayers()){
             addPlayers(runId, sport);
             if(sport.getCurrentPlayers() < sport.getMinPlayers()){
@@ -106,6 +142,14 @@ public class SportManager {
         }
     }
 
+    /**
+     * Add players to a team until reaching the maximum number of
+     * players allowed on the team.
+     *
+     * @param runId
+     * @param sport
+     * @return
+     */
     public static SportModel addPlayers(String runId, SportModel sport){
         StudentDao dao = new StudentDao();
         List<StudentModel> students = dao.getStudents(runId);
@@ -125,6 +169,11 @@ public class SportManager {
 
     }
 
+    /**
+     * Sell the sports team.
+     *
+     * @param runId
+     */
     static public void sellSport(String runId) {
         SportsDao sportsDao = new SportsDao();
         NewsFeedDao noteDao = new NewsFeedDao();
@@ -133,6 +182,14 @@ public class SportManager {
         noteDao.deleteNotes(runId);
     }
 
+    /**
+     * Return a list of sports representing the sports that can
+     * be added to the college.  You can't add a sport that already
+     * exists.
+     *
+     * @param runId
+     * @return
+     */
     public static ArrayList<SportModel> checkAvailableSports(String runId) {
         SportsDao dao = new SportsDao();
         CollegeDao cao = new CollegeDao();
@@ -170,65 +227,71 @@ public class SportManager {
         return availableSports;
     }
 
-    public static void checkIfGameDay(SportModel sport, int hoursAlive,String runId ){
-        if(sport.getHoursUntilNextGame() <= 0){
+    /**
+     * If enough time has elapsed since the last game, play a game.
+     *
+     * @param sport
+     * @param hoursAlive
+     * @param runId
+     */
+    public static void playGame(SportModel sport, int hoursAlive, String runId ){
+        if (sport.getHoursUntilNextGame() <= 0) {
             simulateGame(sport, hoursAlive, runId);
-        }else{
-            sport.setHoursUntilNextGame(hoursAlive - sport.getHourLastUpdated());
+            sport.setHoursUntilNextGame(48);
+        } else {
+            sport.setHoursUntilNextGame(Math.max(0, hoursAlive - sport.getHourLastUpdated()));
         }
     }
+
+    /**
+     * Delete the given sport.
+     *
+     * @param runId
+     * @param sportName
+     */
     public static void deleteSelectedSport(String runId, String sportName){
         SportsDao dao = new SportsDao();
-        List<SportModel> sports = dao.getSports(runId);
-        for(int i =0; i < sports.size(); i++){
-            if(sportName.equals(sports.get(i).getName())){
-                sports.remove(i);
-            }
-        }
-        dao.saveAllSports(runId,sports);
-
+        dao.deleteSelectedSport(runId, sportName);
     }
+
+    /**
+     * Simulate the playing of a game.
+     *
+     * @param sport
+     * @param hoursAlive
+     * @param runId
+     */
     public static void simulateGame(SportModel sport, int hoursAlive,String runId){
         StudentDao stuDao = new StudentDao();
         List<StudentModel> students = stuDao.getStudentsOnSport(runId,sport.getName());
         int numOfPlayers = sport.getCurrentPlayers();
         int totalAthleticAbility = 0;
 
-        for(StudentModel student : students){
+        for (StudentModel student : students) {
             totalAthleticAbility = totalAthleticAbility + student.getAthleticAbility();
         }
 
-        int teamAverage = totalAthleticAbility/numOfPlayers;
+        int aveAbilityOnTeam = totalAthleticAbility / numOfPlayers;
         Random rand = new Random();
-        int random_integer = rand.nextInt(5) + 5;
+        int numberBetween5and9 = rand.nextInt(5) + 5;
 
-        if(random_integer > teamAverage){
-            sport.setGamesLost(sport.getGamesLost() +1);
+        if (numberBetween5and9 > aveAbilityOnTeam) {
+            sport.setGamesLost(sport.getGamesLost() + 1);
             NewsManager.createNews(runId, hoursAlive, sport.getName() + " just lost a game.", NewsType.SPORTS_NEWS, NewsLevel.BAD_NEWS);
-        }else{
-            sport.setGamesWon(sport.getGamesWon() +1);
-            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just WON a game!", NewsType.SPORTS_NEWS, NewsLevel.GOOD_NEWS);
+        } else {
+            sport.setGamesWon(sport.getGamesWon() + 1);
+            NewsManager.createNews(runId, hoursAlive, sport.getName() + " just won a game!", NewsType.SPORTS_NEWS, NewsLevel.GOOD_NEWS);
         }
         SportManager rep = new SportManager();
         rep.sportRep(sport, runId);
-        sport.setHoursUntilNextGame(48);
-
-    }
-    public void calcRep(String runId){
-        List<SportModel> sports = dao.getSports(runId);
-        int averageRep = 0;
-        int activeSports = 0;
-        for(SportModel sport: sports){
-            if (sport.getIsActive() >= 1) {
-                activeSports++;
-                averageRep = sport.getReputation() + averageRep;
-                if (sports.size() >= 0) {
-                    sport.setOverallRep(averageRep / sports.size());
-                }
-            }
-        }
     }
 
+    /**
+     * Set the reputation of a sports team based on wins and loses.
+     *
+     * @param sport
+     * @param runId
+     */
     public void sportRep(SportModel sport, String runId) {
         if (sport.getGamesWon() > sport.getGamesLost()) {
             sport.setReputation(sport.getReputation() + 5);

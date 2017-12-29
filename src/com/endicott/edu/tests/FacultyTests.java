@@ -85,16 +85,16 @@ public class FacultyTests {
             return;
         }
 
-        //when we create the college we create a dean.. lets make sure the only faculty is them..
-        if(member == null || member.length < 1 || member[0].getTitle() == null || !member[0].getTitle().equals("Dean")){
-            System.out.println("Was expecting title to be dean. Response: " + responseAsString + " from " + serviceUrl + "faculty/" + runId);
+        //when we create the college we expect there to be faculty.
+        if(member == null || member.length <= 0){
+            System.out.println("Didn't find faculty in new college.");
             result = FAIL;
             return;
         }
         FacultyDao fao = new FacultyDao();
         facultyList = fao.getFaculty(runId);
-        if(facultyList.size() != 1){
-            System.out.println("FacultyList size expected 1 got other...");
+        if(facultyList.size() != 10){
+            System.out.println("FacultyList size expected 10 got other...");
             System.out.println(facultyList.size() + " :SIZE");
             result = FAIL;
             return;

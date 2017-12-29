@@ -1,6 +1,5 @@
 package com.endicott.edu.simulators;
 
-import com.endicott.edu.datalayer.CollegeDao;
 import com.endicott.edu.datalayer.DormitoryDao;
 import com.endicott.edu.datalayer.StudentDao;
 import com.endicott.edu.models.*;
@@ -9,96 +8,137 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * DormManager is responsible for simulating all dorm activity and for
+ * providing functions for manipulation and retrieving information
+ * about dorms.
+ */
 public class DormManager {
     static private DormitoryDao dao = new DormitoryDao();
     static private Logger logger = Logger.getLogger("DormManager");
-    CollegeModel college = new CollegeModel();
     static private StudentDao studentDao = new StudentDao();
 
+    /**
+     * Simulate all changes in dorms caused by advancing the hours the college
+     * has been alive to the given value.
+     *
+     * @param runId college name
+     * @param hoursAlive number of hours college has been alive
+     */
     public void handleTimeChange(String runId, int hoursAlive) {
         List<DormitoryModel> dorms = dao.getDorms(runId);
 
         for (DormitoryModel dorm : dorms) {
             billRunningCostOfDorm(runId, hoursAlive, dorm);
-            dorm.setHourLastUpdated(hoursAlive);
             workOnDorm(dorm, 24, runId);
+            dorm.setHourLastUpdated(hoursAlive);
         }
 
         dao.saveAllDorms(runId, dorms);
     }
 
-    public void workOnDorm(DormitoryModel dorm, int decrementHours, String runId){
+    /**
+     * Perform any construction work needed on dorm.
+     *
+     * @param dorm
+     * @param hoursWorkingOnDorm
+     * @param runId
+     */
+    public void workOnDorm(DormitoryModel dorm, int hoursWorkingOnDorm, String runId){
         if (dorm.getHourLastUpdated() > 0) {
-            int left = dorm.getHoursToComplete() - decrementHours;
+            int left = dorm.getHoursToComplete() - hoursWorkingOnDorm;
             left = Math.max(0, left);
             dorm.setHoursToComplete(left);
 
-            chanceOfEventDuringConstruction(runId);
+            surpriseEventDuringConstruction(runId, hoursWorkingOnDorm);
         }
     }
 
-    private static void setDormAttributesByDormType(DormitoryModel temp) {
-        //small size
-        if (temp.getDormType() == 1) {
-            temp.setCapacity(200);
-            temp.setNumRooms(100);
-            temp.setTotalBuildCost(100);
-        }
-        //normal size
-        else if (temp.getDormType() == 2) {
-            temp.setCapacity(350);
-            temp.setNumRooms(175);
-            temp.setTotalBuildCost(175);
-        }
-        //large size
-        else if (temp.getDormType() == 3) {
-            temp.setCapacity(500);
-            temp.setNumRooms(250);
-            temp.setTotalBuildCost(250);
+    /**
+     * Given a dorm type, set attributes of the dorm.
+     *
+     * @param dorm
+     */
+    private static void setDormAttributesByDormType(DormitoryModel dorm) {
+        DormType dormType = DormType.valueOf(dorm.getDormType());
 
-        } else {
-            //not a type only 3 types of dorms
-            logger.severe("Could not add dorm: '" + temp.getName() + "'");
+        switch(dormType) {
+            case SMALL:
+                dorm.setCapacity(200);
+                dorm.setNumRooms(100);
+                dorm.setTotalBuildCost(100);
+                break;
+            case MEDIUM:
+                dorm.setCapacity(350);
+                dorm.setNumRooms(175);
+                dorm.setTotalBuildCost(175);
+                break;
+            case LARGE:
+                dorm.setCapacity(500);
+                dorm.setNumRooms(250);
+                dorm.setTotalBuildCost(250);
+                break;
+            default:
+                logger.severe("Could not add dorm: '" + dorm.getName() + "'");
         }
     }
 
-    public static DormitoryModel createDorm(String runId, String dormName, String dormType, int hoursAlive) {
-        DormitoryModel temp = new DormitoryModel();
-        temp.setName(dormName);
-        if (dormType.equals("Small")) {
-            temp.setDormType(1);
-        } else if (dormType.equals("Medium")) {
-            temp.setDormType(2);
-        } else if (dormType.equals("Large")) {
-            temp.setDormType(3);
+    /**
+     * Create a dorm.
+     *
+     * @param runId college name
+     * @param dormName name of new dorm
+     * @param dormType type of dorm (see DormType)
+     * @param hoursAlive number of hours college has existed
+     * @return
+     */
+    public static DormitoryModel createDorm(String runId, String dormName, int dormType, int hoursAlive) {
+
+        // Create dorm
+        DormitoryModel newDorm = new DormitoryModel();
+        newDorm.setName(dormName);
+        newDorm.setDormType(dormType);
+        setDormAttributesByDormType(newDorm);
+        newDorm.setHourLastUpdated(0);
+        newDorm.setReputation(5);
+        newDorm.setCurDisaster("none");
+        newDorm.setMaintenanceCostPerDay(newDorm.getNumRooms());
+
+        // Pay for dorm
+        if (newDorm.getTotalBuildCost() >= Accountant.getAvailableCash(runId)) {
+            newDorm.setNote("Not enough money to build it.");
+            return newDorm;
         }
 
-        setDormAttributesByDormType(temp);
-        temp.setHourLastUpdated(0);
-        temp.setReputation(5);
-        temp.setCurDisaster("none");
-        temp.setMaintenanceCostPerDay(temp.getNumRooms());
-
-        if (temp.getTotalBuildCost() >= Accountant.getBalance(runId)) {
-            temp.setNote("Not enough money to build it.");
-            return temp;
-        }
-
-        Accountant.payBill(runId, "Charge of new dorm", temp.getTotalBuildCost());
+        Accountant.payBill(runId, "Charge of new dorm", newDorm.getTotalBuildCost());
         NewsManager.createNews(runId, hoursAlive, "Construction of " + dormName +" dorm has started! ", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
-        DormitoryDao dormDao = new DormitoryDao();
-        temp.setNote("A new dorm has been created.");
+        newDorm.setNote("A new dorm has been created.");
 
-        dormDao.saveNewDorm(runId, temp);
-        return temp;
+        // Save dorm
+        DormitoryDao dormDao = new DormitoryDao();
+        dormDao.saveNewDorm(runId, newDorm);
+        return newDorm;
     }
 
+    /**
+     * Charge the college the cost of running the dorm.
+     *
+     * @param runId college name
+     * @param hoursAlive number of hours the college has existed
+     * @param dorm the dorm that's causing the cost
+     */
     private void billRunningCostOfDorm(String runId, int hoursAlive, DormitoryModel dorm) {
         int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerDay();
-//        int newCharge = (hoursAlive - dorm.getHourLastUpdated()) * dorm.getMaintenanceCostPerHour();
         Accountant.payBill(runId, "Maintenance of dorm " + dorm.getName(), (int) (newCharge));
     }
 
+    /**
+     * Set the dorm as having a flood disaster and set the number of hours left in the flooding.
+     *
+     * @param lengthOfFlood
+     * @param dormName
+     * @param collegeId
+     */
     /*Takes in the length of the flood, the dorm dormName affected by the flood, and the runId of the college. */
     public void floodAlert(int lengthOfFlood, String dormName, String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
@@ -109,12 +149,17 @@ public class DormManager {
             }
         }
         dao.saveAllDorms(collegeId, dorms);
-        //when lengthOfFlood number of hours is completed change curDisaster back to "none".
     }
 
-    /*Handles one student being admitted to the college at a time:
-    Takes in the runId of the college (String)
-    returns the name of the dorm (String) that student was placed in.*/
+    /**
+     * Return the name of a dorm that has an open spot for a student
+     * and reserve this spot by increasing the dorm occupancy by 1.
+     * It's the responsibility of the caller to store the dorm name
+     * under the student.
+     *
+     * @param collegeId college name
+     * @return the name of the dorm where the student as placed.  If no space available, return commuter.
+     */
     public String assignDorm(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         String dormName = "";
@@ -129,14 +174,18 @@ public class DormManager {
             }
         }
 
-        // We don't expect to get here.
         // This means we didn't find room for the student!
         return "Commuter";
     }
 
-    /*Handles one student leaving the college at a time:
-    Takes in the runId of the college (String), and the name of the dorm the student is in (String)
-    returns nothing.*/
+    /**
+     * Increase the occupancy of the given dorm.
+     * It's the responsibility of the caller to clear the dorm name
+     * stored under the student.
+     *
+     * @param collegeId
+     * @param dormName
+     */
     public void removeStudent(String collegeId, String dormName) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         Boolean removed = false;
@@ -150,11 +199,17 @@ public class DormManager {
         dao.saveAllDorms(collegeId, dorms);
     }
 
+    /**
+     * Return the number of open beds in the college.
+     *
+     * @param collegeId
+     * @return
+     */
     public static int getOpenBeds(String collegeId) {
         List<DormitoryModel> dorms = dao.getDorms(collegeId);
         int openBeds = 0;
         for (DormitoryModel d : dorms) {
-            if(d.getHoursToComplete() == 0) {
+            if(d.getHoursToComplete() <= 0) {
                 int numStudents = d.getNumStudents();
                 int capacity = d.getCapacity();
                 openBeds += capacity - numStudents;
@@ -163,9 +218,31 @@ public class DormManager {
         return openBeds;
     }
 
+    /**
+     * Return the number of beds under construction.
+     *
+     * @param collegeId
+     * @return
+     */
+    public static int getBedsUnderConstruction(String collegeId) {
+        List<DormitoryModel> dorms = dao.getDorms(collegeId);
+        int openBeds = 0;
+        for (DormitoryModel d : dorms) {
+            if(d.getHoursToComplete() > 0) {
+                int numStudents = d.getNumStudents();
+                int capacity = d.getCapacity();
+                openBeds += capacity - numStudents;
+            }
+        }
+        return openBeds;
+    }
 
-
-    //takes the runId of the dorm and the dorm name to be removed
+    /**
+     * Sell a dorm.
+     *
+     * @param runId
+     * @param dormName
+     */
     public static void sellDorm(String runId, String dormName) {
 
         DormitoryDao dormitoryDao = new DormitoryDao();
@@ -184,7 +261,7 @@ public class DormManager {
                 if(students.size() < (getOpenBeds(runId) - d.getCapacity())){
                     dorms.remove(d);
                     dormitoryDao.saveAllDorms(runId, dorms);
-                    Accountant.studentIncome(runId, dormName + "has been sold.", refund);
+                    Accountant.receiveIncome(runId, dormName + "has been sold.", refund);
                     return;
                 }
                 else{
@@ -196,11 +273,15 @@ public class DormManager {
 
     }
 
-    public List<DormitoryModel> checkAvailableDorms(String runId){
-        CollegeDao collegeDao = new CollegeDao();
-        CollegeModel college = collegeDao.getCollege(runId);
-        int availableCash = college.getAvailableCash();
-        //List<DormitoryModel> availableDormTypes = null;
+    /**
+     * Get a list of the types of the dorms that can be built.
+     * Returns a list of dorms where the dorm type is indicating
+     * which dorms can be built.
+     *
+     * @param runId
+     * @return
+     */
+    public List<DormitoryModel> getWhatTypesOfDormsCanBeBuilt(String runId){
         ArrayList<DormitoryModel> availableDormTypes = new ArrayList<>();
         DormitoryModel smallDorm = new DormitoryModel();
         smallDorm.setDormType(1);
@@ -209,47 +290,51 @@ public class DormManager {
         DormitoryModel largeDorm = new DormitoryModel();
         largeDorm.setDormType(3);
 
+        int availableCash = Accountant.getAvailableCash(runId);
+
         if(availableCash >= 250000){
-            //can build dorm type all
+            //can build all dorm types
             availableDormTypes.add(smallDorm);
             availableDormTypes.add(mediumDorm);
             availableDormTypes.add(largeDorm);
-            return availableDormTypes;
         }
         else if(availableCash >= 175000){
-            //can build small and medium sized dorms
             availableDormTypes.add(smallDorm);
             availableDormTypes.add(mediumDorm);
-            return availableDormTypes;
         }
         else if(availableCash >=100000){
-            //can build small
             availableDormTypes.add(smallDorm);
+        }
 
-            return availableDormTypes;
-        }
-        else{
-            //you do not have enough money to build a dorm
-            return availableDormTypes;
-        }
+        return availableDormTypes;
     }
 
-    public void chanceOfEventDuringConstruction(String runId) {
+    /**
+     * See if a surprise event has occurred during construction.
+     * If so, report it.
+     *
+     * @param runId
+     * @param hoursWorkingOnDorm
+     */
+    public void surpriseEventDuringConstruction(String runId, int hoursWorkingOnDorm) {
         String dormName = "";
         double chance = Math.random();
-        if (chance < 0.25) {
-            //25% chance of gaining $1000 dollars
-            Accountant.studentIncome(runId, "Donation received for building " + dormName, 1000);
-        } else if (chance < 0.35) {
-            //35% chance of losing $500 dollars
-            Accountant.studentIncome(runId, "Ran into unexpected construction costs building " + dormName, 500);
-        } else {
-            //40% chance of nothing happening
+        if (chance < 0.25 * 24f/hoursWorkingOnDorm) {
+            //25% chance of gaining $1000 dollars every 24 hours working on dorm.
+            Accountant.receiveIncome(runId, "Donation received for building " + dormName, 1000);
+        } else if (chance < 0.35 * 24/hoursWorkingOnDorm) {
+            Accountant.receiveIncome(runId, "Ran into unexpected construction costs building " + dormName, 500);
         }
     }
 
+    /**
+     * A new college has just been built.
+     * Take care of any initial dorm construction.
+     *
+     * @param runId
+     * @param college
+     */
     static public void establishCollege(String runId, CollegeModel college) {
-        logger.info("Creating dorm");
         DormitoryModel dorm = new DormitoryModel(200, 10, "Hampshire Hall",
                 0, "none", 5, "none", 100);
         dorm.setHoursToComplete(0);
@@ -260,6 +345,12 @@ public class DormManager {
         NewsManager.createNews(runId, college.getCurrentDay(), "Dorm " + dorm.getName() + " has opened.", NewsType.RES_LIFE_NEWS, NewsLevel.GOOD_NEWS);
     }
 
+    /**
+     * Get the dorms at the college.
+     *
+     * @param runId
+     * @return
+     */
     static public List<DormitoryModel> getDorms(String runId){
         String dormName = "";
         List<DormitoryModel> dorms = dao.getDorms(runId);

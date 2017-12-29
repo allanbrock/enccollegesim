@@ -76,6 +76,16 @@ public class SportsDao {
         file.delete();
     }
 
+    public void deleteSelectedSport(String runId, String sportName){
+        List<SportModel> sports = getSports(runId);
+        for(int i =0; i < sports.size(); i++){
+            if(sportName.equals(sports.get(i).getName())){
+                sports.remove(i);
+            }
+        }
+        saveAllSports(runId,sports);
+    }
+
     public static void main(String[] args) {
         testNotes();
     }

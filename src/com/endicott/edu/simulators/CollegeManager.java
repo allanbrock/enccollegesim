@@ -2,20 +2,23 @@ package com.endicott.edu.simulators;
 
 import com.endicott.edu.datalayer.*;
 import com.endicott.edu.models.*;
-import com.endicott.edu.simulators.StudentManager;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
-// Created by abrocken on 7/24/2017.
+/**
+ * The CollegeManager is responsible for simulating all overall college functions,
+ * such as creating a college, deleting the college, and is responsible for
+ * providing college information (retention rate, current tuition, etc.)
+ */
 
 public class CollegeManager {
-    static public final int STARTUP_FUNDING = 200000;
+    static public final int STARTUP_FUNDING = 200000;  // Amount of money initially in college bank account.
 
     /**
-     * This functions updates the amount that the college costs per year
-     * @param runId id of college instance
-     * @return an instance of a college model
+     * Sets college yearly tuition.
+     *
+     * @param runId college name
+     * @return the college
      */
     public static CollegeModel updateCollegeTuition(String runId, int amount){
         CollegeDao cao = new CollegeDao();
@@ -30,6 +33,12 @@ public class CollegeManager {
         return college;
     }
 
+    /**
+     * Creates a new college.
+     *
+     * @param runId college name
+     * @return the college
+     */
     static public CollegeModel establishCollege(String runId) {
         CollegeDao collegeDao = new CollegeDao();
         Logger logger = Logger.getLogger("CollegeManager");
@@ -66,6 +75,11 @@ public class CollegeManager {
         return college;
     }
 
+    /**
+     * Deletes a college.  Removes all storage associated with the college.
+     *
+     * @param runId college name
+     */
     static public void sellCollege(String runId) {
         CollegeDao.deleteCollege(runId);
         DormitoryDao.deleteDorm(runId);
@@ -78,22 +92,24 @@ public class CollegeManager {
         IdNumberGenDao.deleteIDs(runId);
     }
 
+    /**
+     * Advance the clock one day.  Simulate all changes occurring during that day.
+     *
+     * @param runId college name
+     */
     static public CollegeModel nextDay(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
         // Get the college
         CollegeModel college = collegeDao.getCollege(runId);
 
-        // Advance time
-        college.advanceClock(24);
+        // Advance time college has been alive.
+        college.setHoursAlive(college.getHoursAlive() + 24);
         collegeDao.saveCollege(college);
         int hoursAlive = college.getHoursAlive();
 
-        // Tell everyone about the time change.
-        FloodManager floodManager = new FloodManager();
-        floodManager.handleTimeChange(runId, hoursAlive);
+        // Tell all the simulators about the time change.
 
-        //Plague time change
         PlagueManager plagueManager = new PlagueManager();
         plagueManager.handleTimeChange(runId, hoursAlive);
 
@@ -106,7 +122,7 @@ public class CollegeManager {
         StudentManager studentManager = new StudentManager();
         studentManager.handleTimeChange(runId, hoursAlive);
 
-        FloodManager floodManager1 = new FloodManager();
+        FloodManager floodManager = new FloodManager();
         floodManager.handleTimeChange(runId, hoursAlive);
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
@@ -114,11 +130,17 @@ public class CollegeManager {
         return college;
     }
 
+    /**
+     * Return true if the given college exists.
+     *
+     * @param runId college name
+     * @return true if exists.
+     */
     static public boolean doesCollegeExist(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
         try {
-            CollegeModel college = collegeDao.getCollege(runId);
+            collegeDao.getCollege(runId);
             return true;
         } catch (Exception e) {
             return false;

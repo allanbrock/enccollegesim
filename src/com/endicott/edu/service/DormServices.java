@@ -10,7 +10,6 @@ import com.endicott.edu.simulators.DormManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 // The Java class will be hosted at the URI path "/finances"
@@ -33,13 +32,25 @@ public class DormServices {
                                   @PathParam("dormType") String dormType) {
 
         if (!CollegeManager.doesCollegeExist(runId)) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
         }
+
+        int dormTypeInt;
+        if (dormType.equals("Small")) {
+            dormTypeInt = 1;
+        } else if (dormType.equals("Medium")) {
+            dormTypeInt = 2;
+        } else if (dormType.equals("Large")) {
+            dormTypeInt = 3;
+        } else {
+            throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
+        }
+
         // Override some fields
         DormitoryDao dormitoryDao = new DormitoryDao();
         CollegeDao dao = new CollegeDao();
         CollegeModel college = dao.getCollege(runId);
-        return (DormManager.createDorm(runId, dormName, dormType,college.getHoursAlive()));
+        return (DormManager.createDorm(runId, dormName, dormTypeInt,college.getHoursAlive()));
     }
 
     /**
@@ -75,7 +86,7 @@ public class DormServices {
     public List<DormitoryModel> getAvailableDorms(@PathParam("runId") String runId, @PathParam("command") String command){
         DormManager dormManager = new DormManager();
         if (command.equalsIgnoreCase("available")) {
-            return dormManager.checkAvailableDorms(runId);
+            return dormManager.getWhatTypesOfDormsCanBeBuilt(runId);
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }

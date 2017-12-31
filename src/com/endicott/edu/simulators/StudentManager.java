@@ -14,8 +14,6 @@ public class StudentManager {
     private FacultyDao facultyDao = new FacultyDao();
     private DormManager dormManager = new DormManager();
     private CollegeModel college = new CollegeModel();
-    private List<StudentModel> students;
-    private List<FacultyModel> faculty;
     private Random rand = new Random();
 
     /**
@@ -25,8 +23,8 @@ public class StudentManager {
      * @param runId
      */
     public void establishCollege(String runId) {
-        addNewStudents(runId, college.getCurrentDay()/24, true);
-        recalculateStudentStatistics(runId);
+        admitStudents(runId, college.getCurrentDay()/24, true);
+        calculateStatistics(runId);
     }
 
     /**
@@ -37,34 +35,11 @@ public class StudentManager {
      * @param hoursAlive
      */
     public  void handleTimeChange(String runId, int hoursAlive) {
-        students = dao.getStudents(runId);
-        addNewStudents(runId, hoursAlive, false);
+        admitStudents(runId, hoursAlive, false);
         receiveStudentTuition(runId);
-        removeStudents(runId, hoursAlive);
-        updateStudentsTime(hoursAlive);
-        dao.saveAllStudents(runId, students);
-
-        recalculateStudentStatistics(runId);
-    }
-
-    /**
-     * Recalculate all the statistics that are being maintained involving students.
-     * @param runId
-     */
-    public void recalculateStudentStatistics(String runId) {
-        faculty = facultyDao.getFaculty(runId);
-        college = collegeDao.getCollege(runId);
-        college.setStudentBodyHappiness(calculateStudentsHappiness(college, faculty));
-        college.setStudentFacultyRatio(updateStudentFacultyRatio());
-
-        int retentionRate = 100;
-        if (college.getNumberStudentsAdmitted() > 0) {
-            retentionRate =
-                    Math.max(((college.getNumberStudentsAdmitted() - college.getNumberStudentsWithdrew()) * 100)/
-                            college.getNumberStudentsAdmitted(), 0);
-        }
-        college.setRetentionRate(retentionRate);
-        collegeDao.saveCollege(college);
+        withdrawStudents(runId, hoursAlive);
+        calculateStatistics(runId);
+        updateStudentsTime(runId, hoursAlive);
     }
 
     /**
@@ -73,15 +48,23 @@ public class StudentManager {
      * @param runId
      */
     private void receiveStudentTuition(String runId) {
+        List<StudentModel> students = dao.getStudents(runId);
         college = collegeDao.getCollege(runId);
         int dailyTuitionSum = (college.getYearlyTuitionCost() / 365) * students.size();
         Accountant.receiveIncome(runId,"Student tuition received.",dailyTuitionSum);
     }
 
-    public void addNewStudents(String runId, int hoursAlive, boolean initial) {
+    /**
+     * Admit new students to the college.
+     *
+     * @param runId
+     * @param hoursAlive
+     * @param initial
+     */
+    public void admitStudents(String runId, int hoursAlive, boolean initial) {
         int openBeds = dormManager.getOpenBeds(runId);
         int numNewStudents;
-        students = dao.getStudents(runId);
+        List<StudentModel> students = dao.getStudents(runId);
 
         // Are we fully booked?
         if (openBeds <= 0) {
@@ -124,8 +107,15 @@ public class StudentManager {
         }
     }
 
-    private void removeStudents(String runId, int hoursAlive) {
+    /**
+     * Withdraw students from the college.
+     *
+     * @param runId
+     * @param hoursAlive
+     */
+    private void withdrawStudents(String runId, int hoursAlive) {
         float scalingFactor = .0001f;
+        List<StudentModel> students = dao.getStudents(runId);
         int currentSize = students.size();
 
         // scroll through students list and remove student based upon a probability determined by their happiness level
@@ -142,6 +132,8 @@ public class StudentManager {
             }
         }
 
+        dao.saveAllStudents(runId, students);
+
         college = collegeDao.getCollege(runId);
         college.setNumberStudentsWithdrew(college.getNumberStudentsWithdrew() + studentsWithdrawn);
         collegeDao.saveCollege(college);
@@ -152,53 +144,128 @@ public class StudentManager {
         }
     }
 
-    private boolean didItHappen(float oddsBetween0And1) {
-        return (Math.random() < oddsBetween0And1);
-    }
+    private void updateStudentsTime(String runId, int hoursAlive){
+        List<StudentModel> students = dao.getStudents(runId);
 
-    private int calculateStudentsHappiness(CollegeModel college, List <FacultyModel> faculty) {
-        //calculate affects of college stats on individual student happiness
-        calculateCollegeAffect(college.getReputation(), faculty.size(), college.getYearlyTuitionCost());
-
-        int happinessSum = 0;
-        int happinessLevel;
-        for (int i = 0; i < students.size(); i++) {
-            happinessSum += students.get(i).getHappinessLevel();
-        }
-
-        // Make sure happiness is never less than 0.
-        happinessLevel = Math.max(0,happinessSum / students.size());
-
-        return happinessLevel;
-    }
-
-    private void calculateCollegeAffect(int reputation, int numberOfFaculty, int tuitionCost){
-        //dividing values below are for scaling
-        int reputationAffect = (reputation - 60)/10;
-        int ratioAffect = -((students.size() / numberOfFaculty) - 13)/5;
-        int tuitionAffect = -(tuitionCost - 40000)/1000;
-        int sicknessAffect = 0;
-
-        for(int i = 0; i < students.size(); i++){
-
-            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
-                sicknessAffect = (int) -(0.5 * students.get(i).getHappinessLevel());
-            }
-
-            students.get(i).setHappinessLevel(
-                    Math.min(100,students.get(i).getHappinessLevel() + reputationAffect + ratioAffect + tuitionAffect + sicknessAffect));
-        }
-    }
-
-    private void updateStudentsTime(int hoursAlive){
         for(int i = 0; i < students.size(); i++){
             students.get(i).setHourLastUpdated(hoursAlive);
         }
 
+        dao.saveAllStudents(runId, students);
     }
 
-    private int updateStudentFacultyRatio() {
-        return students.size() / faculty.size();
+    private boolean didItHappen(float oddsBetween0And1) {
+        return (Math.random() < oddsBetween0And1);
+    }
+
+    /**
+     * Recalculate all the statistics that are being maintained involving students.
+     * @param runId
+     */
+    public void calculateStatistics(String runId) {
+        calculateStudentHealthRating(runId);
+        calculateStudentsHappiness(runId);
+        calculateStudentFacultyRatio(runId);
+        calculateStudentFacultyRatioRating(runId);
+        calculateRetentionRate(runId);
+    }
+
+    private void calculateStudentHealthRating(String runId) {
+        CollegeModel college = collegeDao.getCollege(runId);
+        List<StudentModel> students = dao.getStudents(runId);
+
+        int nSick = 0;
+
+        for(int i = 0; i < students.size(); i++){
+            if(students.get(i).getNumberHoursLeftBeingSick() > 0){
+                nSick++;
+            }
+        }
+
+        int percentageWell = 100 - (nSick * 100) / Math.max(students.size(), 1);
+        int rating = SimulatorUtilities.getRatingZeroToOneHundred(50, 95, percentageWell);
+        college.setStudentHealthRating(rating);
+
+        collegeDao.saveCollege(college);
+    }
+
+    private void calculateStudentsHappiness(String runId) {
+        CollegeModel college = collegeDao.getCollege(runId);
+        List<StudentModel> students = dao.getStudents(runId);
+        List<FacultyModel> faculty = facultyDao.getFaculty(runId);
+
+        calculateIndividualStudentHappiness(college.getRunId(), college.getReputation(), faculty.size(), college.getYearlyTuitionCost());
+
+        int happinessSum = 0;
+        for (int i = 0; i < students.size(); i++) {
+            happinessSum += students.get(i).getHappinessLevel();
+        }
+
+        int aveHappiness = Math.max(0,happinessSum / students.size());
+
+        college.setStudentBodyHappiness(aveHappiness);
+        collegeDao.saveCollege(college);
+    }
+
+    private void calculateIndividualStudentHappiness(String runId, int reputation, int numberOfFaculty, int tuitionCost){
+        List<StudentModel> students = dao.getStudents(runId);
+        CollegeModel college = collegeDao.getCollege(runId);
+
+        // We're not using reputation at the moment because it's
+        // hardcoded at 50%.  That leaves: one third for faculty, one third for tuition, one third for health.
+
+        for(int i = 0; i < students.size(); i++){
+            int healthRating = 100;
+            if (students.get(i).getNumberHoursLeftBeingSick() > 0){
+                healthRating = 0;
+            }
+
+            int happiness = college.getStudentFacultyRatioRating()/3 +
+                            college.getYearlyTuitionRating()/3 +
+                            healthRating/3;
+            happiness = Math.min(happiness, 100);
+            happiness = Math.max(happiness, 0);
+
+            students.get(i).setHappinessLevel(happiness);
+        }
+
+        dao.saveAllStudents(runId, students);
+    }
+
+    private void calculateStudentFacultyRatio(String runId) {
+        CollegeModel college = collegeDao.getCollege(runId);
+        List<StudentModel> students = dao.getStudents(college.getRunId());
+        List<FacultyModel> faculty = facultyDao.getFaculty(college.getRunId());
+
+        college.setStudentFacultyRatio(students.size() / Math.max(faculty.size(),1));
+
+        collegeDao.saveCollege(college);
+    }
+
+    private void calculateStudentFacultyRatioRating(String runId) {
+        CollegeModel college = collegeDao.getCollege(runId);
+        int rating = SimulatorUtilities.getRatingZeroToOneHundred(20, 5, college.getStudentFacultyRatio());
+        college.setStudentFacultyRatioRating(rating);
+        collegeDao.saveCollege(college);
+    }
+
+    /**
+     * Calculate retention rate of students.  This is based on how many students
+     * withdrew compare to students that remained.
+     *
+     * @param runId
+     */
+    private void calculateRetentionRate(String runId) {
+        college = collegeDao.getCollege(runId);
+        int retentionRate = 100;
+        if (college.getNumberStudentsAdmitted() > 0) {
+            retentionRate =
+                    Math.max(((college.getNumberStudentsAdmitted() - college.getNumberStudentsWithdrew()) * 100)/
+                            college.getNumberStudentsAdmitted(), 0);
+        }
+        college.setRetentionRate(retentionRate);
+
+        collegeDao.saveCollege(college);
     }
 
     private float calculateCollegeScore(){

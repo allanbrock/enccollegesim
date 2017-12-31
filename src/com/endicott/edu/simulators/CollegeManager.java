@@ -15,25 +15,6 @@ public class CollegeManager {
     static public final int STARTUP_FUNDING = 200000;  // Amount of money initially in college bank account.
 
     /**
-     * Sets college yearly tuition.
-     *
-     * @param runId college name
-     * @return the college
-     */
-    public static CollegeModel updateCollegeTuition(String runId, int amount){
-        CollegeDao cao = new CollegeDao();
-        CollegeModel college = cao.getCollege(runId); //get the college for this runID
-        college.setYearlyTuitionCost(amount); //set the amount via setter
-        cao.saveCollege(college); //write to disk
-        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS,NewsLevel.GOOD_NEWS);
-
-        StudentManager studentManager = new StudentManager();
-        studentManager.recalculateStudentStatistics(runId);
-
-        return college;
-    }
-
-    /**
      * Creates a new college.
      *
      * @param runId college name
@@ -100,12 +81,11 @@ public class CollegeManager {
     static public CollegeModel nextDay(String runId) {
         CollegeDao collegeDao = new CollegeDao();
 
-        // Get the college
-        CollegeModel college = collegeDao.getCollege(runId);
-
         // Advance time college has been alive.
+        CollegeModel college = collegeDao.getCollege(runId);
         college.setHoursAlive(college.getHoursAlive() + 24);
         collegeDao.saveCollege(college);
+
         int hoursAlive = college.getHoursAlive();
 
         // Tell all the simulators about the time change.
@@ -127,7 +107,45 @@ public class CollegeManager {
 
         FacultyManager.handleTimeChange(runId,hoursAlive);
 
+        calculateStatisticsAndRatings(runId);
+
         return college;
+    }
+
+    /**
+     * Sets college yearly tuition.
+     *
+     * @param runId college name
+     * @return the college
+     */
+    public static CollegeModel updateCollegeTuition(String runId, int amount){
+        CollegeDao cao = new CollegeDao();
+
+        CollegeModel college = cao.getCollege(runId);
+        college.setYearlyTuitionCost(amount);
+        cao.saveCollege(college);
+
+        calculateStatisticsAndRatings(runId);
+
+        NewsManager.createNews(runId, college.getHoursAlive(),"Tuition Updated to: $" + amount, NewsType.FINANCIAL_NEWS,NewsLevel.GOOD_NEWS);
+
+        StudentManager studentManager = new StudentManager();
+        studentManager.calculateStatistics(runId);
+
+        return college;
+    }
+
+    private static void calculateStatisticsAndRatings(String runId) {
+        calculateTuitionRating(runId);
+    }
+
+    private static void calculateTuitionRating(String runId) {
+        CollegeDao collegeDao = new CollegeDao();
+        CollegeModel college = collegeDao.getCollege(runId);
+
+        int rating = SimulatorUtilities.getRatingZeroToOneHundred(60000, 24000, college.getYearlyTuitionCost());
+        college.setYearlyTuitionRating(rating);
+        collegeDao.saveCollege(college);
     }
 
     /**

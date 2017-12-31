@@ -10,11 +10,38 @@ public class CollegeModel implements Serializable {
     private String runId = "unknown";        // name of the college
     private String note = "empty";           // note for debugging
     private int studentBodyHappiness;        // out of 100, 0 is unhappy
-    private int studentFacultyRatio = 1;     // number of students per faculty member
+    private int studentFacultyRatio = 100;     // number of students per faculty member
     private int numberStudentsAdmitted = 0;  // number of students admitted since college created.
     private int numberStudentsWithdrew = 0;  // number of students withdrawn since college created.
     private int numberStudentsGraduated = 0; // number of students graduate since college created
     private float retentionRate = 0f;        // percentage of students retained (or graduated) since college created
+    private int yearlyTuitionRating = 0;     // 0 to 100 rating of happiness corresponding to tuition.
+    private int studentFacultyRatioRating = 0; // 0 to 100 rating of student faculty ratio
+    private int studentHealthRating = 0;       // 0 to 100 rating of student health
+
+    public int getStudentHealthRating() {
+        return studentHealthRating;
+    }
+
+    public void setStudentHealthRating(int studentHealthRating) {
+        this.studentHealthRating = studentHealthRating;
+    }
+
+    public int getStudentFacultyRatioRating() {
+        return studentFacultyRatioRating;
+    }
+
+    public void setStudentFacultyRatioRating(int studentFacultyRatioRating) {
+        this.studentFacultyRatioRating = studentFacultyRatioRating;
+    }
+
+    public int getYearlyTuitionRating() {
+        return yearlyTuitionRating;
+    }
+
+    public void setYearlyTuitionRating(int yearlyTuitionRating) {
+        this.yearlyTuitionRating = yearlyTuitionRating;
+    }
 
     public int getReputation() { return reputation; }
 

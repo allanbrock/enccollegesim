@@ -31,15 +31,15 @@ public class AdminService {
         File folder = new File(collegeDir);
         File[] listOfFiles = folder.listFiles();//list of all files in directory
 
-//        for(int i = 0; i < listOfFiles.length; i++){
-//            //if the name of the file ends in college.dat we know it contains a college object
-//            if(listOfFiles[i].getName().endsWith("college.dat")){
-//                //get the name and chop off the file ending to get the runID
-//                String tmp = listOfFiles[i].getName();
-//                tmp = tmp.substring(0,tmp.length() - 11);
-//                list.add(collegeDao.getCollege(tmp)); //grab the college with the runId we just discovered and add it to the list
-//            }
-//        }
+        for(int i = 0; i < listOfFiles.length; i++){
+            //if the name of the file ends in college.dat we know it contains a college object
+            if(listOfFiles[i].getName().endsWith("college.dat")){
+                //get the name and chop off the file ending to get the runID
+                String tmp = listOfFiles[i].getName();
+                tmp = tmp.substring(0,tmp.length() - 11);
+                list.add(collegeDao.getCollege(tmp)); //grab the college with the runId we just discovered and add it to the list
+            }
+        }
         return list;
     }
 }

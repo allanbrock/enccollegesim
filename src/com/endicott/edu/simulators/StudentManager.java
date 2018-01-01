@@ -144,6 +144,12 @@ public class StudentManager {
         }
     }
 
+    /**
+     * Advance the last updated time on the students.
+     *
+     * @param runId
+     * @param hoursAlive
+     */
     private void updateStudentsTime(String runId, int hoursAlive){
         List<StudentModel> students = dao.getStudents(runId);
 
@@ -152,10 +158,6 @@ public class StudentManager {
         }
 
         dao.saveAllStudents(runId, students);
-    }
-
-    private boolean didItHappen(float oddsBetween0And1) {
-        return (Math.random() < oddsBetween0And1);
     }
 
     /**
@@ -268,10 +270,10 @@ public class StudentManager {
         collegeDao.saveCollege(college);
     }
 
-    private float calculateCollegeScore(){
-        float collegeScore = college.getStudentBodyHappiness(); // temporary college score rating
-        return collegeScore;
+    private boolean didItHappen(float oddsBetween0And1) {
+        return (Math.random() < oddsBetween0And1);
     }
+
 }
 
 

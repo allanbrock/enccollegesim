@@ -1,7 +1,5 @@
 package com.endicott.edu.models;
 
-import com.endicott.edu.simulators.DormManager;
-
 import java.io.Serializable;
 
 public class DormitoryModel implements Serializable {

@@ -3,6 +3,7 @@ package com.endicott.edu.service;
 import com.endicott.edu.models.FacultyModel;
 import com.endicott.edu.datalayer.FacultyDao;
 import com.endicott.edu.simulators.CollegeManager;
+import com.endicott.edu.simulators.FacultyManager;
 import com.google.gson.Gson;
 
 import javax.ws.rs.*;
@@ -36,28 +37,16 @@ public class FacultyService {
     }
 
     /**
-     *add a new member of faculty
-     * @param facultyJson json object of faculty as plain text
+     * Add a new member of faculty
+     *
      * @return the faculty member we created as json
      */
     @POST
-    @Path("/add")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/{runId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String postFaculty(String facultyJson) {
-        FacultyModel member = gson.fromJson(facultyJson,FacultyModel.class);
-
-        //make sure the college were trying to use exists
-        String runId = member.getRunId();
-
-        if (!CollegeManager.doesCollegeExist(runId)) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        //make sure the dao layer nows this is a new member by setting id to -1
-        member.setFacultyID(-1);
-        fao.saveNewFaculty(runId,member);
-
-        return gson.toJson(member);
+    public FacultyModel postFaculty(@PathParam("runId") String runId) {
+        FacultyManager manager = new FacultyManager();
+        return(manager.addFaculty(runId));
     }
 
     /**
@@ -65,7 +54,7 @@ public class FacultyService {
      * @param facultyJson json string of faculty object
      * @return removed member of faculty json object
      */
-    @POST
+    @DELETE
     @Path("/delete")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)

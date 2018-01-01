@@ -48,14 +48,21 @@ public class FacultyManager {
      * @param runId instance of the simulation
      */
    public static void establishCollege(String runId){
-
-       FacultyModel member;
-       FacultyDao fao = new FacultyDao();
-
        for (int i=0; i<10; i++) {
-           member = new FacultyModel("Dr. " + NameGenDao.generateName(false), "Dean", "Science", "LSB", runId);
-           member.setFacultyID(IdNumberGenDao.getID(runId));
-           fao.saveNewFaculty(runId, member);
+           addFaculty(runId);
        }
    }
+
+    /**
+     * Add new faculty to the college.
+     */
+    public static FacultyModel addFaculty(String runId) {
+        FacultyModel member;
+        FacultyDao fao = new FacultyDao();
+
+        member = new FacultyModel("Dr. " + NameGenDao.generateName(false), "Dean", "Science", "LSB", runId);
+        member.setFacultyID(IdNumberGenDao.getID(runId));
+        fao.saveNewFaculty(runId, member);
+        return member;
+    }
 }

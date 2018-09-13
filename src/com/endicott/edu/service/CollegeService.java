@@ -122,7 +122,7 @@ public class CollegeService {
         sb.append("<li>Chris Seidl</l1>");
         sb.append("<li>Jeff Thor</l1>");
         sb.append("<li>Derek Yannone</l1>");
-        sb.append("<li>A Cool Cat</l1>");
+        sb.append("<li>a Cool Cat</l1>");
         sb.append("</body>\n");
         return(sb.toString());
     }

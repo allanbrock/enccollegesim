@@ -110,8 +110,10 @@ public class CollegeService {
         sb.append("<p></p>");
         sb.append("<p><h1>Contributors</h1></p>");
         sb.append("<p><h2>2nd Generation: Fall 2018</h2></p>");
+        sb.append("<li>CJ Mustone</l1>");
         sb.append("<li>Stephen Hoadley</l1>");
-        sb.append("<li>Joe Moss</l1>");
+        sb.append("<li>Steven Suchcicki</l1>");
+        sb.append("<li>Allan B.</l1>");
         sb.append("<p><h2>Founders: Fall 2017</h2></p>");
         sb.append("<li>Mazlin Higbee</l1>");
         sb.append("<li>Nick Dos Santos</l1>");
@@ -124,6 +126,7 @@ public class CollegeService {
         sb.append("<li>Chris Seidl</l1>");
         sb.append("<li>Jeff Thor</l1>");
         sb.append("<li>Derek Yannone</l1>");
+        sb.append("<li>a Cool Cat</l1>");
         sb.append("</body>\n");
         return(sb.toString());
     }

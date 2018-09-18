@@ -115,6 +115,7 @@ public class CollegeService {
         sb.append("<li>Steven Suchcicki</l1>");
         sb.append("<li>Joseph Moss</l1>");
         sb.append("<li>Tyler Ouellette</l1>");
+        sb.append("<li>Marie Urmson</l1>");
         sb.append("<li>Allan B.</l1>");
         sb.append("<p><h2>Founders: Fall 2017</h2></p>");
         sb.append("<li>Mazlin Higbee</l1>");

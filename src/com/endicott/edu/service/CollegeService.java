@@ -110,8 +110,11 @@ public class CollegeService {
         sb.append("<p></p>");
         sb.append("<p><h1>Contributors</h1></p>");
         sb.append("<p><h2>2nd Generation: Fall 2018</h2></p>");
+        sb.append("<li>CJ Mustone</l1>");
         sb.append("<li>Stephen Hoadley</l1>");
-        sb.append("<li>Marie Urmson</l1>");
+        sb.append("<li>Steven Suchcicki</l1>");
+        sb.append("<li>Joseph Moss</l1>");
+        sb.append("<li>Tyler Ouellette</l1>");
         sb.append("<li>Allan B.</l1>");
         sb.append("<p><h2>Founders: Fall 2017</h2></p>");
         sb.append("<li>Mazlin Higbee</l1>");
